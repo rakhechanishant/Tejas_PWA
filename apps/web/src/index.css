@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+@theme {
+  --color-slate-950: #ffffff;
+  --color-slate-900: #f8fafc;
+  --color-slate-850: #f1f5f9;
+  --color-slate-800: #e2e8f0;
+  --color-slate-700: #475569;
+  --color-slate-600: #64748b;
+  --color-slate-500: #8892b0;
+  --color-slate-400: #334155;
+  --color-slate-350: #1e293b;
+  --color-slate-300: #1e293b;
+  --color-slate-205: #0f172a;
+  --color-slate-200: #0f172a;
+  --color-slate-100: #0f172a;
+  --color-slate-50: #0f172a;
+
+  --color-slate-805: #cbd5e1;
+  --color-slate-855: #e2e8f0;
+  --color-slate-905: #f1f5f9;
+  --color-slate-650: #475569;
+  --color-slate-450: #64748b;
+
+  --color-amber-500: #2563eb;
+  --color-amber-600: #1d4ed8;
+  --color-amber-700: #1e40af;
+  --color-amber-550: #2563eb;
+  --color-amber-505: #1d4ed8;
+}
+
+@layer base {
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+/* Custom premium design system additions */
+.tejas-gradient {
+  background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.05) 0%, rgba(241, 245, 249, 0.4) 50%, rgba(255, 255, 255, 1) 100%), #ffffff;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(37, 99, 235, 0.2) !important;
+  box-shadow: 0 8px 30px 0 rgba(37, 99, 235, 0.08);
+}
+
+.glow-amber {
+  text-shadow: 0 0 10px rgba(37, 99, 235, 0.2);
+}
+
+.glow-blue {
+  text-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+}
+
+/* Ensure select option texts are visible in dark mode browsers on Windows / Chrome */
+select option {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  font-family: inherit;
+}
+
+/* Primary Animated Brand Button */
+.btn-primary-blue {
+  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%) !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 10px -2px rgba(37, 99, 235, 0.3);
+  cursor: pointer;
+}
+
+.btn-primary-blue:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 15px -1px rgba(37, 99, 235, 0.4);
+  filter: brightness(1.05);
+}
+
+.btn-primary-blue:active {
+  transform: scale(0.96);
+  filter: brightness(0.95);
+}
+
+.btn-primary-blue:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Secondary Animated Outline Button */
+.btn-secondary-blue {
+  background-color: transparent !important;
+  color: #2563eb !important;
+  border: 1.5px solid #2563eb !important;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.btn-secondary-blue:hover {
+  background-color: rgba(37, 99, 235, 0.05) !important;
+  transform: translateY(-1px);
+}
+
+.btn-secondary-blue:active {
+  transform: scale(0.97);
+}
+
+/* Accent Card borders & tint */
+.accent-card-blue {
+  border-left: 4px solid #2563eb !important;
+  background-color: rgba(37, 99, 235, 0.02) !important;
+}
+
+.accent-card-emerald {
+  border-left: 4px solid #10b981 !important;
+  background-color: rgba(16, 185, 129, 0.02) !important;
+}
+
+.accent-card-amber {
+  border-left: 4px solid #f59e0b !important;
+  background-color: rgba(245, 158, 11, 0.02) !important;
+}
+
+.accent-card-rose {
+  border-left: 4px solid #ef4444 !important;
+  background-color: rgba(239, 68, 68, 0.02) !important;
+}
