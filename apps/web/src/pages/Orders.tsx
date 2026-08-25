@@ -324,7 +324,9 @@ export const Orders: React.FC = () => {
                     p_party_id: order.party_id,
                     p_items: order.items.map(item => {
                         const price = item.product.mrp || 0
-                        const discountPct = discType === 'PRODUCT' ? (item.discountPct || 0) : 0
+                        let discountPct = 0
+                        if (discType === 'PRODUCT') discountPct = item.discountPct || 0
+                        else if (discType === 'OVERALL') discountPct = overallPct || 0
                         const finalUnitPrice = price * (1 - discountPct / 100)
                         return {
                             product_id: item.product.id,

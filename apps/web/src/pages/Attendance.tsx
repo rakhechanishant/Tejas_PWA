@@ -36,6 +36,7 @@ export const Attendance: React.FC = () => {
     const { profile } = useAuth()
     const [history, setHistory] = useState<AttendanceRecord[]>([])
     const [adminHistory, setAdminHistory] = useState<AttendanceRecord[]>([])
+    const [autoLocations, setAutoLocations] = useState<any[]>([])
     const [activeRecord, setActiveRecord] = useState<AttendanceRecord | null>(null)
     const [loading, setLoading] = useState(true)
     const [actionLoading, setActionLoading] = useState(false)
@@ -125,6 +126,18 @@ export const Attendance: React.FC = () => {
 
             if (error) throw error
             setAdminHistory(data || [])
+
+            const { data: autoData, error: autoErr } = await supabase
+                .from('user_locations')
+                .select(`
+                    *,
+                    profiles ( name, role )
+                `)
+                .order('created_at', { ascending: false })
+                .limit(100)
+
+            if (autoErr) throw autoErr
+            setAutoLocations(autoData || [])
         } catch (err) {
             console.error('Error fetching admin logs:', err)
         }
@@ -536,6 +549,71 @@ export const Attendance: React.FC = () => {
                                             </td>
                                             <td className="px-4 py-3 text-slate-400 max-w-[200px] truncate" title={log.notes || ''}>
                                                 {log.notes || '—'}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {isAdminOrManager && (
+                <div className="rounded-2xl border border-slate-805 bg-white p-6 space-y-4 shadow-sm accent-card-emerald mt-6">
+                    <div className="flex items-center gap-2 pb-2 border-b border-slate-200">
+                        <MapPin className="h-5 w-5 text-emerald-600" />
+                        <h2 className="text-base font-bold text-slate-200">App Open Locations (Auto Tracked)</h2>
+                    </div>
+
+                    {autoLocations.length === 0 ? (
+                        <div className="py-8 text-center text-xs text-slate-500">No auto-tracked logs found.</div>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="w-full border-collapse text-left text-xs text-slate-650">
+                                <thead className="bg-emerald-50/50 text-emerald-700 border-b border-emerald-105 uppercase text-[9px] font-extrabold tracking-wider">
+                                    <tr>
+                                        <th className="px-4 py-3">Member</th>
+                                        <th className="px-4 py-3">Timestamp</th>
+                                        <th className="px-4 py-3">GPS Location</th>
+                                        <th className="px-4 py-3">Event</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-800/80">
+                                    {autoLocations.map((log) => (
+                                        <tr key={log.id} className="hover:bg-slate-900/30 transition-colors">
+                                            <td className="px-4 py-3">
+                                                <div className="font-semibold text-slate-200">{log.profiles?.name || 'Staff Member'}</div>
+                                                <div className="text-[10px] text-slate-550 uppercase">{log.profiles?.role}</div>
+                                            </td>
+                                            <td className="px-4 py-3 text-slate-205 font-medium">
+                                                {new Date(log.created_at).toLocaleString('en-IN')}
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                {log.latitude ? (
+                                                    <div className="space-y-1">
+                                                        <button
+                                                            onClick={() => openMapLink(log.latitude, log.longitude)}
+                                                            className="px-2 py-1 bg-white border border-emerald-600 hover:bg-emerald-50 rounded text-emerald-600 active:scale-95 transition-all duration-200 flex items-center gap-1 font-semibold text-[10px] cursor-pointer shadow-sm"
+                                                        >
+                                                            <MapPin className="h-3 w-3" />
+                                                            <span>View Map</span>
+                                                        </button>
+                                                        {log.address && (
+                                                            <div className="text-[9px] text-slate-500 max-w-[200px] leading-snug break-words" title={log.address}>
+                                                                {log.address}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-slate-400">Unavailable</span>
+                                                )}
+                                            </td>
+                                            <td className="px-4 py-3 text-slate-400">
+                                                <span className="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-1 rounded inline-flex items-center gap-1">
+                                                    <Navigation className="h-3 w-3" />
+                                                    {log.event_type}
+                                                </span>
                                             </td>
                                         </tr>
                                     ))}

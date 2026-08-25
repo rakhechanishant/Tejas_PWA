@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react'
-import { supabase } from '../lib/supabase'
 import { Search, AlertCircle, RefreshCw, Layers, X } from 'lucide-react'
+import { useCatalogStore } from '../store/useCatalogStore'
+import { useDebounce } from '../lib/useDebounce'
 
 interface Product {
     id: number
@@ -21,15 +22,18 @@ interface Product {
 }
 
 export const Products: React.FC = () => {
-    const [products, setProducts] = useState<Product[]>([])
-    const [loading, setLoading] = useState(true)
+    const { products, loading, fetchProducts, error: storeError } = useCatalogStore()
     const [errorMsg, setErrorMsg] = useState('')
+
+    useEffect(() => {
+        if (storeError) setErrorMsg(storeError)
+    }, [storeError])
 
     // Search and filter states
     const [searchQuery, setSearchQuery] = useState('')
-    const [selectedCompany, setSelectedCompany] = useState('ALL')
-    const [selectedCategory, setSelectedCategory] = useState('ALL')
-
+    const debouncedSearchQuery = useDebounce(searchQuery, 300)
+    const [selectedCompanies, setSelectedCompanies] = useState<string[]>(['ALL'])
+    const [selectedCategories, setSelectedCategories] = useState<string[]>(['ALL'])
 
     // Pagination and Detail states
     const [currentPage, setCurrentPage] = useState(1)
@@ -37,28 +41,7 @@ export const Products: React.FC = () => {
 
     useEffect(() => {
         fetchProducts()
-    }, [])
-
-    const fetchProducts = async () => {
-        setLoading(true)
-        setErrorMsg('')
-        try {
-            const { data, error } = await supabase
-                .from('products')
-                .select('*')
-                .order('product_name', { ascending: true })
-
-            if (error) {
-                throw error
-            }
-            setProducts(data || [])
-        } catch (err: any) {
-            console.error('Error fetching products:', err)
-            setErrorMsg(err.message || 'Failed to load catalog products.')
-        } finally {
-            setLoading(false)
-        }
-    }
+    }, [fetchProducts])
 
     // Get distinct companies and categories for dropdown selections
     const companies = useMemo(() => {
@@ -77,7 +60,7 @@ export const Products: React.FC = () => {
 
     // Real-time filtering based on state inputs
     const filteredProducts = useMemo(() => {
-        const query = searchQuery.trim().toLowerCase()
+        const query = debouncedSearchQuery.trim().toLowerCase()
 
         return products.filter((p) => {
             // 1. Search Query Filter (dynamic on keystroke)
@@ -94,23 +77,21 @@ export const Products: React.FC = () => {
             }
 
             // 2. Company/Brand Filter
-            if (selectedCompany !== 'ALL' && p.company !== selectedCompany) {
-                return false
-            }
+            const matchesCompany = selectedCompanies.includes('ALL') || (p.company && selectedCompanies.includes(p.company));
+            if (!matchesCompany) return false;
 
             // 3. Category Filter
-            if (selectedCategory !== 'ALL' && p.category !== selectedCategory) {
-                return false
-            }
+            const matchesCategory = selectedCategories.includes('ALL') || (p.category && selectedCategories.includes(p.category));
+            if (!matchesCategory) return false;
 
             return true
         })
-    }, [products, searchQuery, selectedCompany, selectedCategory])
+    }, [products, debouncedSearchQuery, selectedCompanies, selectedCategories])
 
     // Reset pagination to page 1 when search or filter states change
     useEffect(() => {
         setCurrentPage(1)
-    }, [searchQuery, selectedCompany, selectedCategory])
+    }, [debouncedSearchQuery, selectedCompanies, selectedCategories])
 
     const ITEMS_PER_PAGE = 18
     const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE)
@@ -128,7 +109,7 @@ export const Products: React.FC = () => {
                     <p className="text-sm text-slate-400">Manage store inventory, check stock alerts, and inspect specification sheets.</p>
                 </div>
                 <button
-                    onClick={fetchProducts}
+                    onClick={() => fetchProducts(true)}
                     title="Reload Catalog"
                     className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 transition-colors text-slate-400 hover:text-white self-start sm:self-center"
                 >
@@ -147,7 +128,7 @@ export const Products: React.FC = () => {
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Search by name, ref code, specs, category..."
+                        placeholder="Search by name, ref code, specs, category... (debounce 300ms)"
                         className="block w-full rounded-xl border border-slate-800 bg-slate-950/80 py-3 pr-4 pl-10 text-white placeholder-slate-500 transition-colors focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
                     />
                     {searchQuery && (
@@ -166,12 +147,21 @@ export const Products: React.FC = () => {
                     <div className="space-y-1.5">
                         <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Brand / Company</label>
                         <select
-                            value={selectedCompany}
-                            onChange={(e) => setSelectedCompany(e.target.value)}
-                            className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:border-amber-500 focus:outline-none"
+                            multiple
+                            value={selectedCompanies}
+                            onChange={(e) => {
+                                const opts = Array.from(e.target.selectedOptions, option => option.value);
+                                if (opts.includes('ALL')) {
+                                    setSelectedCompanies(['ALL']);
+                                } else {
+                                    setSelectedCompanies(opts.length ? opts : ['ALL']);
+                                }
+                            }}
+                            className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:border-amber-500 focus:outline-none overflow-hidden h-[44px]"
                         >
-                            {companies.map((c) => (
-                                <option key={c} value={c}>{c === 'ALL' ? 'All Brands' : c}</option>
+                            <option value="ALL">All Brands</option>
+                            {companies.map((c) => c !== 'ALL' && (
+                                <option key={c} value={c}>{c}</option>
                             ))}
                         </select>
                     </div>
@@ -180,12 +170,21 @@ export const Products: React.FC = () => {
                     <div className="space-y-1.5">
                         <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Category</label>
                         <select
-                            value={selectedCategory}
-                            onChange={(e) => setSelectedCategory(e.target.value)}
-                            className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:border-amber-500 focus:outline-none"
+                            multiple
+                            value={selectedCategories}
+                            onChange={(e) => {
+                                const opts = Array.from(e.target.selectedOptions, option => option.value);
+                                if (opts.includes('ALL')) {
+                                    setSelectedCategories(['ALL']);
+                                } else {
+                                    setSelectedCategories(opts.length ? opts : ['ALL']);
+                                }
+                            }}
+                            className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:border-amber-500 focus:outline-none overflow-hidden h-[44px]"
                         >
-                            {categories.map((cat) => (
-                                <option key={cat} value={cat}>{cat === 'ALL' ? 'All Categories' : cat}</option>
+                            <option value="ALL">All Categories</option>
+                            {categories.map((c) => c !== 'ALL' && (
+                                <option key={c} value={c}>{c}</option>
                             ))}
                         </select>
                     </div>

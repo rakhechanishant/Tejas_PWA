@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
 import { useCartStore, type Party, type Product } from '../store/useCartStore'
+import { useCatalogStore } from '../store/useCatalogStore'
+import { useDebounce } from '../lib/useDebounce'
 import { db } from '../lib/db'
 import {
     Search,
@@ -52,11 +54,12 @@ export const NewOrder: React.FC = () => {
     const [partyQuery, setPartyQuery] = useState('')
 
     // Step 2: Product selection States
-    const [products, setProducts] = useState<Product[]>([])
-    const [productLoading, setProductLoading] = useState(false)
+    const { products, loading: productLoading, fetchProducts } = useCatalogStore();
     const [productQuery, setProductQuery] = useState('')
-    const [selectedCompany, setSelectedCompany] = useState('ALL')
-    const [selectedCategory, setSelectedCategory] = useState('ALL')
+    const debouncedProductQuery = useDebounce(productQuery, 300);
+    const [selectedCompany, setSelectedCompany] = useState<string>('ALL')
+    const [selectedCategory, setSelectedCategory] = useState<string>('ALL')
+    const [qtyInputs, setQtyInputs] = useState<Record<number, string>>({}); // ID to qty string mapping
 
     // Step 3: Notes
     const [notes, setNotes] = useState('')
@@ -126,24 +129,9 @@ export const NewOrder: React.FC = () => {
         }
     }
 
-    const fetchProducts = async () => {
-        setProductLoading(true)
-        try {
-            const { data, error } = await supabase
-                .from('products')
-                .select('*')
-                .eq('is_active', true)
-                .order('product_name', { ascending: true })
-
-            if (error) throw error
-            setProducts(data || [])
-        } catch (err: any) {
-            console.error('Error fetching products:', err)
-            setErrorMsg(err.message || 'Failed to fetch products.')
-        } finally {
-            setProductLoading(false)
-        }
-    }
+    useEffect(() => {
+        fetchProducts()
+    }, [fetchProducts])
 
     // Filters
     const filteredParties = useMemo(() => {
@@ -157,26 +145,29 @@ export const NewOrder: React.FC = () => {
     }, [parties, partyQuery])
 
     const companies = useMemo(() => {
-        const list = new Set(products.map(p => p.company).filter(Boolean) as string[])
+        const list = new Set(['Tiger', 'Deli', ...products.map(p => p.company).filter(Boolean) as string[]])
         return ['ALL', ...Array.from(list)]
     }, [products])
 
     const categories = useMemo(() => {
-        const list = new Set(products.map(p => p.category).filter(Boolean) as string[])
+        const list = new Set(['Hand tools', 'Power tools', 'Accessories', ...products.map(p => p.category).filter(Boolean) as string[]])
         return ['ALL', ...Array.from(list)]
     }, [products])
 
     const filteredProducts = useMemo(() => {
-        const query = productQuery.trim().toLowerCase()
+        const query = debouncedProductQuery.trim().toLowerCase()
         return products.filter(p => {
             const matchesSearch = !query ||
                 p.product_name.toLowerCase().includes(query) ||
                 (p.ref_code && p.ref_code.toLowerCase().includes(query))
-            const matchesCompany = selectedCompany === 'ALL' || p.company === selectedCompany
-            const matchesCategory = selectedCategory === 'ALL' || p.category === selectedCategory
+
+            const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const matchesCompany = selectedCompany === 'ALL' || (p.company && normalize(p.company) === normalize(selectedCompany));
+            const matchesCategory = selectedCategory === 'ALL' || (p.category && normalize(p.category) === normalize(selectedCategory));
+
             return matchesSearch && matchesCompany && matchesCategory
         })
-    }, [products, productQuery, selectedCompany, selectedCategory])
+    }, [products, debouncedProductQuery, selectedCompany, selectedCategory])
 
     const { subtotal, itemDiscounts, overallDiscount, totalItems, finalTotal } = getTotals()
 
@@ -235,7 +226,9 @@ export const NewOrder: React.FC = () => {
                     p_party_id: orderData.party_id,
                     p_items: orderData.items.map(item => {
                         const price = item.product.mrp || 0
-                        const discountPct = discountType === 'PRODUCT' ? (item.discountPct || 0) : 0
+                        let discountPct = 0
+                        if (discountType === 'PRODUCT') discountPct = item.discountPct || 0
+                        else if (discountType === 'OVERALL') discountPct = overallDiscountPct || 0
                         const finalUnitPrice = price * (1 - discountPct / 100)
                         return {
                             product_id: item.product.id,
@@ -342,7 +335,7 @@ export const NewOrder: React.FC = () => {
             </div>
 
             {/* Stepper Progress Indicator */}
-            <div className="flex items-center justify-between max-w-md mx-auto py-2">
+            <div className="flex items-center justify-between max-w-lg mx-auto py-5">
                 {[
                     { number: 1, label: 'Customer', icon: User },
                     { number: 2, label: 'Add Items', icon: Package },
@@ -350,7 +343,7 @@ export const NewOrder: React.FC = () => {
                 ].map((s, idx) => (
                     <React.Fragment key={s.number}>
                         {idx > 0 && (
-                            <div className={`h-0.5 flex-1 mx-2 rounded-full ${step >= s.number ? 'bg-blue-600' : 'bg-slate-200'
+                            <div className={`h-1 flex-1 mx-4 rounded-full ${step >= s.number ? 'bg-blue-600' : 'bg-slate-200'
                                 }`} />
                         )}
                         <div
@@ -363,15 +356,15 @@ export const NewOrder: React.FC = () => {
                             className={`flex flex-col items-center cursor-pointer ${step === s.number ? 'text-blue-600' : step > s.number ? 'text-slate-500' : 'text-slate-400'
                                 }`}
                         >
-                            <div className={`h-8 w-8 rounded-full border flex items-center justify-center font-bold text-xs transition-all ${step === s.number
-                                ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20'
+                            <div className={`h-11 w-11 sm:h-12 sm:w-12 rounded-full border-2 flex items-center justify-center font-bold transition-all ${step === s.number
+                                ? 'bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-500/30 ring-4 ring-blue-50'
                                 : step > s.number
                                     ? 'bg-blue-50 text-blue-600 border-blue-200'
-                                    : 'bg-slate-900 text-slate-400 border-slate-200'
+                                    : 'bg-white text-slate-400 border-slate-200 hover:border-slate-300'
                                 }`}>
-                                <s.icon className="h-4 w-4" />
+                                <s.icon className="h-5 w-5" />
                             </div>
-                            <span className="text-[10px] font-bold uppercase tracking-wider mt-1.5">{s.label}</span>
+                            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-widest mt-2">{s.label}</span>
                         </div>
                     </React.Fragment>
                 ))}
@@ -488,35 +481,47 @@ export const NewOrder: React.FC = () => {
             {step === 2 && (
                 <div className="space-y-4">
                     {/* Filters Toolbar */}
-                    <div className="grid gap-3 sm:grid-cols-3">
+                    <div className="grid gap-4 sm:grid-cols-3 mb-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
                         <div className="relative sm:col-span-1">
-                            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                             <input
                                 type="text"
                                 placeholder="Search products..."
                                 value={productQuery}
                                 onChange={(e) => setProductQuery(e.target.value)}
-                                className="w-full bg-slate-900 border border-slate-205 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white transition-all shadow-sm"
+                                className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-50 transition-all font-medium"
                             />
                         </div>
 
-                        <select
-                            value={selectedCompany}
-                            onChange={(e) => setSelectedCompany(e.target.value)}
-                            className="bg-slate-900 border border-slate-205 rounded-2xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:bg-white focus:border-blue-600 transition-all shadow-sm"
-                        >
-                            <option value="ALL">All Brands / Companies</option>
-                            {companies.map(c => c !== 'ALL' && <option key={c} value={c}>{c}</option>)}
-                        </select>
+                        {/* Standard Dropdown for Brands */}
+                        <div className="relative">
+                            <select
+                                value={selectedCompany}
+                                onChange={(e) => setSelectedCompany(e.target.value)}
+                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-50 transition-all appearance-none cursor-pointer"
+                            >
+                                <option value="ALL">All Brands</option>
+                                {companies.map(c => c !== 'ALL' && <option key={c} value={c}>{c}</option>)}
+                            </select>
+                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </div>
 
-                        <select
-                            value={selectedCategory}
-                            onChange={(e) => setSelectedCategory(e.target.value)}
-                            className="bg-slate-900 border border-slate-205 rounded-2xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:bg-white focus:border-blue-600 transition-all shadow-sm"
-                        >
-                            <option value="ALL">All Product Categories</option>
-                            {categories.map(c => c !== 'ALL' && <option key={c} value={c}>{c}</option>)}
-                        </select>
+                        {/* Standard Dropdown for Categories */}
+                        <div className="relative">
+                            <select
+                                value={selectedCategory}
+                                onChange={(e) => setSelectedCategory(e.target.value)}
+                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-50 transition-all appearance-none cursor-pointer"
+                            >
+                                <option value="ALL">All Categories</option>
+                                {categories.map(c => c !== 'ALL' && <option key={c} value={c}>{c}</option>)}
+                            </select>
+                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="grid gap-4 md:grid-cols-3">
@@ -528,76 +533,70 @@ export const NewOrder: React.FC = () => {
                                     {productLoading && <span className="text-slate-500 animate-pulse">Syncing catalog...</span>}
                                 </div>
 
-                                <div className="divide-y divide-slate-100 max-h-[600px] overflow-y-auto">
+                                <div className="p-4 overflow-y-auto max-h-[600px] bg-slate-900/30">
                                     {filteredProducts.length === 0 ? (
                                         <div className="p-8 text-center text-xs text-slate-500">
                                             No products match the chosen filters.
                                         </div>
                                     ) : (
-                                        filteredProducts.map((p) => {
-                                            const cartQty = items.find(item => item.product.id === p.id)?.quantity || 0
-                                            return (
-                                                <div key={p.id} className="p-4 flex items-center justify-between gap-4 hover:bg-slate-900/50 transition-colors">
-                                                    <div className="min-w-0 pr-2 flex-grow">
-                                                        <span className="text-[8px] font-bold uppercase tracking-wider py-0.5 px-2 rounded-full bg-slate-850 text-slate-650 border border-slate-200">
-                                                            {p.company || 'Generic'}
-                                                        </span>
-                                                        <div
-                                                            onClick={() => setSelectedDetailProduct(p)}
-                                                            className="flex items-center gap-1.5 mt-1.5 cursor-pointer group/title"
-                                                        >
-                                                            <h4 className="text-xs font-bold text-slate-200 truncate group-hover/title:text-blue-600 transition-colors">{p.product_name}</h4>
-                                                            <Info className="h-3.5 w-3.5 text-slate-400 group-hover/title:text-blue-600 shrink-0" />
-                                                        </div>
-                                                        <div className="flex flex-wrap items-center gap-1.5 mt-1 text-[10px] text-slate-500 font-medium">
-                                                            <span className="text-blue-600 font-bold">
-                                                                {p.mrp ? `रु ${p.mrp.toLocaleString()}` : 'N/A MRP'}
-                                                            </span>
-                                                            <span className="h-1 w-1 rounded-full bg-slate-200"></span>
-                                                            <span>Unit: {p.unit}</span>
-                                                            {p.ref_code && (
-                                                                <>
-                                                                    <span className="h-1 w-1 rounded-full bg-slate-200"></span>
-                                                                    <span className="text-[9px] font-mono font-bold text-blue-600 bg-blue-50/50 px-1.5 py-0.2 rounded border border-blue-105">
-                                                                        {p.ref_code}
-                                                                    </span>
-                                                                </>
-                                                            )}
-                                                        </div>
-                                                    </div>
-
-                                                    {/* Qty action center */}
-                                                    <div className="flex items-center gap-2 shrink-0">
-                                                        {cartQty > 0 ? (
-                                                            <div className="flex items-center gap-2 bg-slate-900 border border-slate-200 rounded-xl p-1 shadow-sm">
-                                                                <button
-                                                                    onClick={() => updateQuantity(p.id, cartQty - 1)}
-                                                                    className="h-6 w-6 rounded-lg bg-white border border-slate-200 flex items-center justify-center font-bold text-slate-650 hover:bg-slate-850 hover:text-slate-200 cursor-pointer"
-                                                                >
-                                                                    -
-                                                                </button>
-                                                                <span className="text-xs font-extrabold px-1.5 text-slate-200 min-w-[1.25rem] text-center">
-                                                                    {cartQty}
+                                        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                                            {filteredProducts.map((p) => {
+                                                const cartQty = items.find(item => item.product.id === p.id)?.quantity || 0
+                                                const localQtyInput = qtyInputs[p.id] || "1"
+                                                return (
+                                                    <div key={p.id} className="group relative rounded-2xl glass-card p-4 hover:scale-[1.01] transition-all flex flex-col justify-between cursor-pointer border border-slate-800 bg-slate-900/40">
+                                                        <div>
+                                                            <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-slate-950/60 border border-slate-850 flex items-center justify-center mb-3">
+                                                                {p.image_url ? (
+                                                                    <img src={p.image_url} alt={p.product_name} className="h-full w-full object-contain" loading="lazy" />
+                                                                ) : (
+                                                                    <span className="text-[8px] font-mono text-slate-600">NO IMAGE</span>
+                                                                )}
+                                                            </div>
+                                                            <div className="flex items-center justify-between gap-1 mb-1">
+                                                                <span className="text-[8px] font-bold uppercase tracking-wider py-0.5 px-2 rounded-full bg-slate-850 text-slate-400">
+                                                                    {p.company || 'Generic'}
                                                                 </span>
-                                                                <button
-                                                                    onClick={() => updateQuantity(p.id, cartQty + 1)}
-                                                                    className="h-6 w-6 rounded-lg bg-white border border-slate-200 flex items-center justify-center font-bold text-slate-655 hover:bg-slate-850 hover:text-slate-200 cursor-pointer"
-                                                                >
-                                                                    +
+                                                                {p.ref_code && <span className="text-[9px] font-mono font-bold text-amber-500">{p.ref_code}</span>}
+                                                            </div>
+                                                            <div className="flex items-center justify-between mt-1 gap-2">
+                                                                <h4 className="text-xs font-bold text-slate-100 group-hover:text-white leading-snug">{p.product_name}</h4>
+                                                                <Info onClick={() => setSelectedDetailProduct(p)} className="h-4 w-4 text-slate-400 hover:text-blue-500 cursor-pointer shrink-0" />
+                                                            </div>
+                                                            <div className="flex gap-2">
+                                                                <div className="text-[9px] text-slate-500 mt-1">{p.category}</div>
+                                                                <div className="text-[9px] text-slate-500 mt-1">Unit: {p.unit}</div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="mt-3 pt-3 border-t border-slate-850 flex flex-col gap-2">
+                                                            <div className="flex justify-between items-center">
+                                                                <span className="text-xs font-bold text-amber-500">रु {p.mrp ? p.mrp.toLocaleString() : 'N/A'}</span>
+                                                                {cartQty > 0 && <span className="text-[9px] font-bold bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded">In Cart: {cartQty}</span>}
+                                                            </div>
+
+                                                            <div className="flex items-center gap-1.5 justify-between bg-slate-950 rounded-xl p-1 border border-slate-800">
+                                                                <div className="flex items-center">
+                                                                    <button onClick={() => setQtyInputs(prev => ({ ...prev, [p.id]: String(Math.max(1, parseInt(localQtyInput || "1") - 1)) }))} className="w-7 h-7 bg-slate-900 border border-slate-700 rounded-lg text-slate-300 font-bold hover:bg-slate-800">-</button>
+                                                                    <input
+                                                                        type="number"
+                                                                        min="1"
+                                                                        className="w-10 bg-transparent text-center text-xs text-slate-200 font-bold focus:outline-none"
+                                                                        value={localQtyInput}
+                                                                        onChange={(e) => setQtyInputs(prev => ({ ...prev, [p.id]: e.target.value }))}
+                                                                    />
+                                                                    <button onClick={() => setQtyInputs(prev => ({ ...prev, [p.id]: String(parseInt(localQtyInput || "0") + 1) }))} className="w-7 h-7 bg-slate-900 border border-slate-700 rounded-lg text-slate-300 font-bold hover:bg-slate-800">+</button>
+                                                                </div>
+                                                                <button onClick={() => {
+                                                                    addItem(p, parseInt(localQtyInput || "1"));
+                                                                }} className="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-[10px] uppercase py-1.5 rounded-lg transition-colors">
+                                                                    {cartQty > 0 ? "Update" : "Add"}
                                                                 </button>
                                                             </div>
-                                                        ) : (
-                                                            <button
-                                                                onClick={() => addItem(p, 1)}
-                                                                className="btn-primary-blue py-1.5 px-3 text-[10px] uppercase font-bold"
-                                                            >
-                                                                Add
-                                                            </button>
-                                                        )}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            )
-                                        })
+                                                )
+                                            })}
+                                        </div>
                                     )}
                                 </div>
                             </div>
@@ -631,9 +630,20 @@ export const NewOrder: React.FC = () => {
                                                 <div className="flex items-center justify-between">
                                                     <div className="min-w-0 pr-2">
                                                         <span className="font-semibold text-slate-200 block truncate">{item.product.product_name}</span>
-                                                        <span className="text-[10px] text-slate-500 font-mono mt-0.5 block font-bold">
-                                                            {item.quantity} × रु {item.product.mrp?.toLocaleString() || '0'}
-                                                        </span>
+                                                        <div className="flex items-center gap-2 mt-1">
+                                                            <button onClick={() => updateQuantity(item.product.id, item.quantity - 1)} className="text-slate-400 bg-slate-900 border border-slate-700 rounded px-1.5 hover:bg-slate-800 font-bold">-</button>
+                                                            <input
+                                                                type="number"
+                                                                min="0"
+                                                                className="w-12 bg-slate-900 border border-slate-700 text-slate-200 text-[10px] font-bold text-center py-0.5 rounded focus:outline-none focus:border-blue-500"
+                                                                value={item.quantity}
+                                                                onChange={(e) => updateQuantity(item.product.id, Number(e.target.value) || 0)}
+                                                            />
+                                                            <button onClick={() => updateQuantity(item.product.id, item.quantity + 1)} className="text-slate-400 bg-slate-900 border border-slate-700 rounded px-1.5 hover:bg-slate-800 font-bold">+</button>
+                                                            <span className="text-[10px] text-slate-500 font-mono font-bold ml-1">
+                                                                × रु {item.product.mrp?.toLocaleString() || '0'}
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                     <button
                                                         onClick={() => removeItem(item.product.id)}

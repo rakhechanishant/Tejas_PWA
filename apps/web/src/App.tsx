@@ -14,6 +14,7 @@ import { Cheques } from './pages/Cheques'
 import { Attendance } from './pages/Attendance'
 import { AuditLogs } from './pages/AuditLogs'
 import { supabase } from './lib/supabase'
+import { AutoLocationTracker } from './components/AutoLocationTracker'
 import {
   LayoutDashboard,
   Layers,
@@ -48,10 +49,14 @@ const Dashboard = () => {
   const [errorMsg, setErrorMsg] = useState('')
 
   useEffect(() => {
+    if (profile?.role === 'ORDER_ENTRY_TEAM') {
+      window.location.href = '/orders';
+      return;
+    }
     if (profile?.id) {
       fetchMetrics()
     }
-  }, [profile?.id])
+  }, [profile?.id, profile?.role])
 
   const fetchMetrics = async () => {
     setLoading(true)
@@ -201,11 +206,19 @@ const Layout: React.FC = () => {
       : [])
   ]
 
-  // Filter nav items based on allowed_modules
+  // Filter nav items based on allowed_modules and specific role restrictions
   // null = full access, array = only dashboard + listed modules
-  const navItems = profile?.allowed_modules
-    ? allNavItems.filter(item => item.moduleKey === 'dashboard' || profile.allowed_modules!.includes(item.moduleKey))
-    : allNavItems
+  const navItems = (() => {
+    let items = profile?.allowed_modules
+      ? allNavItems.filter(item => item.moduleKey === 'dashboard' || profile.allowed_modules!.includes(item.moduleKey))
+      : allNavItems;
+
+    if (profile?.role === 'ORDER_ENTRY_TEAM') {
+      const allowedForOrderEntry = ['orders', 'parties', 'quotations', 'products'];
+      items = allNavItems.filter(item => allowedForOrderEntry.includes(item.moduleKey));
+    }
+    return items;
+  })();
 
   return (
     <div className="min-h-screen tejas-gradient text-slate-100 flex flex-col md:flex-row">
@@ -327,6 +340,7 @@ export default function App() {
   return (
     <Router>
       <AuthProvider>
+        <AutoLocationTracker />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route
