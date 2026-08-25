@@ -416,7 +416,7 @@ export const Payments: React.FC = () => {
             {/* Header Title Section */}
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-3xl font-extrabold tracking-tight text-white font-outfit">Payments & Accounts</h1>
+                    <h1 className="text-3xl font-extrabold tracking-tight text-slate-100 font-outfit">Payments & Accounts</h1>
                     <p className="text-sm text-slate-400">Record customer cash, check, and digital payments; audit transaction logs and outstanding credit books.</p>
                 </div>
 
@@ -522,7 +522,7 @@ export const Payments: React.FC = () => {
                                 ? "Search outstanding ledgers by name, code, town..."
                                 : "Filter transaction receipts by customer name, order number, txn reference..."
                         }
-                        className="bg-slate-950 border border-slate-800 rounded-xl py-2.5 pl-10 pr-4 text-white text-xs w-full placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+                        className="bg-slate-950 border border-slate-800 rounded-xl py-2.5 pl-10 pr-4 text-slate-100 text-xs w-full placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
                     />
                 </div>
 
@@ -643,7 +643,7 @@ export const Payments: React.FC = () => {
                             >
                                 <div className="space-y-1.5 flex-1 min-w-0">
                                     <div className="flex items-center gap-2 flex-wrap">
-                                        <h3 className="text-xs font-bold text-white uppercase tracking-wider truncate md:max-w-[200px]">
+                                        <h3 className="text-xs font-bold text-slate-100 uppercase tracking-wider truncate md:max-w-[200px]">
                                             {pay.party_name}
                                         </h3>
                                         <span className="text-[9px] font-black py-0.5 px-2 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20 uppercase">
