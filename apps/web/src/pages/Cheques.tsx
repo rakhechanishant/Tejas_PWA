@@ -243,8 +243,8 @@ export const Cheques: React.FC = () => {
         <div className="space-y-6">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-900">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-slate-100 sm:text-3xl font-outfit">Cheque Register</h1>
-                    <p className="text-sm text-slate-400">Manage post-dated customer cheques, cleared transactions, and bounce actions</p>
+                    <h1 className="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl font-outfit">Cheque Register</h1>
+                    <p className="text-sm text-neutral-600">Manage post-dated customer cheques, cleared transactions, and bounce actions</p>
                 </div>
                 <button
                     onClick={() => setShowAddModal(true)}
@@ -267,12 +267,12 @@ export const Cheques: React.FC = () => {
                             <div key={alertCh.id} className="bg-slate-950/40 p-4 rounded-xl border border-amber-500/20 text-xs flex flex-col justify-between">
                                 <div>
                                     <div className="flex justify-between items-start">
-                                        <span className="font-semibold text-slate-200 truncate pr-2">{alertCh.parties?.Parties_name}</span>
+                                        <span className="font-semibold text-neutral-800 truncate pr-2">{alertCh.parties?.Parties_name}</span>
                                         <span className="text-amber-500 font-bold shrink-0">रु {alertCh.amount.toLocaleString('en-IN')}</span>
                                     </div>
                                     <p className="text-slate-500 mt-1">Bank: {alertCh.bank_name} | No: {alertCh.cheque_number}</p>
                                 </div>
-                                <div className="mt-3 pt-2 border-t border-slate-900 flex justify-between items-center text-[10px] text-slate-400">
+                                <div className="mt-3 pt-2 border-t border-slate-900 flex justify-between items-center text-[10px] text-neutral-600">
                                     <span className="flex items-center gap-1">
                                         <Clock className="h-3.5 w-3.5 text-amber-500/70" />
                                         Due {new Date(alertCh.due_date).toLocaleDateString('en-IN')}
@@ -310,7 +310,7 @@ export const Cheques: React.FC = () => {
                         placeholder="Search bank name, cheque number, or customer..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-205 placeholder-slate-505 focus:border-amber-500/50 focus:ring-1 focus:ring-amber-505 outline-none transition-all text-sm"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-neutral-800 placeholder-slate-505 focus:border-amber-500/50 focus:ring-1 focus:ring-amber-505 outline-none transition-all text-sm"
                     />
                 </div>
                 <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
@@ -326,7 +326,7 @@ export const Cheques: React.FC = () => {
                                 className={`px-4 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all
                                     ${statusFilter === st
                                         ? 'bg-amber-500 text-white shadow'
-                                        : 'text-slate-400 hover:text-white'
+                                        : 'text-neutral-600 hover:text-neutral-900'
                                     }`}
                             >
                                 {st}
@@ -345,13 +345,13 @@ export const Cheques: React.FC = () => {
             ) : filteredCheques.length === 0 ? (
                 <div className="rounded-2xl border border-dashed border-slate-800 p-12 text-center text-slate-500">
                     <BookOpen className="h-12 w-12 mx-auto mb-4 text-slate-600" />
-                    <h3 className="text-base font-semibold text-slate-300">No Cheques Registered</h3>
+                    <h3 className="text-base font-semibold text-neutral-700">No Cheques Registered</h3>
                     <p className="mt-1 text-sm text-slate-550">Matches will display here. Click "Register New Cheque" to make an entry.</p>
                 </div>
             ) : (
                 <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/10">
                     <table className="w-full border-collapse text-left text-sm">
-                        <thead className="bg-slate-900/60 text-slate-400 uppercase text-[10px] font-bold tracking-wider">
+                        <thead className="bg-slate-900/60 text-neutral-600 uppercase text-[10px] font-bold tracking-wider">
                             <tr>
                                 <th className="px-6 py-4">Cheque Details</th>
                                 <th className="px-6 py-4">Customer Name</th>
@@ -363,27 +363,27 @@ export const Cheques: React.FC = () => {
                         </thead>
                         <tbody className="divide-y divide-slate-800/80">
                             {filteredCheques.map((ch) => {
-                                let statusClasses = 'bg-slate-950/40 text-slate-400 border border-slate-800'
+                                let statusClasses = 'bg-slate-950/40 text-neutral-600 border border-slate-800'
                                 if (ch.status === 'CLEARED') statusClasses = 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                                 if (ch.status === 'BOUNCED') statusClasses = 'bg-rose-500/10 text-rose-450 border border-rose-505/20'
 
                                 return (
                                     <tr key={ch.id} className="hover:bg-slate-900/40 transition-colors">
                                         <td className="px-6 py-4">
-                                            <div className="font-semibold text-slate-205">{ch.bank_name}</div>
+                                            <div className="font-semibold text-neutral-800">{ch.bank_name}</div>
                                             <div className="text-[11px] text-slate-500 mt-0.5">No: {ch.cheque_number}</div>
                                         </td>
-                                        <td className="px-6 py-4 text-slate-300">
-                                            <div className="font-medium text-slate-205">{ch.parties?.Parties_name || 'N/A'}</div>
+                                        <td className="px-6 py-4 text-neutral-700">
+                                            <div className="font-medium text-neutral-800">{ch.parties?.Parties_name || 'N/A'}</div>
                                             {ch.parties?.contact_number && <div className="text-[10px] text-slate-550">{ch.parties.contact_number}</div>}
                                         </td>
-                                        <td className="px-6 py-4 text-slate-350">
+                                        <td className="px-6 py-4 text-neutral-700">
                                             <div className="flex items-center gap-1.5 text-xs">
                                                 <Calendar className="h-4 w-4 text-slate-500" />
                                                 <span>{new Date(ch.due_date).toLocaleDateString('en-IN')}</span>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-right font-bold text-slate-100">
+                                        <td className="px-6 py-4 text-right font-bold text-neutral-900">
                                             रु {ch.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                         </td>
                                         <td className="px-6 py-4 text-center">
@@ -425,12 +425,12 @@ export const Cheques: React.FC = () => {
                     <div className="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col">
                         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/20">
                             <div>
-                                <h3 className="text-base font-bold text-slate-100">Register Customer Cheque</h3>
+                                <h3 className="text-base font-bold text-neutral-900">Register Customer Cheque</h3>
                                 <p className="text-xs text-slate-500">Record a post-dated check linked to account dues</p>
                             </div>
                             <button
                                 onClick={() => setShowAddModal(false)}
-                                className="text-slate-450 hover:text-white transition-colors"
+                                className="text-slate-450 hover:text-neutral-900 transition-colors"
                             >
                                 <X className="h-6 w-6" />
                             </button>
@@ -439,7 +439,7 @@ export const Cheques: React.FC = () => {
                         <form onSubmit={handleCreateCheque} className="p-6 space-y-4">
                             {/* Party Auto Select */}
                             <div className="relative" ref={partyDropdownRef}>
-                                <label className="block text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1.5">Select Customer *</label>
+                                <label className="block text-xs font-semibold text-neutral-600 uppercase tracking-widest mb-1.5">Select Customer *</label>
                                 <div className="relative">
                                     <span className="absolute inset-y-0 left-0 flex items-center pl-3">
                                         <Search className="h-4.5 w-4.5 text-slate-500" />
@@ -453,7 +453,7 @@ export const Cheques: React.FC = () => {
                                             setIsPartyDropdownOpen(true)
                                         }}
                                         onFocus={() => setIsPartyDropdownOpen(true)}
-                                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-955 border border-slate-800 text-slate-200 placeholder-slate-550 focus:border-amber-500 outline-none text-sm transition-all"
+                                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-955 border border-slate-800 text-neutral-800 placeholder-slate-550 focus:border-amber-500 outline-none text-sm transition-all"
                                     />
                                     {selectedParty && (
                                         <button
@@ -462,7 +462,7 @@ export const Cheques: React.FC = () => {
                                                 setSelectedParty(null)
                                                 setPartyQuery('')
                                             }}
-                                            className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-500 hover:text-white"
+                                            className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-500 hover:text-neutral-900"
                                         >
                                             <X className="h-4 w-4" />
                                         </button>
@@ -480,7 +480,7 @@ export const Cheques: React.FC = () => {
                                                     setIsPartyDropdownOpen(false)
                                                     setPartyQuery('')
                                                 }}
-                                                className="w-full text-left px-4 py-2 text-slate-205 hover:bg-slate-800 hover:text-white flex items-center justify-between"
+                                                className="w-full text-left px-4 py-2 text-neutral-800 hover:bg-slate-800 hover:text-neutral-900 flex items-center justify-between"
                                             >
                                                 <span>{p.name}</span>
                                                 <span className="text-[10px] text-slate-500 font-mono">{p.party_code}</span>
@@ -493,25 +493,25 @@ export const Cheques: React.FC = () => {
                             {/* Row: Bank Name & Cheque Number */}
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1.5">Bank Name *</label>
+                                    <label className="block text-xs font-semibold text-neutral-600 uppercase tracking-widest mb-1.5">Bank Name *</label>
                                     <input
                                         type="text"
                                         placeholder="e.g. NIC Asia Bank"
                                         required
                                         value={bankName}
                                         onChange={(e) => setBankName(e.target.value)}
-                                        className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 placeholder-slate-600 focus:border-amber-500 focus:ring-0 outline-none text-sm"
+                                        className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-neutral-800 placeholder-slate-600 focus:border-amber-500 focus:ring-0 outline-none text-sm"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1.5">Cheque Number *</label>
+                                    <label className="block text-xs font-semibold text-neutral-600 uppercase tracking-widest mb-1.5">Cheque Number *</label>
                                     <input
                                         type="text"
                                         placeholder="e.g. CHQ384910"
                                         required
                                         value={chequeNumber}
                                         onChange={(e) => setChequeNumber(e.target.value)}
-                                        className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 placeholder-slate-600 focus:border-amber-500 focus:ring-0 outline-none text-sm"
+                                        className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-neutral-800 placeholder-slate-600 focus:border-amber-500 focus:ring-0 outline-none text-sm"
                                     />
                                 </div>
                             </div>
@@ -519,17 +519,17 @@ export const Cheques: React.FC = () => {
                             {/* Row: Amount & Due Date */}
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1.5">Due/Clearance Date *</label>
+                                    <label className="block text-xs font-semibold text-neutral-600 uppercase tracking-widest mb-1.5">Due/Clearance Date *</label>
                                     <input
                                         type="date"
                                         required
                                         value={dueDate}
                                         onChange={(e) => setDueDate(e.target.value)}
-                                        className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 focus:border-amber-500 focus:ring-0 outline-none text-sm"
+                                        className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-neutral-800 focus:border-amber-500 focus:ring-0 outline-none text-sm"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1.5">Cheque Amount *</label>
+                                    <label className="block text-xs font-semibold text-neutral-600 uppercase tracking-widest mb-1.5">Cheque Amount *</label>
                                     <div className="relative">
                                         <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500 text-xs">रु</span>
                                         <input
@@ -539,7 +539,7 @@ export const Cheques: React.FC = () => {
                                             required
                                             value={amount}
                                             onChange={(e) => setAmount(e.target.value)}
-                                            className="w-full pl-8 pr-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 placeholder-slate-600 focus:border-amber-500 focus:ring-0 outline-none text-sm"
+                                            className="w-full pl-8 pr-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-neutral-800 placeholder-slate-600 focus:border-amber-500 focus:ring-0 outline-none text-sm"
                                         />
                                     </div>
                                 </div>
@@ -547,13 +547,13 @@ export const Cheques: React.FC = () => {
 
                             {/* Notes */}
                             <div>
-                                <label className="block text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1.5 font-outfit">Memo / Notes</label>
+                                <label className="block text-xs font-semibold text-neutral-600 uppercase tracking-widest mb-1.5 font-outfit">Memo / Notes</label>
                                 <textarea
                                     rows={2}
                                     placeholder="Enter references, remarks..."
                                     value={notes}
                                     onChange={(e) => setNotes(e.target.value)}
-                                    className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 placeholder-slate-600 focus:border-amber-500 focus:ring-0 outline-none text-sm resize-none"
+                                    className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-neutral-800 placeholder-slate-600 focus:border-amber-500 focus:ring-0 outline-none text-sm resize-none"
                                 />
                             </div>
 
@@ -562,7 +562,7 @@ export const Cheques: React.FC = () => {
                                 <button
                                     type="button"
                                     onClick={() => setShowAddModal(false)}
-                                    className="px-4 py-2.5 border border-slate-805 hover:bg-slate-800 rounded-xl text-slate-400 hover:text-white transition-all text-sm font-semibold"
+                                    className="px-4 py-2.5 border border-slate-805 hover:bg-slate-800 rounded-xl text-neutral-600 hover:text-neutral-900 transition-all text-sm font-semibold"
                                 >
                                     Cancel
                                 </button>

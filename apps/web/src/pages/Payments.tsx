@@ -224,8 +224,8 @@ export const Payments: React.FC = () => {
         let debtorsCount = 0
 
         parties.forEach(p => {
-            if (p.total_due > 0) {
-                totalDues += p.total_due
+            totalDues += Number(p.total_due || 0)
+            if (Number(p.total_due || 0) > 0) {
                 debtorsCount++
             }
         })
@@ -269,7 +269,7 @@ export const Payments: React.FC = () => {
                     .select('id, order_number, total_amount, due_amount, status')
                     .eq('party_id', selectedParty.id)
                     .gt('due_amount', 0)
-                    .eq('status', 'DELIVERED')
+                    .neq('status', 'CANCELLED')
                     .order('created_at', { ascending: false })
 
                 if (error) throw error
@@ -416,8 +416,8 @@ export const Payments: React.FC = () => {
             {/* Header Title Section */}
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-3xl font-extrabold tracking-tight text-slate-100 font-outfit">Payments & Accounts</h1>
-                    <p className="text-sm text-slate-400">Record customer cash, check, and digital payments; audit transaction logs and outstanding credit books.</p>
+                    <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 font-outfit">Payments & Accounts</h1>
+                    <p className="text-sm text-neutral-600">Record customer cash, check, and digital payments; audit transaction logs and outstanding credit books.</p>
                 </div>
 
                 <div className="flex gap-2">
@@ -425,7 +425,7 @@ export const Payments: React.FC = () => {
                         onClick={handleRefresh}
                         title="Reload registry"
                         disabled={refreshing}
-                        className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 transition-colors text-slate-400 hover:text-white"
+                        className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 transition-colors text-neutral-600 hover:text-neutral-900"
                     >
                         <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
                     </button>
@@ -435,7 +435,7 @@ export const Payments: React.FC = () => {
                             resetForm()
                             setShowModal(true)
                         }}
-                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 font-bold transition-all text-xs text-white shadow-lg shadow-amber-500/10"
+                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 font-bold transition-all text-xs text-neutral-900 shadow-lg shadow-amber-500/10"
                     >
                         <Plus className="h-4 w-4" />
                         Record Payment
@@ -446,7 +446,7 @@ export const Payments: React.FC = () => {
             {/* Metrics cards */}
             <div className="grid gap-4 sm:grid-cols-3">
                 <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 backdrop-blur-sm">
-                    <div className="flex items-center justify-between text-slate-400">
+                    <div className="flex items-center justify-between text-neutral-600">
                         <span className="text-xs font-semibold uppercase tracking-wider">Total Outstanding Credit</span>
                         <TrendingUp className="h-4.5 w-4.5 text-rose-500" />
                     </div>
@@ -456,7 +456,7 @@ export const Payments: React.FC = () => {
                     <span className="text-[10px] text-slate-500 mt-1 block">Receivable from {metrics.debtorsCount} dealers</span>
                 </div>
                 <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 backdrop-blur-sm">
-                    <div className="flex items-center justify-between text-slate-400">
+                    <div className="flex items-center justify-between text-neutral-600">
                         <span className="text-xs font-semibold uppercase tracking-wider">Payments Collected Today</span>
                         <Wallet className="h-4.5 w-4.5 text-emerald-500" />
                     </div>
@@ -466,7 +466,7 @@ export const Payments: React.FC = () => {
                     <span className="text-[10px] text-slate-500 mt-1 block">Live transaction clearance</span>
                 </div>
                 <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 backdrop-blur-sm">
-                    <div className="flex items-center justify-between text-slate-400">
+                    <div className="flex items-center justify-between text-neutral-600">
                         <span className="text-xs font-semibold uppercase tracking-wider">Active Credits</span>
                         <User className="h-4.5 w-4.5 text-amber-500" />
                     </div>
@@ -487,7 +487,7 @@ export const Payments: React.FC = () => {
                         }}
                         className={`pb-3 font-bold text-xs uppercase tracking-wider border-b-2 transition-all ${activeViewTab === 'outstanding'
                             ? 'border-amber-500 text-amber-500'
-                            : 'border-transparent text-slate-450 hover:text-slate-205'
+                            : 'border-transparent text-slate-450 hover:text-neutral-800'
                             }`}
                     >
                         Customer Accounts & Ledgers
@@ -499,7 +499,7 @@ export const Payments: React.FC = () => {
                         }}
                         className={`pb-3 font-bold text-xs uppercase tracking-wider border-b-2 transition-all ${activeViewTab === 'history'
                             ? 'border-amber-500 text-amber-500'
-                            : 'border-transparent text-slate-450 hover:text-slate-205'
+                            : 'border-transparent text-slate-450 hover:text-neutral-800'
                             }`}
                     >
                         Payments Log & Receipts
@@ -522,7 +522,7 @@ export const Payments: React.FC = () => {
                                 ? "Search outstanding ledgers by name, code, town..."
                                 : "Filter transaction receipts by customer name, order number, txn reference..."
                         }
-                        className="bg-slate-950 border border-slate-800 rounded-xl py-2.5 pl-10 pr-4 text-slate-100 text-xs w-full placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+                        className="bg-slate-950 border border-slate-800 rounded-xl py-2.5 pl-10 pr-4 text-neutral-900 text-xs w-full placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
                     />
                 </div>
 
@@ -532,7 +532,7 @@ export const Payments: React.FC = () => {
                         <select
                             value={selectedMethodFilter}
                             onChange={(e) => setSelectedMethodFilter(e.target.value)}
-                            className="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-350 text-xs font-semibold focus:outline-none focus:border-amber-500 w-full md:w-auto"
+                            className="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-neutral-700 text-xs font-semibold focus:outline-none focus:border-amber-500 w-full md:w-auto"
                         >
                             <option value="">All Payment Methods</option>
                             <option value="CASH">CASH</option>
@@ -582,7 +582,7 @@ export const Payments: React.FC = () => {
                                             {p.party_code.replace("TEJAS-", "")}
                                         </div>
                                         <div className="min-w-0">
-                                            <h3 className="text-sm font-bold text-slate-100 group-hover:text-white truncate">{p.name}</h3>
+                                            <h3 className="text-sm font-bold text-neutral-900 group-hover:text-neutral-900 truncate">{p.name}</h3>
                                             <div className="flex gap-2.5 items-center mt-1 text-slate-450 text-xs">
                                                 <span>City: {p.city || 'N/A'}</span>
                                                 <span className="h-1 w-1 bg-slate-800 rounded-full"></span>
@@ -606,7 +606,7 @@ export const Payments: React.FC = () => {
                                                 fetchLedgerEntries(p.id)
                                                 setShowLedgerModal(true)
                                             }}
-                                            className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-300 hover:text-slate-100 font-black text-[10px] uppercase tracking-wide transition-all"
+                                            className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-neutral-700 hover:text-neutral-900 font-black text-[10px] uppercase tracking-wide transition-all"
                                         >
                                             View Ledger
                                         </button>
@@ -617,7 +617,7 @@ export const Payments: React.FC = () => {
                                                 setPartyFilterText(p.name)
                                                 setShowModal(true)
                                             }}
-                                            className="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-450 text-white font-black text-[10px] uppercase tracking-wide transition-all"
+                                            className="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-450 text-neutral-900 font-black text-[10px] uppercase tracking-wide transition-all"
                                         >
                                             Collect Payment
                                         </button>
@@ -643,14 +643,14 @@ export const Payments: React.FC = () => {
                             >
                                 <div className="space-y-1.5 flex-1 min-w-0">
                                     <div className="flex items-center gap-2 flex-wrap">
-                                        <h3 className="text-xs font-bold text-slate-100 uppercase tracking-wider truncate md:max-w-[200px]">
+                                        <h3 className="text-xs font-bold text-neutral-900 uppercase tracking-wider truncate md:max-w-[200px]">
                                             {pay.party_name}
                                         </h3>
                                         <span className="text-[9px] font-black py-0.5 px-2 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20 uppercase">
                                             {pay.method.replace('_', ' ')}
                                         </span>
                                         {pay.reference && (
-                                            <span className="text-[10px] font-mono font-medium text-slate-400 truncate bg-slate-905 px-1.5 py-0.5 rounded border border-slate-850">
+                                            <span className="text-[10px] font-mono font-medium text-neutral-600 truncate bg-slate-905 px-1.5 py-0.5 rounded border border-slate-850">
                                                 Ref: {pay.reference}
                                             </span>
                                         )}
@@ -659,7 +659,7 @@ export const Payments: React.FC = () => {
                                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-slate-450 text-xs mt-1">
                                         <span className="flex items-center gap-1">
                                             <ClipboardList className="h-3.5 w-3.5 text-slate-500 shrink-0" />
-                                            Order: <span className="font-bold text-slate-350">{pay.order_number}</span>
+                                            Order: <span className="font-bold text-neutral-700">{pay.order_number}</span>
                                         </span>
                                         <span className="flex items-center gap-1 font-mono text-[11px]">
                                             <Calendar className="h-3.5 w-3.5 text-slate-500" />
@@ -682,7 +682,7 @@ export const Payments: React.FC = () => {
                                     </div>
 
                                     {pay.notes && (
-                                        <p className="text-[11px] text-slate-400 leading-normal mt-1 border-l-2 border-slate-800 pl-2">
+                                        <p className="text-[11px] text-neutral-600 leading-normal mt-1 border-l-2 border-slate-800 pl-2">
                                             {pay.notes}
                                         </p>
                                     )}
@@ -709,11 +709,11 @@ export const Payments: React.FC = () => {
                             <div className="flex items-center gap-2">
                                 <Wallet className="h-5 w-5 text-amber-500" />
                                 <div>
-                                    <h2 className="text-base font-bold text-slate-100 font-outfit">
+                                    <h2 className="text-base font-bold text-neutral-900 font-outfit">
                                         Customer Ledger: {selectedLedgerParty.name}
                                     </h2>
-                                    <p className="text-xs text-slate-400 mt-0.5">
-                                        Party Code: <span className="font-mono text-slate-350">{selectedLedgerParty.party_code}</span> • City: {selectedLedgerParty.city || 'No City'}
+                                    <p className="text-xs text-neutral-600 mt-0.5">
+                                        Party Code: <span className="font-mono text-neutral-700">{selectedLedgerParty.party_code}</span> • City: {selectedLedgerParty.city || 'No City'}
                                     </p>
                                 </div>
                             </div>
@@ -723,7 +723,7 @@ export const Payments: React.FC = () => {
                                     setSelectedLedgerParty(null)
                                     setLedgerEntries([])
                                 }}
-                                className="rounded-xl p-1.5 text-slate-450 hover:text-white hover:bg-slate-800 transition-colors"
+                                className="rounded-xl p-1.5 text-slate-450 hover:text-neutral-900 hover:bg-slate-800 transition-colors"
                             >
                                 <X className="h-5 w-5" />
                             </button>
@@ -741,7 +741,7 @@ export const Payments: React.FC = () => {
                                 </div>
                                 <div className="rounded-2xl border border-slate-800 bg-slate-950/40 p-4">
                                     <span className="text-[10px] uppercase font-bold text-slate-500 block">Credit Limit</span>
-                                    <span className="text-lg font-black font-mono text-slate-200 mt-1 block">
+                                    <span className="text-lg font-black font-mono text-neutral-800 mt-1 block">
                                         रु {selectedLedgerParty.credit_limit.toLocaleString('en-NP', { minimumFractionDigits: 2 })}
                                     </span>
                                 </div>
@@ -769,7 +769,7 @@ export const Payments: React.FC = () => {
                                     ) : (
                                         <table className="w-full text-left border-collapse text-xs">
                                             <thead>
-                                                <tr className="bg-slate-900/50 border-b border-slate-850 text-slate-400 font-bold uppercase tracking-wider text-[10px]">
+                                                <tr className="bg-slate-900/50 border-b border-slate-850 text-neutral-600 font-bold uppercase tracking-wider text-[10px]">
                                                     <th className="p-4">Date</th>
                                                     <th className="p-4">Type</th>
                                                     <th className="p-4">Reference</th>
@@ -789,7 +789,7 @@ export const Payments: React.FC = () => {
                                                     const isReturn = entry.reference_type === 'order_return'
 
                                                     return (
-                                                        <tr key={entry.id} className="hover:bg-slate-900/30 text-slate-300">
+                                                        <tr key={entry.id} className="hover:bg-slate-900/30 text-neutral-700">
                                                             <td className="p-4 font-mono text-[11px]">
                                                                 {entry.transaction_date || new Date(entry.created_at).toISOString().split('T')[0]}
                                                             </td>
@@ -800,7 +800,7 @@ export const Payments: React.FC = () => {
                                                                         ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
                                                                         : isReturn
                                                                             ? 'bg-rose-500/10 text-rose-500 border-rose-500/20'
-                                                                            : 'bg-slate-800 text-slate-400 border-slate-700'
+                                                                            : 'bg-slate-800 text-neutral-600 border-slate-700'
                                                                     }`}>
                                                                     {entry.transaction_type}
                                                                 </span>
@@ -864,7 +864,7 @@ export const Payments: React.FC = () => {
                                                             <td className="p-4 max-w-[260px] truncate" title={entry.description}>
                                                                 {entry.description || 'N/A'}
                                                             </td>
-                                                            <td className="p-4 text-right font-mono font-bold text-slate-100">
+                                                            <td className="p-4 text-right font-mono font-bold text-neutral-900">
                                                                 {creditVal > 0 ? `रु ${creditVal.toLocaleString()}` : ''}
                                                             </td>
                                                             <td className="p-4 text-right font-mono font-bold text-emerald-500">
@@ -895,7 +895,7 @@ export const Payments: React.FC = () => {
                                         setSelectedLedgerParty(null)
                                         setLedgerEntries([])
                                     }}
-                                    className="px-4 py-2.5 bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-300 font-bold text-xs uppercase rounded-xl transition-colors"
+                                    className="px-4 py-2.5 bg-slate-900 border border-slate-800 hover:bg-slate-800 text-neutral-700 font-bold text-xs uppercase rounded-xl transition-colors"
                                 >
                                     Close Ledger
                                 </button>
@@ -911,7 +911,7 @@ export const Payments: React.FC = () => {
                                         setPartyFilterText(p.name)
                                         setShowModal(true)
                                     }}
-                                    className="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-450 text-white font-black text-xs uppercase rounded-xl transition-colors flex items-center gap-1.5"
+                                    className="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-450 text-neutral-900 font-black text-xs uppercase rounded-xl transition-colors flex items-center gap-1.5"
                                 >
                                     <CheckCircle2 className="h-4.5 w-4.5" />
                                     Collect Payment Receipt
@@ -930,14 +930,14 @@ export const Payments: React.FC = () => {
                         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-850 bg-slate-900/30">
                             <div className="flex items-center gap-2">
                                 <Wallet className="h-5 w-5 text-amber-500" />
-                                <h2 className="text-base font-bold text-slate-100 font-outfit">Log Customer Payment</h2>
+                                <h2 className="text-base font-bold text-neutral-900 font-outfit">Log Customer Payment</h2>
                             </div>
                             <button
                                 onClick={() => {
                                     setShowModal(false)
                                     resetForm()
                                 }}
-                                className="rounded-xl p-1.5 text-slate-450 hover:text-white hover:bg-slate-800 transition-colors"
+                                className="rounded-xl p-1.5 text-slate-450 hover:text-neutral-900 hover:bg-slate-800 transition-colors"
                             >
                                 <X className="h-5 w-5" />
                             </button>
@@ -967,7 +967,7 @@ export const Payments: React.FC = () => {
                                             }
                                         }}
                                         placeholder="Start typing customer or store name..."
-                                        className="bg-slate-950 border border-slate-800 rounded-xl py-2.5 pl-10 pr-4 text-white text-xs w-full placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+                                        className="bg-slate-950 border border-slate-800 rounded-xl py-2.5 pl-10 pr-4 text-neutral-900 text-xs w-full placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
                                     />
                                     {selectedParty && (
                                         <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
@@ -988,7 +988,7 @@ export const Payments: React.FC = () => {
                                                 className="px-4 py-2.5 hover:bg-slate-800 cursor-pointer text-xs flex justify-between items-center"
                                             >
                                                 <div>
-                                                    <span className="font-bold text-slate-200">{p.name}</span>
+                                                    <span className="font-bold text-neutral-800">{p.name}</span>
                                                     <span className="text-[10px] text-slate-450 block">{p.city || 'No City'}</span>
                                                 </div>
                                                 <span className="text-[10px] font-bold text-amber-550 font-mono">
@@ -1015,7 +1015,7 @@ export const Payments: React.FC = () => {
                                         <select
                                             value={selectedOrder?.id.toString() || ''}
                                             onChange={(e) => handleOrderSelect(e.target.value)}
-                                            className="rounded-xl bg-slate-950 border border-slate-800 p-2.5 text-slate-200 text-xs font-semibold focus:border-amber-500 focus:outline-none w-full"
+                                            className="rounded-xl bg-slate-950 border border-slate-800 p-2.5 text-neutral-800 text-xs font-semibold focus:border-amber-500 focus:outline-none w-full"
                                         >
                                             {unpaidOrders.map((o) => (
                                                 <option key={o.id} value={o.id}>
@@ -1052,7 +1052,7 @@ export const Payments: React.FC = () => {
                                                 max={selectedOrder.due_amount}
                                                 placeholder="e.g. 50000"
                                                 required
-                                                className="w-full rounded-xl bg-slate-950 border border-slate-800 p-2.5 text-slate-200 text-xs font-bold focus:border-amber-500 focus:outline-none"
+                                                className="w-full rounded-xl bg-slate-950 border border-slate-800 p-2.5 text-neutral-800 text-xs font-bold focus:border-amber-500 focus:outline-none"
                                             />
                                         </div>
                                     </div>
@@ -1065,7 +1065,7 @@ export const Payments: React.FC = () => {
                                             <select
                                                 value={methodInput}
                                                 onChange={(e) => setMethodInput(e.target.value)}
-                                                className="rounded-xl bg-slate-950 border border-slate-800 p-2.5 text-slate-200 text-xs font-semibold focus:border-amber-500 focus:outline-none w-full"
+                                                className="rounded-xl bg-slate-950 border border-slate-800 p-2.5 text-neutral-800 text-xs font-semibold focus:border-amber-500 focus:outline-none w-full"
                                             >
                                                 <option value="CASH">CASH (Physical Clearing)</option>
                                                 <option value="BANK_TRANSFER">BANK TRANSFER (Swift/Bank Ledger)</option>
@@ -1089,7 +1089,7 @@ export const Payments: React.FC = () => {
                                                     value={dateInput}
                                                     onChange={(e) => setDateInput(e.target.value)}
                                                     required
-                                                    className="w-full rounded-xl bg-slate-950 border border-slate-800 py-2.5 pl-10 pr-4 text-slate-200 text-xs font-bold focus:border-amber-500 focus:outline-none"
+                                                    className="w-full rounded-xl bg-slate-950 border border-slate-800 py-2.5 pl-10 pr-4 text-neutral-800 text-xs font-bold focus:border-amber-500 focus:outline-none"
                                                 />
                                             </div>
                                         </div>
@@ -1104,7 +1104,7 @@ export const Payments: React.FC = () => {
                                             value={referenceInput}
                                             onChange={(e) => setReferenceInput(e.target.value)}
                                             placeholder="e.g. TXN-882198B or Cheque # 992812"
-                                            className="w-full rounded-xl bg-slate-950 border border-slate-800 p-2.5 text-slate-205 text-xs font-semibold focus:border-amber-500 focus:outline-none"
+                                            className="w-full rounded-xl bg-slate-950 border border-slate-800 p-2.5 text-neutral-800 text-xs font-semibold focus:border-amber-500 focus:outline-none"
                                         />
                                     </div>
 
@@ -1117,7 +1117,7 @@ export const Payments: React.FC = () => {
                                             onChange={(e) => setNotesInput(e.target.value)}
                                             placeholder="Audit details, deposit account etc..."
                                             rows={2}
-                                            className="w-full rounded-xl bg-slate-955 border border-slate-800 p-2.5 text-slate-205 text-xs font-semibold focus:border-amber-500 focus:outline-none"
+                                            className="w-full rounded-xl bg-slate-955 border border-slate-800 p-2.5 text-neutral-800 text-xs font-semibold focus:border-amber-500 focus:outline-none"
                                         />
                                     </div>
                                 </>
@@ -1161,11 +1161,11 @@ export const Payments: React.FC = () => {
                         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-850 bg-slate-900/30">
                             <div className="flex items-center gap-2">
                                 <Wallet className="h-5 w-5 text-emerald-500" />
-                                <h2 className="text-base font-bold text-slate-100 font-outfit">Payment Clearance Receipt</h2>
+                                <h2 className="text-base font-bold text-neutral-900 font-outfit">Payment Clearance Receipt</h2>
                             </div>
                             <button
                                 onClick={() => setSelectedPaymentDetail(null)}
-                                className="rounded-xl p-1.5 text-slate-450 hover:text-white hover:bg-slate-800 transition-colors"
+                                className="rounded-xl p-1.5 text-slate-450 hover:text-neutral-900 hover:bg-slate-800 transition-colors"
                             >
                                 <X className="h-5 w-5" />
                             </button>
@@ -1186,26 +1186,26 @@ export const Payments: React.FC = () => {
                             <div className="grid grid-cols-2 gap-4 text-xs font-semibold">
                                 <div className="bg-slate-900/20 p-4 rounded-xl border border-slate-850">
                                     <span className="block text-[9px] uppercase tracking-wider text-slate-500 mb-1 font-bold">Party / Customer</span>
-                                    <span className="text-slate-200 block">{selectedPaymentDetail.party_name}</span>
+                                    <span className="text-neutral-800 block">{selectedPaymentDetail.party_name}</span>
                                 </div>
                                 <div className="bg-slate-900/20 p-4 rounded-xl border border-slate-850">
                                     <span className="block text-[9px] uppercase tracking-wider text-slate-500 mb-1 font-bold">Date Logged</span>
-                                    <span className="text-slate-200 block">{selectedPaymentDetail.payment_date || new Date(selectedPaymentDetail.created_at).toLocaleDateString()}</span>
+                                    <span className="text-neutral-800 block">{selectedPaymentDetail.payment_date || new Date(selectedPaymentDetail.created_at).toLocaleDateString()}</span>
                                 </div>
                                 <div className="bg-slate-900/20 p-4 rounded-xl border border-slate-850">
                                     <span className="block text-[9px] uppercase tracking-wider text-slate-500 mb-1 font-bold">Ref / Cheque No</span>
-                                    <span className="text-slate-350 block font-mono">{selectedPaymentDetail.reference || 'N/A'}</span>
+                                    <span className="text-neutral-700 block font-mono">{selectedPaymentDetail.reference || 'N/A'}</span>
                                 </div>
                                 <div className="bg-slate-900/20 p-4 rounded-xl border border-slate-850">
                                     <span className="block text-[9px] uppercase tracking-wider text-slate-500 mb-1 font-bold">Accounting User</span>
-                                    <span className="text-slate-200 block">{selectedPaymentDetail.recorded_by_name}</span>
+                                    <span className="text-neutral-800 block">{selectedPaymentDetail.recorded_by_name}</span>
                                 </div>
                             </div>
 
                             {/* Notes */}
                             <div className="bg-slate-950/40 p-4 rounded-xl border border-slate-850">
                                 <span className="block text-[10px] font-black uppercase text-slate-500 tracking-wider mb-2">Remarks / Notes</span>
-                                <p className="text-xs text-slate-350 italic leading-relaxed">
+                                <p className="text-xs text-neutral-700 italic leading-relaxed">
                                     {selectedPaymentDetail.notes || 'No remarks provided.'}
                                 </p>
                             </div>
@@ -1215,7 +1215,7 @@ export const Payments: React.FC = () => {
                         <div className="px-6 py-4 bg-slate-900/30 border-t border-slate-850 flex justify-end">
                             <button
                                 onClick={() => setSelectedPaymentDetail(null)}
-                                className="px-5 py-2.5 bg-slate-800 hover:bg-slate-750 text-slate-200 font-black text-xs uppercase rounded-xl transition-colors"
+                                className="px-5 py-2.5 bg-slate-800 hover:bg-slate-750 text-neutral-800 font-black text-xs uppercase rounded-xl transition-colors"
                             >
                                 Close Document
                             </button>

@@ -72,7 +72,7 @@ export const AuditLogs: React.FC = () => {
                 <div className="h-14 w-14 rounded-full bg-rose-500/10 flex items-center justify-center text-rose-500 border border-rose-500/20">
                     <ShieldAlert className="h-7 w-7" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-205">Access Denied</h3>
+                <h3 className="text-lg font-bold text-neutral-800">Access Denied</h3>
                 <p className="text-sm text-slate-500 max-w-sm">
                     You do not have permissions to access the database audit trail. This module is restricted to administrators and managers.
                 </p>
@@ -101,7 +101,7 @@ export const AuditLogs: React.FC = () => {
             case 'INSERT': return 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
             case 'UPDATE': return 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
             case 'DELETE': return 'bg-rose-500/10 text-rose-455 border border-rose-500/20'
-            default: return 'bg-slate-950 text-slate-400 border border-slate-800'
+            default: return 'bg-slate-950 text-neutral-600 border border-slate-800'
         }
     }
 
@@ -130,7 +130,7 @@ export const AuditLogs: React.FC = () => {
 
                             return (
                                 <tr key={k} className={isChanged ? 'bg-amber-500/5' : 'opacity-80'}>
-                                    <td className="py-1.5 px-2 font-semibold text-slate-350">{k}</td>
+                                    <td className="py-1.5 px-2 font-semibold text-neutral-700">{k}</td>
                                     <td className="py-1.5 px-2 text-rose-400 max-w-[200px] truncate">{oldVal !== undefined ? oldVal : '-'}</td>
                                     <td className="py-1.5 px-2 text-emerald-450 max-w-[200px] truncate">{newVal !== undefined ? newVal : '-'}</td>
                                 </tr>
@@ -146,8 +146,8 @@ export const AuditLogs: React.FC = () => {
         <div className="space-y-6">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-900">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-slate-100 sm:text-3xl font-outfit">Audit Trails</h1>
-                    <p className="text-sm text-slate-400">View real-time event logs of inserts, edits, and deletions on key structures</p>
+                    <h1 className="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl font-outfit">Audit Trails</h1>
+                    <p className="text-sm text-neutral-600">View real-time event logs of inserts, edits, and deletions on key structures</p>
                 </div>
             </div>
 
@@ -169,7 +169,7 @@ export const AuditLogs: React.FC = () => {
                         placeholder="Search table name, record ID, or staff..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-205 placeholder-slate-550 focus:border-amber-505 outline-none text-sm transition-all"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-neutral-800 placeholder-slate-550 focus:border-amber-505 outline-none text-sm transition-all"
                     />
                 </div>
 
@@ -178,7 +178,7 @@ export const AuditLogs: React.FC = () => {
                     <select
                         value={tableFilter}
                         onChange={(e) => setTableFilter(e.target.value)}
-                        className="w-full px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 outline-none text-sm"
+                        className="w-full px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-neutral-800 outline-none text-sm"
                     >
                         <option value="ALL">All Tables</option>
                         {tableNames.map(t => (
@@ -192,7 +192,7 @@ export const AuditLogs: React.FC = () => {
                     <select
                         value={actionFilter}
                         onChange={(e) => setActionFilter(e.target.value)}
-                        className="w-full px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 outline-none text-sm"
+                        className="w-full px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-neutral-800 outline-none text-sm"
                     >
                         <option value="ALL">All Actions (Any)</option>
                         <option value="INSERT">INSERT</option>
@@ -211,13 +211,13 @@ export const AuditLogs: React.FC = () => {
             ) : filteredLogs.length === 0 ? (
                 <div className="rounded-2xl border border-dashed border-slate-800 p-12 text-center text-slate-500">
                     <Database className="h-12 w-12 mx-auto mb-4 text-slate-600" />
-                    <h3 className="text-base font-semibold text-slate-300">No Audits Found</h3>
+                    <h3 className="text-base font-semibold text-neutral-700">No Audits Found</h3>
                     <p className="mt-1 text-sm text-slate-550">No events found matching your query criteria.</p>
                 </div>
             ) : (
                 <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/10">
                     <table className="w-full border-collapse text-left text-sm">
-                        <thead className="bg-slate-900/60 text-slate-400 uppercase text-[9px] font-bold tracking-wider">
+                        <thead className="bg-slate-900/60 text-neutral-600 uppercase text-[9px] font-bold tracking-wider">
                             <tr>
                                 <th className="px-5 py-3">Timestamp</th>
                                 <th className="px-5 py-3">Table Affected</th>
@@ -230,13 +230,13 @@ export const AuditLogs: React.FC = () => {
                         <tbody className="divide-y divide-slate-800/80">
                             {filteredLogs.map((log) => (
                                 <tr key={log.id} className="hover:bg-slate-900/40 transition-colors">
-                                    <td className="px-5 py-3 text-slate-400 text-xs">
+                                    <td className="px-5 py-3 text-neutral-600 text-xs">
                                         <div className="flex items-center gap-1">
                                             <Calendar className="h-3.5 w-3.5 text-slate-550" />
                                             <span>{new Date(log.changed_at).toLocaleString('en-IN')}</span>
                                         </div>
                                     </td>
-                                    <td className="px-5 py-3 font-semibold text-slate-205 font-mono text-xs">
+                                    <td className="px-5 py-3 font-semibold text-neutral-800 font-mono text-xs">
                                         {log.table_name}
                                     </td>
                                     <td className="px-5 py-3 text-center">
@@ -244,17 +244,17 @@ export const AuditLogs: React.FC = () => {
                                             {log.action}
                                         </span>
                                     </td>
-                                    <td className="px-5 py-3 text-right text-slate-350 font-mono text-xs">
+                                    <td className="px-5 py-3 text-right text-neutral-700 font-mono text-xs">
                                         #{log.record_id}
                                     </td>
                                     <td className="px-5 py-3">
-                                        <div className="font-medium text-slate-205">{log.profiles?.name || 'Automated Engine'}</div>
+                                        <div className="font-medium text-neutral-800">{log.profiles?.name || 'Automated Engine'}</div>
                                         <div className="text-[9px] text-slate-550 font-semibold">{log.profiles?.role || 'SYSTEM'}</div>
                                     </td>
                                     <td className="px-5 py-3 text-center">
                                         <button
                                             onClick={() => setSelectedLog(log)}
-                                            className="px-2.5 py-1 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-semibold"
+                                            className="px-2.5 py-1 bg-slate-900 border border-slate-800 hover:border-slate-700 text-neutral-700 hover:text-neutral-900 rounded-lg text-xs font-semibold"
                                         >
                                             Inspect Diff
                                         </button>
@@ -272,12 +272,12 @@ export const AuditLogs: React.FC = () => {
                     <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh]">
                         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/20">
                             <div>
-                                <h3 className="text-base font-bold text-slate-100">Audit Payload Inspector</h3>
+                                <h3 className="text-base font-bold text-neutral-900">Audit Payload Inspector</h3>
                                 <p className="text-xs text-slate-550 font-mono">Log ID #{selectedLog.id} | Table: {selectedLog.table_name}</p>
                             </div>
                             <button
                                 onClick={() => setSelectedLog(null)}
-                                className="text-slate-450 hover:text-white transition-colors"
+                                className="text-slate-450 hover:text-neutral-900 transition-colors"
                             >
                                 <X className="h-6 w-6" />
                             </button>
@@ -294,15 +294,15 @@ export const AuditLogs: React.FC = () => {
                                 </div>
                                 <div className="text-right">
                                     <p className="text-slate-500 uppercase tracking-widest text-[9px] font-bold">Affected Record ID</p>
-                                    <p className="mt-1.5 font-semibold text-slate-200 font-mono text-sm">#{selectedLog.record_id}</p>
+                                    <p className="mt-1.5 font-semibold text-neutral-800 font-mono text-sm">#{selectedLog.record_id}</p>
                                 </div>
                                 <div className="pt-2 border-t border-slate-800/80">
                                     <p className="text-slate-500 uppercase tracking-widest text-[9px] font-bold">Timestamp</p>
-                                    <p className="mt-1 font-medium text-slate-350">{new Date(selectedLog.changed_at).toLocaleString()}</p>
+                                    <p className="mt-1 font-medium text-neutral-700">{new Date(selectedLog.changed_at).toLocaleString()}</p>
                                 </div>
                                 <div className="pt-2 border-t border-slate-800/80 text-right">
                                     <p className="text-slate-500 uppercase tracking-widest text-[9px] font-bold">Operator</p>
-                                    <p className="mt-1 font-medium text-slate-205">{selectedLog.profiles?.name || 'System Auto'}</p>
+                                    <p className="mt-1 font-medium text-neutral-800">{selectedLog.profiles?.name || 'System Auto'}</p>
                                 </div>
                             </div>
 
@@ -321,7 +321,7 @@ export const AuditLogs: React.FC = () => {
                         <div className="px-6 py-4 border-t border-slate-800 bg-slate-950/30 flex justify-end">
                             <button
                                 onClick={() => setSelectedLog(null)}
-                                className="px-4 py-2 bg-slate-900 border border-slate-800 hover:bg-slate-850 rounded-xl text-slate-300 hover:text-white transition-all text-sm font-semibold"
+                                className="px-4 py-2 bg-slate-900 border border-slate-800 hover:bg-slate-850 rounded-xl text-neutral-700 hover:text-neutral-900 transition-all text-sm font-semibold"
                             >
                                 Close Inspector
                             </button>

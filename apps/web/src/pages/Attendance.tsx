@@ -280,8 +280,8 @@ export const Attendance: React.FC = () => {
         <div className="space-y-6">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-900">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-slate-100 sm:text-3xl font-outfit">Team GPS Attendance</h1>
-                    <p className="text-sm text-slate-400">Log work hours and verify field visits with secure tracking</p>
+                    <h1 className="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl font-outfit">Team GPS Attendance</h1>
+                    <p className="text-sm text-neutral-600">Log work hours and verify field visits with secure tracking</p>
                 </div>
             </div>
 
@@ -305,7 +305,7 @@ export const Attendance: React.FC = () => {
                     <div className={`rounded-2xl border border-slate-800 p-6 space-y-5 bg-white ${activeRecord ? 'accent-card-rose' : 'accent-card-amber'}`}>
                         <div className="flex items-center gap-2">
                             <Compass className="h-5 w-5 text-amber-600" />
-                            <h2 className="text-base font-bold text-slate-200">Duty Tracker</h2>
+                            <h2 className="text-base font-bold text-neutral-800">Duty Tracker</h2>
                         </div>
 
                         {activeRecord ? (
@@ -313,7 +313,7 @@ export const Attendance: React.FC = () => {
                                 <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-center space-y-2">
                                     <Clock className="h-8 w-8 text-rose-600 mx-auto animate-pulse" />
                                     <p className="text-xs text-rose-700 font-bold uppercase tracking-wider">Status: Checked In</p>
-                                    <p className="text-sm font-semibold text-slate-200">
+                                    <p className="text-sm font-semibold text-neutral-800">
                                         Since {new Date(activeRecord.check_in_time).toLocaleTimeString()}
                                     </p>
                                     {locationText ? (
@@ -346,7 +346,7 @@ export const Attendance: React.FC = () => {
                                         placeholder="e.g. Visiting Bhaktapur client"
                                         value={note}
                                         onChange={(e) => setNote(e.target.value)}
-                                        className="w-full px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-200 text-slate-200 placeholder-slate-400 focus:border-amber-500 outline-none text-sm"
+                                        className="w-full px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-200 text-neutral-800 placeholder-slate-400 focus:border-amber-500 outline-none text-sm"
                                     />
                                 </div>
 
@@ -376,7 +376,7 @@ export const Attendance: React.FC = () => {
                     <div className="rounded-2xl border border-slate-805 bg-white p-6 space-y-4 shadow-sm accent-card-blue">
                         <div className="flex items-center gap-2">
                             <Clock className="h-5 w-5 text-blue-600" />
-                            <h2 className="text-base font-bold text-slate-200">My Logging History</h2>
+                            <h2 className="text-base font-bold text-neutral-800">My Logging History</h2>
                         </div>
 
                         {loading ? (
@@ -402,9 +402,9 @@ export const Attendance: React.FC = () => {
                                                     </div>
                                                     <div className="flex-1 min-w-0 pt-1 flex justify-between space-x-4">
                                                         <div>
-                                                            <p className="text-xs text-slate-300">
+                                                            <p className="text-xs text-neutral-700">
                                                                 Checked In:{' '}
-                                                                <strong className="text-slate-100">
+                                                                <strong className="text-neutral-900">
                                                                     {new Date(rec.check_in_time).toLocaleString('en-IN')}
                                                                 </strong>
                                                                 {rec.notes && <span className="text-slate-500"> — "{rec.notes}"</span>}
@@ -430,7 +430,7 @@ export const Attendance: React.FC = () => {
                                                                 )}
 
                                                                 {rec.check_out_address && (
-                                                                    <p className="text-[10px] text-slate-400 font-sans leading-relaxed">
+                                                                    <p className="text-[10px] text-neutral-600 font-sans leading-relaxed">
                                                                         📍 Out: {rec.check_out_address}
                                                                     </p>
                                                                 )}
@@ -439,7 +439,7 @@ export const Attendance: React.FC = () => {
                                                         <div className="text-right text-xs text-slate-450">
                                                             {rec.check_out_time ? (
                                                                 <div>
-                                                                    <p className="font-semibold text-slate-200">
+                                                                    <p className="font-semibold text-neutral-800">
                                                                         Out: {new Date(rec.check_out_time).toLocaleTimeString()}
                                                                     </p>
                                                                     {rec.check_out_latitude && (
@@ -472,7 +472,7 @@ export const Attendance: React.FC = () => {
                 <div className="rounded-2xl border border-slate-805 bg-white p-6 space-y-4 shadow-sm accent-card-blue">
                     <div className="flex items-center gap-2 pb-2 border-b border-slate-200">
                         <Users className="h-5 w-5 text-blue-600" />
-                        <h2 className="text-base font-bold text-slate-200">Team Attendance Logs (Admin Master Panel)</h2>
+                        <h2 className="text-base font-bold text-neutral-800">Team Attendance Logs (Admin Master Panel)</h2>
                     </div>
 
                     {adminHistory.length === 0 ? (
@@ -494,10 +494,10 @@ export const Attendance: React.FC = () => {
                                     {adminHistory.map((log) => (
                                         <tr key={log.id} className="hover:bg-slate-900/30 transition-colors">
                                             <td className="px-4 py-3">
-                                                <div className="font-semibold text-slate-200">{log.profiles?.name || 'Staff Member'}</div>
+                                                <div className="font-semibold text-neutral-800">{log.profiles?.name || 'Staff Member'}</div>
                                                 <div className="text-[10px] text-slate-550 uppercase">{log.profiles?.role}</div>
                                             </td>
-                                            <td className="px-4 py-3 text-slate-205 font-medium">
+                                            <td className="px-4 py-3 text-neutral-800 font-medium">
                                                 {new Date(log.check_in_time).toLocaleString('en-IN')}
                                             </td>
                                             <td className="px-4 py-3">
@@ -517,7 +517,7 @@ export const Attendance: React.FC = () => {
                                                         )}
                                                     </div>
                                                 ) : (
-                                                    <span className="text-slate-400">Unavailable</span>
+                                                    <span className="text-neutral-600">Unavailable</span>
                                                 )}
                                             </td>
                                             <td className="px-4 py-3">
@@ -547,7 +547,7 @@ export const Attendance: React.FC = () => {
                                                     <span className="text-slate-450">{log.check_out_time ? 'Unavailable' : 'Active'}</span>
                                                 )}
                                             </td>
-                                            <td className="px-4 py-3 text-slate-400 max-w-[200px] truncate" title={log.notes || ''}>
+                                            <td className="px-4 py-3 text-neutral-600 max-w-[200px] truncate" title={log.notes || ''}>
                                                 {log.notes || '—'}
                                             </td>
                                         </tr>
@@ -563,7 +563,7 @@ export const Attendance: React.FC = () => {
                 <div className="rounded-2xl border border-slate-805 bg-white p-6 space-y-4 shadow-sm accent-card-emerald mt-6">
                     <div className="flex items-center gap-2 pb-2 border-b border-slate-200">
                         <MapPin className="h-5 w-5 text-emerald-600" />
-                        <h2 className="text-base font-bold text-slate-200">App Open Locations (Auto Tracked)</h2>
+                        <h2 className="text-base font-bold text-neutral-800">App Open Locations (Auto Tracked)</h2>
                     </div>
 
                     {autoLocations.length === 0 ? (
@@ -583,10 +583,10 @@ export const Attendance: React.FC = () => {
                                     {autoLocations.map((log) => (
                                         <tr key={log.id} className="hover:bg-slate-900/30 transition-colors">
                                             <td className="px-4 py-3">
-                                                <div className="font-semibold text-slate-200">{log.profiles?.name || 'Staff Member'}</div>
+                                                <div className="font-semibold text-neutral-800">{log.profiles?.name || 'Staff Member'}</div>
                                                 <div className="text-[10px] text-slate-550 uppercase">{log.profiles?.role}</div>
                                             </td>
-                                            <td className="px-4 py-3 text-slate-205 font-medium">
+                                            <td className="px-4 py-3 text-neutral-800 font-medium">
                                                 {new Date(log.created_at).toLocaleString('en-IN')}
                                             </td>
                                             <td className="px-4 py-3">
@@ -606,10 +606,10 @@ export const Attendance: React.FC = () => {
                                                         )}
                                                     </div>
                                                 ) : (
-                                                    <span className="text-slate-400">Unavailable</span>
+                                                    <span className="text-neutral-600">Unavailable</span>
                                                 )}
                                             </td>
-                                            <td className="px-4 py-3 text-slate-400">
+                                            <td className="px-4 py-3 text-neutral-600">
                                                 <span className="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-1 rounded inline-flex items-center gap-1">
                                                     <Navigation className="h-3 w-3" />
                                                     {log.event_type}

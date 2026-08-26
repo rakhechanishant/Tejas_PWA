@@ -850,7 +850,7 @@ export const Quotations: React.FC = () => {
                         onClick={() => { setViewMode('list'); resetCreator(); fetchQuotations(); }}
                         className={`pb-2 text-base font-bold border-b-2 transition-all flex items-center gap-2 ${viewMode === 'list'
                             ? 'border-amber-500 text-amber-500'
-                            : 'border-transparent text-slate-400 hover:text-slate-200'
+                            : 'border-transparent text-neutral-600 hover:text-neutral-800'
                             }`}
                     >
                         <Calendar className="h-5 w-5" />
@@ -860,7 +860,7 @@ export const Quotations: React.FC = () => {
                         onClick={() => { setViewMode('create'); resetCreator(); }}
                         className={`pb-2 text-base font-bold border-b-2 transition-all flex items-center gap-2 ${viewMode === 'create'
                             ? 'border-amber-500 text-amber-500'
-                            : 'border-transparent text-slate-400 hover:text-slate-200'
+                            : 'border-transparent text-neutral-600 hover:text-neutral-800'
                             }`}
                     >
                         <Calculator className="h-5 w-5" />
@@ -889,7 +889,7 @@ export const Quotations: React.FC = () => {
                 <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-4 text-sm font-semibold text-rose-400 flex items-center gap-2 no-print">
                     <AlertCircle className="h-4 w-4 shrink-0 text-rose-500" />
                     <span>{errorMsg}</span>
-                    <button onClick={() => setErrorMsg('')} className="ml-auto text-slate-400 hover:text-white">
+                    <button onClick={() => setErrorMsg('')} className="ml-auto text-neutral-600 hover:text-neutral-900">
                         <X className="h-4 w-4" />
                     </button>
                 </div>
@@ -900,7 +900,7 @@ export const Quotations: React.FC = () => {
                 <div className="space-y-4 no-print">
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pb-2">
                         <div>
-                            <h1 className="text-2xl font-extrabold text-slate-100 tracking-tight font-outfit">Quotation Register</h1>
+                            <h1 className="text-2xl font-extrabold text-neutral-900 tracking-tight font-outfit">Quotation Register</h1>
                             <p className="text-sm text-slate-500">Track estimates, manage approvals, and convert them to orders instantly</p>
                         </div>
                     </div>
@@ -913,13 +913,13 @@ export const Quotations: React.FC = () => {
                     ) : quotationsList.length === 0 ? (
                         <div className="rounded-2xl border border-dashed border-slate-800 p-12 text-center text-slate-550 bg-slate-900/10">
                             <Calculator className="h-12 w-12 mx-auto mb-4 text-slate-700" />
-                            <h3 className="text-sm font-bold text-slate-350">No Quotations Found</h3>
+                            <h3 className="text-sm font-bold text-neutral-700">No Quotations Found</h3>
                             <p className="text-xs text-slate-500 mt-1">Start by clicking "New Quotation" to draft a price estimate.</p>
                         </div>
                     ) : (
                         <div className="overflow-x-auto rounded-2xl border border-slate-805 bg-slate-900/10">
                             <table className="w-full border-collapse text-left text-sm">
-                                <thead className="bg-slate-950/45 text-slate-405 uppercase text-xs font-bold tracking-wider">
+                                <thead className="bg-slate-950/45 text-neutral-600 uppercase text-xs font-bold tracking-wider">
                                     <tr>
                                         <th className="px-5 py-3.5">Date</th>
                                         <th className="px-5 py-3.5">Quotation ID</th>
@@ -932,18 +932,18 @@ export const Quotations: React.FC = () => {
                                 <tbody className="divide-y divide-slate-800/80">
                                     {quotationsList.map((q) => (
                                         <tr key={q.id} className="hover:bg-slate-900/20 transition-colors">
-                                            <td className="px-5 py-3.5 text-slate-400">
+                                            <td className="px-5 py-3.5 text-neutral-600">
                                                 {new Date(q.created_at).toLocaleDateString('en-IN')}
                                             </td>
-                                            <td className="px-5 py-3.5 font-semibold text-slate-100 font-mono">
+                                            <td className="px-5 py-3.5 font-semibold text-neutral-900 font-mono">
                                                 {q.quotation_number}
                                             </td>
                                             <td className="px-5 py-3.5">
-                                                <div className="font-semibold text-slate-205">{q.parties?.Parties_name}</div>
+                                                <div className="font-semibold text-neutral-800">{q.parties?.Parties_name}</div>
                                                 <div className="text-xs text-slate-555 font-mono">{q.parties?.party_code}</div>
                                             </td>
                                             <td className="px-5 py-3">
-                                                <span className={`px-2.5 py-1 rounded text-[11px] font-extrabold tracking-widest ${q.status === 'DRAFT' ? 'bg-slate-850 text-slate-400 border border-slate-800' :
+                                                <span className={`px-2.5 py-1 rounded text-[11px] font-extrabold tracking-widest ${q.status === 'DRAFT' ? 'bg-slate-850 text-neutral-600 border border-slate-800' :
                                                     q.status === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-450 border border-emerald-500/20' :
                                                         q.status === 'CONVERTED' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' :
                                                             'bg-rose-500/10 text-rose-455 border border-rose-500/20'
@@ -951,13 +951,13 @@ export const Quotations: React.FC = () => {
                                                     {q.status}
                                                 </span>
                                             </td>
-                                            <td className="px-5 py-3.5 text-right font-mono font-bold text-slate-205">
+                                            <td className="px-5 py-3.5 text-right font-mono font-bold text-neutral-800">
                                                 रु {Number(q.total_amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                             </td>
                                             <td className="px-5 py-3 text-center">
                                                 <button
                                                     onClick={() => loadQuotationIntoEstimator(q)}
-                                                    className="px-3 py-1.5 bg-slate-900 border border-slate-850 hover:border-slate-700 text-slate-300 hover:text-white rounded-lg text-sm font-bold flex items-center gap-1.5 mx-auto"
+                                                    className="px-3 py-1.5 bg-slate-900 border border-slate-850 hover:border-slate-700 text-neutral-700 hover:text-neutral-900 rounded-lg text-sm font-bold flex items-center gap-1.5 mx-auto"
                                                 >
                                                     <Eye className="h-3.5 w-3.5 text-amber-500" />
                                                     <span>Inspect</span>
@@ -978,7 +978,7 @@ export const Quotations: React.FC = () => {
                         <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 no-print">
                             <div>
                                 <span className="text-[10px] font-bold text-slate-505 uppercase tracking-wider font-mono">Viewing Saved Quotation</span>
-                                <h4 className="text-sm font-extrabold text-slate-200 mt-0.5">{currentQuotationNumber} ({currentQuotationStatus})</h4>
+                                <h4 className="text-sm font-extrabold text-neutral-800 mt-0.5">{currentQuotationNumber} ({currentQuotationStatus})</h4>
                             </div>
                             <div className="flex flex-wrap gap-2 shrink-0">
                                 {currentQuotationStatus === 'DRAFT' && (
@@ -993,7 +993,7 @@ export const Quotations: React.FC = () => {
                                         <button
                                             onClick={() => handleSaveQuotation('DRAFT')}
                                             disabled={actionLoading}
-                                            className="py-1.5 px-3 bg-slate-850 hover:bg-slate-800 text-slate-300 font-semibold rounded-lg text-xs border border-slate-800 transition-all shrink-0"
+                                            className="py-1.5 px-3 bg-slate-850 hover:bg-slate-800 text-neutral-700 font-semibold rounded-lg text-xs border border-slate-800 transition-all shrink-0"
                                         >
                                             Update Draft Details
                                         </button>
@@ -1019,7 +1019,7 @@ export const Quotations: React.FC = () => {
                                 )}
                                 <button
                                     onClick={() => { setViewMode('list'); resetCreator(); }}
-                                    className="py-1.5 px-3 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-400 hover:text-white rounded-lg text-xs font-semibold flex items-center gap-1"
+                                    className="py-1.5 px-3 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-neutral-600 hover:text-neutral-900 rounded-lg text-xs font-semibold flex items-center gap-1"
                                 >
                                     <ArrowLeft className="h-3.5 w-3.5" />
                                     <span>Back to History</span>
@@ -1035,7 +1035,7 @@ export const Quotations: React.FC = () => {
                                 <Calculator className="h-5 w-5" />
                             </div>
                             <div>
-                                <h1 className="text-xl font-extrabold text-slate-105 tracking-tight font-outfit">
+                                <h1 className="text-xl font-extrabold text-neutral-900 tracking-tight font-outfit">
                                     {currentQuotationId ? `Estimate Detail Inspector` : `Quotation Estimator`}
                                 </h1>
                                 <p className="text-xs text-slate-500">Formulate price quotes, discounts, and dispatch estimates on the fly</p>
@@ -1057,7 +1057,7 @@ export const Quotations: React.FC = () => {
                                             <button
                                                 onClick={() => handleSaveQuotation('DRAFT')}
                                                 disabled={actionLoading}
-                                                className="py-2 px-4 bg-slate-800 hover:bg-slate-700 text-slate-350 font-bold rounded-xl text-xs border border-slate-750 transition-colors"
+                                                className="py-2 px-4 bg-slate-800 hover:bg-slate-700 text-neutral-700 font-bold rounded-xl text-xs border border-slate-750 transition-colors"
                                             >
                                                 Save Draft
                                             </button>
@@ -1097,7 +1097,7 @@ export const Quotations: React.FC = () => {
                         <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-4 text-xs font-semibold text-rose-400 flex items-center gap-2 no-print">
                             <AlertCircle className="h-4 w-4 shrink-0 text-rose-500" />
                             <span>{errorMsg}</span>
-                            <button onClick={() => setErrorMsg('')} className="ml-auto text-slate-400 hover:text-white">
+                            <button onClick={() => setErrorMsg('')} className="ml-auto text-neutral-600 hover:text-neutral-900">
                                 <X className="h-4 w-4" />
                             </button>
                         </div>
@@ -1108,7 +1108,7 @@ export const Quotations: React.FC = () => {
 
                         {/* Section 1: Customer Selection */}
                         <div className="rounded-2xl border border-slate-800/80 bg-slate-900/40 p-5 space-y-4 backdrop-blur-sm relative">
-                            <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                            <h3 className="text-sm font-extrabold uppercase tracking-wider text-neutral-600 flex items-center gap-2">
                                 <User className="h-5 w-5 text-amber-500" /> Customer / Party Setup
                             </h3>
 
@@ -1122,7 +1122,7 @@ export const Quotations: React.FC = () => {
                                     }}
                                     className={`py-2 text-sm font-bold rounded-lg transition-all ${!isGuest
                                         ? 'bg-amber-500/10 border border-amber-500/20 text-amber-500'
-                                        : 'text-slate-400 hover:text-slate-200'
+                                        : 'text-neutral-600 hover:text-neutral-800'
                                         }`}
                                 >
                                     Registered Party
@@ -1135,7 +1135,7 @@ export const Quotations: React.FC = () => {
                                     }}
                                     className={`py-2 text-sm font-bold rounded-lg transition-all ${isGuest
                                         ? 'bg-amber-500/10 border border-amber-500/20 text-amber-500'
-                                        : 'text-slate-400 hover:text-slate-200'
+                                        : 'text-neutral-600 hover:text-neutral-800'
                                         }`}
                                 >
                                     Guest / Retail Mode
@@ -1150,12 +1150,12 @@ export const Quotations: React.FC = () => {
                                         <button
                                             type="button"
                                             onClick={() => setIsPartyDropdownOpen(!isPartyDropdownOpen)}
-                                            className="w-full bg-slate-950 border border-slate-850 rounded-xl px-4 py-3 flex items-center justify-between text-sm text-slate-200 focus:outline-none focus:border-amber-500/40 transition-all text-left"
+                                            className="w-full bg-slate-950 border border-slate-850 rounded-xl px-4 py-3 flex items-center justify-between text-sm text-neutral-800 focus:outline-none focus:border-amber-500/40 transition-all text-left"
                                         >
                                             {selectedParty ? (
                                                 <div className="min-w-0 pr-2">
                                                     <div className="flex items-center gap-2">
-                                                        <span className="font-extrabold text-slate-200 truncate">{selectedParty.name}</span>
+                                                        <span className="font-extrabold text-neutral-800 truncate">{selectedParty.name}</span>
                                                         <span className="text-xs font-bold font-mono px-1.5 py-0.5 rounded bg-slate-900 text-slate-450 border border-slate-800">
                                                             {selectedParty.party_code}
                                                         </span>
@@ -1175,7 +1175,7 @@ export const Quotations: React.FC = () => {
                                                             e.stopPropagation()
                                                             setSelectedParty(null)
                                                         }}
-                                                        className="p-1 rounded-lg hover:bg-slate-900 text-slate-400 hover:text-rose-500 transition-colors"
+                                                        className="p-1 rounded-lg hover:bg-slate-900 text-neutral-600 hover:text-rose-500 transition-colors"
                                                         title="Clear Customer"
                                                     >
                                                         <X className="h-4 w-4" />
@@ -1194,7 +1194,7 @@ export const Quotations: React.FC = () => {
                                                         placeholder="Type to filter customer registry..."
                                                         value={partyQuery}
                                                         onChange={(e) => setPartyQuery(e.target.value)}
-                                                        className="w-full bg-slate-900 border border-slate-800 rounded-lg pl-9 pr-3 py-2.5 text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-amber-500/20"
+                                                        className="w-full bg-slate-900 border border-slate-800 rounded-lg pl-9 pr-3 py-2.5 text-sm text-neutral-800 placeholder:text-slate-600 focus:outline-none focus:border-amber-500/20"
                                                         autoFocus
                                                     />
                                                 </div>
@@ -1213,17 +1213,17 @@ export const Quotations: React.FC = () => {
                                                                 setIsPartyDropdownOpen(false)
                                                                 setPartyQuery('')
                                                             }}
-                                                            className={`p-3 hover:bg-slate-900 cursor-pointer flex items-center justify-between text-sm transition-colors rounded-md ${selectedParty?.id === p.id ? 'bg-amber-500/10 text-amber-500' : 'text-slate-350'
+                                                            className={`p-3 hover:bg-slate-900 cursor-pointer flex items-center justify-between text-sm transition-colors rounded-md ${selectedParty?.id === p.id ? 'bg-amber-500/10 text-amber-500' : 'text-neutral-700'
                                                                 }`}
                                                         >
                                                             <div className="min-w-0 pr-2">
-                                                                <span className="font-semibold text-slate-200 block truncate">{p.name}</span>
+                                                                <span className="font-semibold text-neutral-800 block truncate">{p.name}</span>
                                                                 <span className="text-xs text-slate-500 block truncate mt-0.5">
                                                                     {p.party_code} • {p.city || 'No Location'}
                                                                 </span>
                                                             </div>
                                                             <div className="text-right shrink-0">
-                                                                <span className="text-xs text-slate-400 block font-mono">रु {p.total_due.toLocaleString()}</span>
+                                                                <span className="text-xs text-neutral-600 block font-mono">रु {p.total_due.toLocaleString()}</span>
                                                                 {p.total_due > 0 && (
                                                                     <span className="text-[10px] text-rose-500 bg-rose-500/5 px-1.5 py-0.5 rounded border border-rose-500/10 font-bold uppercase mt-0.5 inline-block">Due</span>
                                                                 )}
@@ -1243,7 +1243,7 @@ export const Quotations: React.FC = () => {
                                         placeholder="e.g. Shyam hardware center"
                                         value={customPartyName}
                                         onChange={(e) => setCustomPartyName(e.target.value)}
-                                        className="w-full bg-slate-905 border border-slate-850 rounded-xl px-3 py-2.5 text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-amber-500/40"
+                                        className="w-full bg-slate-905 border border-slate-850 rounded-xl px-3 py-2.5 text-sm text-neutral-800 placeholder:text-slate-600 focus:outline-none focus:border-amber-500/40"
                                     />
                                 </div>
                             )}
@@ -1252,7 +1252,7 @@ export const Quotations: React.FC = () => {
                         {/* Section 2: Catalog Selector */}
                         <div className="rounded-2xl border border-slate-800/80 bg-slate-900/40 p-5 space-y-4 backdrop-blur-sm">
                             <div className="flex justify-between items-center">
-                                <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                                <h3 className="text-sm font-extrabold uppercase tracking-wider text-neutral-600 flex items-center gap-2">
                                     <Package className="h-5 w-5 text-amber-500" /> Catalog Products
                                 </h3>
                                 <button
@@ -1261,7 +1261,7 @@ export const Quotations: React.FC = () => {
                                         setSelectedBrand('ALL')
                                         setSelectedCategory('ALL')
                                     }}
-                                    className="text-xs font-bold text-slate-500 hover:text-slate-300"
+                                    className="text-xs font-bold text-slate-500 hover:text-neutral-700"
                                 >
                                     Reset Filters
                                 </button>
@@ -1276,7 +1276,7 @@ export const Quotations: React.FC = () => {
                                         placeholder="Search by SKU, series name..."
                                         value={productQuery}
                                         onChange={(e) => setProductQuery(e.target.value)}
-                                        className="w-full bg-slate-950 border border-slate-850 rounded-xl pl-9 pr-3 py-2.5 text-sm text-slate-200 placeholder:text-slate-655 focus:outline-none focus:border-amber-500/40"
+                                        className="w-full bg-slate-950 border border-slate-850 rounded-xl pl-9 pr-3 py-2.5 text-sm text-neutral-800 placeholder:text-slate-655 focus:outline-none focus:border-amber-500/40"
                                     />
                                 </div>
 
@@ -1284,7 +1284,7 @@ export const Quotations: React.FC = () => {
                                     <select
                                         value={selectedBrand}
                                         onChange={(e) => setSelectedBrand(e.target.value)}
-                                        className="bg-slate-950 border border-slate-850 rounded-xl px-3 py-2 text-sm text-slate-400 focus:outline-none"
+                                        className="bg-slate-950 border border-slate-850 rounded-xl px-3 py-2 text-sm text-neutral-600 focus:outline-none"
                                     >
                                         <option value="ALL">All Brands</option>
                                         {brands.map(b => b !== 'ALL' && <option key={b} value={b}>{b}</option>)}
@@ -1293,7 +1293,7 @@ export const Quotations: React.FC = () => {
                                     <select
                                         value={selectedCategory}
                                         onChange={(e) => setSelectedCategory(e.target.value)}
-                                        className="bg-slate-950 border border-slate-850 rounded-xl px-3 py-2 text-sm text-slate-400 focus:outline-none"
+                                        className="bg-slate-950 border border-slate-850 rounded-xl px-3 py-2 text-sm text-neutral-600 focus:outline-none"
                                     >
                                         <option value="ALL">All Categories</option>
                                         {categories.map(c => c !== 'ALL' && <option key={c} value={c}>{c}</option>)}
@@ -1324,7 +1324,7 @@ export const Quotations: React.FC = () => {
                                                     onClick={() => setSelectedDetailProduct(p)}
                                                     className="flex items-center gap-1.5 mt-1.5 cursor-pointer group/title"
                                                 >
-                                                    <span className="text-sm font-bold text-slate-200 truncate group-hover/title:text-amber-500 transition-colors">
+                                                    <span className="text-sm font-bold text-neutral-800 truncate group-hover/title:text-amber-500 transition-colors">
                                                         {p.product_name}
                                                     </span>
                                                     <Info className="h-3.5 w-3.5 text-slate-500 group-hover/title:text-amber-500 shrink-0" />
@@ -1336,7 +1336,7 @@ export const Quotations: React.FC = () => {
                                                     {p.ref_code && (
                                                         <>
                                                             <span>•</span>
-                                                            <span className="text-xs font-mono font-semibold text-slate-400">{p.ref_code}</span>
+                                                            <span className="text-xs font-mono font-semibold text-neutral-600">{p.ref_code}</span>
                                                         </>
                                                     )}
                                                 </div>
@@ -1364,7 +1364,7 @@ export const Quotations: React.FC = () => {
                             {/* Sheet title header */}
                             <div className="flex items-center justify-between pb-3 border-b border-slate-850">
                                 <div>
-                                    <h3 className="text-base font-bold text-slate-200">Draft Estimation Panel</h3>
+                                    <h3 className="text-base font-bold text-neutral-800">Draft Estimation Panel</h3>
                                     <p className="text-xs text-slate-500">Lines listing pricing rates and invoice totals</p>
                                 </div>
                                 <span className="text-xs font-semibold bg-slate-950 text-amber-550 border border-slate-850 px-3 py-1.5 rounded-lg">
@@ -1376,7 +1376,7 @@ export const Quotations: React.FC = () => {
                             <div className="divide-y divide-slate-850/60 max-h-[450px] overflow-y-auto overflow-x-hidden pr-2">
                                 {items.length === 0 ? (
                                     <div className="py-12 text-center text-sm text-slate-500 font-semibold flex flex-col items-center justify-center gap-2">
-                                        <Calculator className="h-10 w-10 text-slate-200 stroke-1" />
+                                        <Calculator className="h-10 w-10 text-neutral-800 stroke-1" />
                                         <span>No products added to quote. Add items from the side catalog.</span>
                                     </div>
                                 ) : (
@@ -1394,7 +1394,7 @@ export const Quotations: React.FC = () => {
                                                     <div className="min-w-0">
                                                         <div className="flex items-center gap-1.5 flex-wrap">
                                                             {it.product.ref_code && (
-                                                                <span className="text-xs font-mono font-bold px-1.5 py-0.5 rounded bg-slate-850 text-slate-400 border border-slate-800 uppercase">
+                                                                <span className="text-xs font-mono font-bold px-1.5 py-0.5 rounded bg-slate-850 text-neutral-600 border border-slate-800 uppercase">
                                                                     {it.product.ref_code}
                                                                 </span>
                                                             )}
@@ -1404,7 +1404,7 @@ export const Quotations: React.FC = () => {
                                                                 </span>
                                                             )}
                                                         </div>
-                                                        <span className="font-bold text-slate-200 mt-1 block truncate">
+                                                        <span className="font-bold text-neutral-800 mt-1 block truncate">
                                                             {it.product.product_name}
                                                         </span>
                                                     </div>
@@ -1416,7 +1416,7 @@ export const Quotations: React.FC = () => {
                                                     <div className="flex items-center gap-1 bg-slate-950 border border-slate-850 rounded-lg p-1">
                                                         <button
                                                             onClick={() => updateItemQty(it.product.id, it.quantity - 1)}
-                                                            className="h-6 w-6 bg-blue-50 border border-blue-105 rounded flex items-center justify-center text-xs text-blue-600 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-colors duration-200 active:scale-90"
+                                                            className="h-6 w-6 bg-blue-50 border border-blue-105 rounded flex items-center justify-center text-xs text-blue-600 hover:bg-blue-600 hover:text-neutral-900 hover:border-blue-600 transition-colors duration-200 active:scale-90"
                                                         >
                                                             <Minus className="h-2.5 w-2.5" />
                                                         </button>
@@ -1425,18 +1425,18 @@ export const Quotations: React.FC = () => {
                                                             min="1"
                                                             value={it.quantity}
                                                             onChange={(e) => updateItemQty(it.product.id, Number(e.target.value))}
-                                                            className="w-12 bg-transparent text-center font-bold text-sm text-slate-100 focus:outline-none"
+                                                            className="w-12 bg-transparent text-center font-bold text-sm text-neutral-900 focus:outline-none"
                                                         />
                                                         <button
                                                             onClick={() => updateItemQty(it.product.id, it.quantity + 1)}
-                                                            className="h-6 w-6 bg-blue-50 border border-blue-105 rounded flex items-center justify-center text-xs text-blue-600 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-colors duration-200 active:scale-90"
+                                                            className="h-6 w-6 bg-blue-50 border border-blue-105 rounded flex items-center justify-center text-xs text-blue-600 hover:bg-blue-600 hover:text-neutral-900 hover:border-blue-600 transition-colors duration-200 active:scale-90"
                                                         >
                                                             <Plus className="h-2.5 w-2.5" />
                                                         </button>
                                                     </div>
 
                                                     {/* Interactive discount pct */}
-                                                    <div className="flex items-center gap-1.5 bg-slate-955 border border-slate-850 rounded-lg py-1.5 px-3 text-xs font-semibold text-slate-400">
+                                                    <div className="flex items-center gap-1.5 bg-slate-955 border border-slate-850 rounded-lg py-1.5 px-3 text-xs font-semibold text-neutral-600">
                                                         <span>Disc:</span>
                                                         <input
                                                             type="number"
@@ -1444,7 +1444,7 @@ export const Quotations: React.FC = () => {
                                                             max="100"
                                                             value={it.discountPct}
                                                             onChange={(e) => updateItemDiscount(it.product.id, Number(e.target.value))}
-                                                            className="w-8 bg-transparent text-center text-slate-100 font-bold focus:outline-none"
+                                                            className="w-8 bg-transparent text-center text-neutral-900 font-bold focus:outline-none"
                                                         />
                                                         <span>%</span>
                                                     </div>
@@ -1457,7 +1457,7 @@ export const Quotations: React.FC = () => {
                                                                 <span className="font-extrabold text-amber-500 select-all block">रु {lineTotal.toLocaleString()}</span>
                                                             </>
                                                         ) : (
-                                                            <span className="font-extrabold text-slate-200 select-all block">रु {lineTotal.toLocaleString()}</span>
+                                                            <span className="font-extrabold text-neutral-800 select-all block">रु {lineTotal.toLocaleString()}</span>
                                                         )}
                                                     </div>
 
@@ -1481,7 +1481,7 @@ export const Quotations: React.FC = () => {
 
                                     {/* Overall Discount Input schemes */}
                                     <div className="space-y-3 p-3.5 rounded-xl bg-slate-950/60 border border-slate-850">
-                                        <label className="text-xs font-extrabold uppercase tracking-wider text-slate-400 block">Overall Invoice Reduction</label>
+                                        <label className="text-xs font-extrabold uppercase tracking-wider text-neutral-600 block">Overall Invoice Reduction</label>
                                         <div className="grid grid-cols-3 gap-1 grid-flow-row">
                                             {(['NONE', 'PERCENT', 'FLAT'] as const).map(mode => (
                                                 <button
@@ -1493,7 +1493,7 @@ export const Quotations: React.FC = () => {
                                                     }}
                                                     className={`py-1.5 text-xs font-bold rounded-lg border transition-all ${overallDiscountType === mode
                                                         ? 'bg-amber-500/10 border-amber-500/30 text-amber-500'
-                                                        : 'bg-slate-900 border-slate-800 hover:bg-slate-800 text-slate-400'
+                                                        : 'bg-slate-900 border-slate-800 hover:bg-slate-800 text-neutral-600'
                                                         }`}
                                                 >
                                                     {mode === 'NONE' ? 'No Discount' : mode === 'PERCENT' ? 'Percentage %' : 'Flat Cash'}
@@ -1503,7 +1503,7 @@ export const Quotations: React.FC = () => {
 
                                         {overallDiscountType !== 'NONE' && (
                                             <div className="flex items-center justify-between gap-3 mt-2 pt-2 border-t border-slate-900">
-                                                <span className="text-xs text-slate-400 font-bold">
+                                                <span className="text-xs text-neutral-600 font-bold">
                                                     {overallDiscountType === 'PERCENT' ? 'Enter Percentage' : 'Enter Dues Reduction (रु)'}
                                                 </span>
                                                 <div className="flex items-center gap-1.5 bg-slate-900 border border-slate-800 rounded-lg py-1 px-2.5">
@@ -1512,9 +1512,9 @@ export const Quotations: React.FC = () => {
                                                         min="0"
                                                         value={overallDiscountValue}
                                                         onChange={(e) => setOverallDiscountValue(Number(e.target.value))}
-                                                        className="w-16 bg-transparent text-right text-sm font-bold text-slate-105 focus:outline-none"
+                                                        className="w-16 bg-transparent text-right text-sm font-bold text-neutral-900 focus:outline-none"
                                                     />
-                                                    <span className="text-xs text-slate-400 font-bold">
+                                                    <span className="text-xs text-neutral-600 font-bold">
                                                         {overallDiscountType === 'PERCENT' ? '%' : 'रु'}
                                                     </span>
                                                 </div>
@@ -1524,9 +1524,9 @@ export const Quotations: React.FC = () => {
 
                                     {/* Arithmetic Breakdown */}
                                     <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-850 text-xs space-y-1.5 self-center">
-                                        <div className="flex justify-between items-center text-slate-400">
+                                        <div className="flex justify-between items-center text-neutral-600">
                                             <span>Estimate subtotal:</span>
-                                            <span className="font-semibold text-slate-200">रु {totals.subtotal.toLocaleString()}</span>
+                                            <span className="font-semibold text-neutral-800">रु {totals.subtotal.toLocaleString()}</span>
                                         </div>
                                         {totals.discount > 0 && (
                                             <div className="flex justify-between items-center text-rose-400 font-medium">
@@ -1548,7 +1548,7 @@ export const Quotations: React.FC = () => {
                                     <button
                                         onClick={handleSharePDF}
                                         disabled={sharingLoading}
-                                        className="flex-grow py-3 px-4 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-extrabold text-xs uppercase rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-blue-500/15 hover:shadow-blue-500/25 cursor-pointer disabled:opacity-50 transition-all duration-300 hover:-translate-y-0.5 active:scale-95 font-outfit"
+                                        className="flex-grow py-3 px-4 btn-primary-blue text-white font-extrabold text-xs uppercase rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-blue-500/15 hover:shadow-blue-500/25 cursor-pointer disabled:opacity-50 transition-all duration-300 hover:-translate-y-0.5 active:scale-95 font-outfit"
                                     >
                                         <Send className="h-4 w-4 text-white" /> {sharingLoading ? 'Generating PDF...' : 'Share PDF to WhatsApp'}
                                     </button>
@@ -1743,12 +1743,12 @@ export const Quotations: React.FC = () => {
                     <div className="relative w-full max-w-2xl rounded-3xl border border-slate-800 bg-slate-900/90 p-6 shadow-2xl backdrop-blur-xl max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-200">
                         <button
                             onClick={() => setSelectedDetailProduct(null)}
-                            className="absolute right-4 top-4 rounded-xl bg-slate-955/80 p-2 text-slate-400 hover:text-white border border-slate-800 transition-colors"
+                            className="absolute right-4 top-4 rounded-xl bg-slate-955/80 p-2 text-neutral-600 hover:text-neutral-900 border border-slate-800 transition-colors"
                         >
                             <X className="h-5 w-5" />
                         </button>
 
-                        <div className="grid gap-6 md:grid-cols-2 mt-4 text-slate-205">
+                        <div className="grid gap-6 md:grid-cols-2 mt-4 text-neutral-800">
                             {/* Visual Asset Container */}
                             <div className="relative aspect-square w-full rounded-2xl bg-slate-950/80 border border-slate-850 flex items-center justify-center p-6">
                                 {selectedDetailProduct.image_url ? (
@@ -1781,8 +1781,8 @@ export const Quotations: React.FC = () => {
                                         )}
                                     </div>
 
-                                    <h2 className="mt-3 text-xl font-extrabold text-slate-200 tracking-tight leading-snug">{selectedDetailProduct.product_name}</h2>
-                                    <p className="text-xs text-slate-400 font-semibold mt-1">
+                                    <h2 className="mt-3 text-xl font-extrabold text-neutral-800 tracking-tight leading-snug">{selectedDetailProduct.product_name}</h2>
+                                    <p className="text-xs text-neutral-600 font-semibold mt-1">
                                         Category: {selectedDetailProduct.category} {selectedDetailProduct.sub_category ? `• ${selectedDetailProduct.sub_category}` : ''}
                                     </p>
                                 </div>
@@ -1800,7 +1800,7 @@ export const Quotations: React.FC = () => {
 
                                 <div className="rounded-xl bg-slate-950/30 border border-slate-850 p-3">
                                     <span className="text-[8px] font-bold text-slate-500 uppercase tracking-wide block">Order Unit</span>
-                                    <span className="text-sm font-semibold text-slate-350 mt-0.5 block">
+                                    <span className="text-sm font-semibold text-neutral-700 mt-0.5 block">
                                         {selectedDetailProduct.unit || 'pcs'}
                                     </span>
                                 </div>
@@ -1811,8 +1811,8 @@ export const Quotations: React.FC = () => {
                         <div className="mt-6 space-y-4">
                             {selectedDetailProduct.specification && (
                                 <div className="rounded-xl bg-slate-950/30 border border-slate-850 p-4">
-                                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Technical Description & Specs</h4>
-                                    <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-line bg-slate-955/45 p-3 rounded-lg border border-slate-850">
+                                    <h4 className="text-xs font-bold text-neutral-600 uppercase tracking-wider mb-2">Technical Description & Specs</h4>
+                                    <p className="text-sm text-neutral-700 leading-relaxed whitespace-pre-line bg-slate-955/45 p-3 rounded-lg border border-slate-850">
                                         {selectedDetailProduct.specification}
                                     </p>
                                 </div>
@@ -1824,19 +1824,19 @@ export const Quotations: React.FC = () => {
                                 <div className="grid grid-cols-3 gap-4 text-center">
                                     <div className="border-r border-slate-850">
                                         <span className="text-[9px] font-bold text-slate-500 uppercase block">Pcs / Packet</span>
-                                        <span className="text-lg font-extrabold text-slate-200 mt-1 block">
+                                        <span className="text-lg font-extrabold text-neutral-800 mt-1 block">
                                             {selectedDetailProduct.packing_pcs || '—'}
                                         </span>
                                     </div>
                                     <div className="border-r border-slate-850">
                                         <span className="text-[9px] font-bold text-slate-500 uppercase block">Pcs / Box</span>
-                                        <span className="text-lg font-extrabold text-slate-200 mt-1 block">
+                                        <span className="text-lg font-extrabold text-neutral-800 mt-1 block">
                                             {selectedDetailProduct.packing_bx || '—'}
                                         </span>
                                     </div>
                                     <div>
                                         <span className="text-[9px] font-bold text-slate-500 uppercase block">Pcs / Carton</span>
-                                        <span className="text-lg font-extrabold text-slate-200 mt-1 block">
+                                        <span className="text-lg font-extrabold text-neutral-800 mt-1 block">
                                             {selectedDetailProduct.packing_car || '—'}
                                         </span>
                                     </div>

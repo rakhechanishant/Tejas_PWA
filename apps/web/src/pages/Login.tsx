@@ -38,7 +38,7 @@ export const Login: React.FC = () => {
     }
 
     return (
-        <div className="relative flex min-h-screen items-center justify-center overflow-hidden tejas-gradient px-4 py-12 text-slate-100 sm:px-6 lg:px-8">
+        <div className="relative flex min-h-screen items-center justify-center overflow-hidden tejas-gradient px-4 py-12 text-neutral-900 sm:px-6 lg:px-8">
             {/* Background gradients */}
             <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-amber-500/10 blur-3xl"></div>
             <div className="absolute -bottom-40 -right-40 h-96 w-96 rounded-full bg-blue-600/10 blur-3xl"></div>
@@ -47,9 +47,9 @@ export const Login: React.FC = () => {
                 {/* Logo and Header */}
                 <div className="flex flex-col items-center text-center">
                     <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-600 shadow-lg shadow-amber-500/20 border border-amber-400/20">
-                        <Hammer className="h-9 w-9 text-slate-100" />
+                        <Hammer className="h-9 w-9 text-neutral-900" />
                     </div>
-                    <h2 className="mt-6 text-3xl font-extrabold tracking-tight text-white sm:text-4xl font-outfit uppercase tracking-wide">
+                    <h2 className="mt-6 text-3xl font-extrabold tracking-tight text-neutral-900 sm:text-4xl font-outfit uppercase tracking-wide">
                         Tejas Impex
                     </h2>
                     <p className="mt-2 text-xs uppercase tracking-wider text-amber-500 font-semibold">
@@ -69,7 +69,7 @@ export const Login: React.FC = () => {
 
                         {/* Email Field */}
                         <div className="space-y-2">
-                            <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-wider text-slate-400">
+                            <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-wider text-neutral-600">
                                 Email Address
                             </label>
                             <div className="relative">
@@ -84,7 +84,7 @@ export const Login: React.FC = () => {
                                     required
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="block w-full rounded-xl border border-slate-800 bg-slate-950/80 py-3 pr-4 pl-10 text-white placeholder-slate-500 transition-colors focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+                                    className="block w-full rounded-xl border border-slate-800 bg-slate-950/80 py-3 pr-4 pl-10 text-neutral-900 placeholder-slate-500 transition-colors focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
                                     placeholder="name@nepalhardware.com"
                                 />
                             </div>
@@ -92,7 +92,7 @@ export const Login: React.FC = () => {
 
                         {/* Password Field */}
                         <div className="space-y-2">
-                            <label htmlFor="password" className="block text-xs font-semibold uppercase tracking-wider text-slate-400">
+                            <label htmlFor="password" className="block text-xs font-semibold uppercase tracking-wider text-neutral-600">
                                 Password
                             </label>
                             <div className="relative">
@@ -107,7 +107,7 @@ export const Login: React.FC = () => {
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="block w-full rounded-xl border border-slate-800 bg-slate-950/80 py-3 pr-4 pl-10 text-white placeholder-slate-500 transition-colors focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+                                    className="block w-full rounded-xl border border-slate-800 bg-slate-950/80 py-3 pr-4 pl-10 text-neutral-900 placeholder-slate-500 transition-colors focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
                                     placeholder="••••••••"
                                 />
                             </div>
@@ -118,7 +118,7 @@ export const Login: React.FC = () => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="group relative flex w-full justify-center rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 py-3.5 px-4 text-sm font-bold text-slate-100 hover:from-amber-400 hover:to-amber-500 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-slate-950 focus:outline-none disabled:opacity-50 transition-all duration-200"
+                                className="group relative flex w-full justify-center rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 py-3.5 px-4 text-sm font-bold text-neutral-900 hover:from-amber-400 hover:to-amber-500 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-slate-950 focus:outline-none disabled:opacity-50 transition-all duration-200"
                             >
                                 {loading ? (
                                     <Loader2 className="h-5 w-5 animate-spin" />

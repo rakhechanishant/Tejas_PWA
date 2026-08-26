@@ -250,8 +250,8 @@ export const Returns: React.FC = () => {
         <div className="space-y-6">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-900">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-slate-100 sm:text-3xl font-outfit">Returns Management</h1>
-                    <p className="text-sm text-slate-400">View and track customer product returns and store credits</p>
+                    <h1 className="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl font-outfit">Returns Management</h1>
+                    <p className="text-sm text-neutral-600">View and track customer product returns and store credits</p>
                 </div>
             </div>
 
@@ -274,13 +274,13 @@ export const Returns: React.FC = () => {
                         placeholder="Search by customer name, order number, reference..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-205 placeholder-slate-505 focus:border-amber-500/50 focus:ring-1 focus:ring-amber-505 outline-none transition-all text-sm"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-neutral-800 placeholder-slate-505 focus:border-amber-500/50 focus:ring-1 focus:ring-amber-505 outline-none transition-all text-sm"
                     />
                 </div>
                 <button
                     onClick={fetchReturns}
                     disabled={loading}
-                    className="w-full sm:w-auto px-4 py-2.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-slate-350 hover:text-white transition-colors text-sm font-semibold flex items-center justify-center gap-2"
+                    className="w-full sm:w-auto px-4 py-2.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-neutral-700 hover:text-neutral-900 transition-colors text-sm font-semibold flex items-center justify-center gap-2"
                 >
                     Reload Returns
                 </button>
@@ -295,13 +295,13 @@ export const Returns: React.FC = () => {
             ) : filteredReturns.length === 0 ? (
                 <div className="rounded-2xl border border-dashed border-slate-800 p-12 text-center text-slate-500">
                     <Undo2 className="h-12 w-12 mx-auto mb-4 text-slate-600" />
-                    <h3 className="text-base font-semibold text-slate-300">No Returns Found</h3>
+                    <h3 className="text-base font-semibold text-neutral-700">No Returns Found</h3>
                     <p className="mt-1 text-sm text-slate-550">Matches will show up here after sales returns are processed in Orders.</p>
                 </div>
             ) : (
                 <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/10">
                     <table className="w-full border-collapse text-left text-sm">
-                        <thead className="bg-slate-900/60 text-slate-400 uppercase text-[10px] font-bold tracking-wider">
+                        <thead className="bg-slate-900/60 text-neutral-600 uppercase text-[10px] font-bold tracking-wider">
                             <tr>
                                 <th className="px-6 py-4">Return ID</th>
                                 <th className="px-6 py-4">Customer</th>
@@ -318,13 +318,13 @@ export const Returns: React.FC = () => {
                                         RET-{String(ret.id).padStart(4, '0')}
                                     </td>
                                     <td className="px-6 py-4">
-                                        <div className="font-semibold text-slate-200">{ret.parties?.Parties_name}</div>
+                                        <div className="font-semibold text-neutral-800">{ret.parties?.Parties_name}</div>
                                         <div className="text-[11px] text-slate-500">{ret.parties?.city || 'Nepal'}</div>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <div className="text-slate-300 font-medium">{ret.orders?.order_number || 'N/A'}</div>
+                                        <div className="text-neutral-700 font-medium">{ret.orders?.order_number || 'N/A'}</div>
                                     </td>
-                                    <td className="px-6 py-4 text-slate-400">
+                                    <td className="px-6 py-4 text-neutral-600">
                                         <div className="flex items-center gap-1.5 text-xs">
                                             <Calendar className="h-3.5 w-3.5 text-slate-500" />
                                             <span>{new Date(ret.created_at).toLocaleDateString('en-IN')}</span>
@@ -336,7 +336,7 @@ export const Returns: React.FC = () => {
                                     <td className="px-6 py-4 text-center">
                                         <button
                                             onClick={() => fetchReturnItems(ret)}
-                                            className="px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-slate-300 hover:text-white transition-colors text-xs font-semibold"
+                                            className="px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-neutral-700 hover:text-neutral-900 transition-colors text-xs font-semibold"
                                         >
                                             View Details
                                         </button>
@@ -354,12 +354,12 @@ export const Returns: React.FC = () => {
                     <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh]">
                         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/20">
                             <div>
-                                <h3 className="text-base font-bold text-slate-100">Sales Return Detailed View</h3>
+                                <h3 className="text-base font-bold text-neutral-900">Sales Return Detailed View</h3>
                                 <p className="text-xs text-slate-500 font-mono">RET-{String(selectedReturn.id).padStart(4, '0')}</p>
                             </div>
                             <button
                                 onClick={() => setSelectedReturn(null)}
-                                className="text-slate-450 hover:text-white transition-colors"
+                                className="text-slate-450 hover:text-neutral-900 transition-colors"
                             >
                                 <X className="h-6 w-6" />
                             </button>
@@ -370,19 +370,19 @@ export const Returns: React.FC = () => {
                             <div className="grid grid-cols-2 gap-4 bg-slate-950/30 p-4 rounded-xl border border-slate-800/60 text-xs">
                                 <div>
                                     <p className="text-slate-500 uppercase tracking-widest text-[9px] font-bold">Party / Customer</p>
-                                    <p className="mt-1 font-semibold text-slate-200">{selectedReturn.parties?.Parties_name}</p>
+                                    <p className="mt-1 font-semibold text-neutral-800">{selectedReturn.parties?.Parties_name}</p>
                                 </div>
                                 <div className="text-right">
                                     <p className="text-slate-500 uppercase tracking-widest text-[9px] font-bold">Originating Order</p>
-                                    <p className="mt-1 font-semibold text-slate-200">{selectedReturn.orders?.order_number || 'N/A'}</p>
+                                    <p className="mt-1 font-semibold text-neutral-800">{selectedReturn.orders?.order_number || 'N/A'}</p>
                                 </div>
                                 <div className="pt-2 border-t border-slate-800/80">
                                     <p className="text-slate-500 uppercase tracking-widest text-[9px] font-bold">Issued At</p>
-                                    <p className="mt-1 font-medium text-slate-350">{new Date(selectedReturn.created_at).toLocaleString()}</p>
+                                    <p className="mt-1 font-medium text-neutral-700">{new Date(selectedReturn.created_at).toLocaleString()}</p>
                                 </div>
                                 <div className="pt-2 border-t border-slate-800/80 text-right">
                                     <p className="text-slate-500 uppercase tracking-widest text-[9px] font-bold">Processed By</p>
-                                    <p className="mt-1 font-medium text-slate-350">{selectedReturn.profiles?.name || 'Staff'}</p>
+                                    <p className="mt-1 font-medium text-neutral-700">{selectedReturn.profiles?.name || 'Staff'}</p>
                                 </div>
                             </div>
 
@@ -400,17 +400,17 @@ export const Returns: React.FC = () => {
                                         {(selectedReturn.return_items || []).map((item) => (
                                             <div key={item.id} className="p-4 flex items-center justify-between text-sm hover:bg-slate-900/30 transition-colors">
                                                 <div>
-                                                    <div className="font-semibold text-slate-200">{item.products?.product_name || 'Product'}</div>
+                                                    <div className="font-semibold text-neutral-800">{item.products?.product_name || 'Product'}</div>
                                                     <div className="text-[11px] text-slate-550 mt-0.5">SKU: {item.products?.ref_code || 'N/A'}</div>
                                                 </div>
                                                 <div className="text-right">
-                                                    <div className="text-slate-300 font-medium">{item.quantity_returned} Units</div>
+                                                    <div className="text-neutral-700 font-medium">{item.quantity_returned} Units</div>
                                                     <div className="text-emerald-400 font-semibold mt-0.5">रु {Number(item.refund_amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</div>
                                                 </div>
                                             </div>
                                         ))}
 
-                                        <div className="p-4 bg-slate-900/60 flex justify-between font-bold text-slate-100 text-sm border-t border-slate-800">
+                                        <div className="p-4 bg-slate-900/60 flex justify-between font-bold text-neutral-900 text-sm border-t border-slate-800">
                                             <span>Total Refund Credit</span>
                                             <span className="text-emerald-400">रु {Number(selectedReturn.total_refund).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
                                         </div>
@@ -420,11 +420,11 @@ export const Returns: React.FC = () => {
 
                             {selectedReturn.notes && (
                                 <div className="p-4 rounded-xl bg-slate-950/40 border border-slate-800/80 text-xs">
-                                    <p className="font-bold text-slate-400 mb-1 flex items-center gap-1">
+                                    <p className="font-bold text-neutral-600 mb-1 flex items-center gap-1">
                                         <Info className="h-3.5 w-3.5 text-slate-500" />
                                         <span>Remarks / Explanation</span>
                                     </p>
-                                    <p className="text-slate-300 whitespace-pre-wrap leading-relaxed">{selectedReturn.notes}</p>
+                                    <p className="text-neutral-700 whitespace-pre-wrap leading-relaxed">{selectedReturn.notes}</p>
                                 </div>
                             )}
                         </div>
@@ -432,14 +432,14 @@ export const Returns: React.FC = () => {
                         <div className="px-6 py-4 border-t border-slate-800 bg-slate-950/30 flex justify-end gap-3">
                             <button
                                 onClick={() => setSelectedReturn(null)}
-                                className="px-4 py-2 border border-slate-800 hover:border-slate-700 bg-slate-900 rounded-xl text-slate-300 hover:text-white transition-colors text-sm font-semibold"
+                                className="px-4 py-2 border border-slate-800 hover:border-slate-700 bg-slate-900 rounded-xl text-neutral-700 hover:text-neutral-900 transition-colors text-sm font-semibold"
                             >
                                 Close
                             </button>
                             <button
                                 onClick={() => handlePrintDebitNote(selectedReturn)}
                                 disabled={detailedLoading}
-                                className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl transition-colors text-sm font-bold flex items-center gap-1.5"
+                                className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-neutral-900 rounded-xl transition-colors text-sm font-bold flex items-center gap-1.5"
                             >
                                 <Printer className="h-4.5 w-4.5" />
                                 <span>Print Debit Note</span>

@@ -403,11 +403,11 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ parties, products, onClose, o
                             <Receipt className="h-4.5 w-4.5 text-emerald-400" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-bold text-white">New Sales Invoice</h2>
+                            <h2 className="text-lg font-bold text-neutral-900">New Sales Invoice</h2>
                             <p className="text-xs text-slate-500">Stock OUT — tax invoice for customer</p>
                         </div>
                     </div>
-                    <button onClick={onClose} className="rounded-xl p-2 text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
+                    <button onClick={onClose} className="rounded-xl p-2 text-neutral-600 hover:text-neutral-900 hover:bg-slate-800 transition-colors">
                         <X className="h-5 w-5" />
                     </button>
                 </div>
@@ -459,7 +459,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ parties, products, onClose, o
                     {/* Items */}
                     <div>
                         <div className="flex items-center justify-between mb-3">
-                            <h3 className="text-sm font-bold text-slate-300">Items</h3>
+                            <h3 className="text-sm font-bold text-neutral-700">Items</h3>
                             <button onClick={() => setItems(p => [...p, newRow()])} className="flex items-center gap-1.5 text-xs font-medium text-amber-400 hover:text-amber-300">
                                 <Plus className="h-3.5 w-3.5" /> Add Row
                             </button>
@@ -469,7 +469,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ parties, products, onClose, o
                                 <thead>
                                     <tr className="border-b border-slate-800 bg-slate-950/60">
                                         {['#', 'Product / Search', 'Ref Code', 'Qty', 'Unit', 'Rate', 'Less%', 'Amount', ''].map(h => (
-                                            <th key={h} className="px-3 py-2.5 text-left font-semibold text-slate-400 uppercase tracking-wide whitespace-nowrap">{h}</th>
+                                            <th key={h} className="px-3 py-2.5 text-left font-semibold text-neutral-600 uppercase tracking-wide whitespace-nowrap">{h}</th>
                                         ))}
                                     </tr>
                                 </thead>
@@ -499,7 +499,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ parties, products, onClose, o
                                                     <div className="absolute top-full left-0 z-50 mt-1 w-[460px] max-h-[500px] overflow-y-auto rounded-xl border border-slate-700 bg-slate-900 shadow-2xl scrollbar-thin scrollbar-thumb-slate-800">
                                                         {filteredProducts(productSearch[item.id] ?? '').map(p => (
                                                             <button key={p.id} onMouseDown={() => selectProduct(item.id, p)}
-                                                                className="w-full text-left px-3 py-2 hover:bg-slate-800 border-b border-slate-800/60 last:border-b-0 flex items-start gap-2.5 transition-colors text-slate-100">
+                                                                className="w-full text-left px-3 py-2 hover:bg-slate-800 border-b border-slate-800/60 last:border-b-0 flex items-start gap-2.5 transition-colors text-neutral-900">
                                                                 <div className="h-10 w-10 rounded-lg bg-slate-950/80 border border-slate-800 flex items-center justify-center p-1 shrink-0">
                                                                     {p.image_url ? (
                                                                         <img src={p.image_url} alt={p.product_name} className="h-full w-full object-contain" />
@@ -509,18 +509,18 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ parties, products, onClose, o
                                                                 </div>
                                                                 <div className="flex-1 min-w-0">
                                                                     <div className="flex items-center justify-between gap-1">
-                                                                        <span className="font-bold text-xs text-slate-100 truncate block">{p.product_name}</span>
+                                                                        <span className="font-bold text-xs text-neutral-900 truncate block">{p.product_name}</span>
                                                                         <span className="text-[10px] font-mono font-bold text-amber-500 bg-slate-950/60 px-1.5 py-0.2 rounded border border-slate-800 shrink-0">
                                                                             {p.ref_code || 'No Ref'}
                                                                         </span>
                                                                     </div>
-                                                                    <div className="flex items-center gap-1.5 mt-0.5 text-[10px] text-slate-400">
-                                                                        <span className="px-1.5 py-0.2 bg-slate-950 text-[9px] rounded text-slate-400 font-medium">{p.company || 'Generic'}</span>
+                                                                    <div className="flex items-center gap-1.5 mt-0.5 text-[10px] text-neutral-600">
+                                                                        <span className="px-1.5 py-0.2 bg-slate-950 text-[9px] rounded text-neutral-600 font-medium">{p.company || 'Generic'}</span>
                                                                         <span>•</span>
                                                                         <span>{p.category || 'No Category'}</span>
                                                                     </div>
                                                                     {p.specification && (
-                                                                        <p className="mt-0.5 text-[9px] text-slate-400 line-clamp-1 italic">
+                                                                        <p className="mt-0.5 text-[9px] text-neutral-600 line-clamp-1 italic">
                                                                             {p.specification}
                                                                         </p>
                                                                     )}
@@ -575,19 +575,19 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ parties, products, onClose, o
                             <textarea className="field w-full resize-none" rows={3} value={remarks} onChange={e => setRemarks(e.target.value)} placeholder="Optional notes..." />
                         </div>
                         <div className="min-w-[240px] space-y-1.5 rounded-xl border border-slate-800 bg-slate-950/40 p-4">
-                            <div className="flex justify-between text-sm text-slate-400"><span>Sub Total:</span><span className="font-bold text-slate-100">{formatNPR(subtotal)}</span></div>
-                            <div className="flex justify-between text-sm text-slate-400"><span>VAT {vatRate}%:</span><span className="font-bold text-emerald-400">{formatNPR(vatAmount)}</span></div>
-                            <div className="flex justify-between text-base font-extrabold border-t border-slate-800 pt-2 mt-2 text-white"><span>Net Total:</span><span className="text-amber-400">{formatNPR(netTotal)}</span></div>
+                            <div className="flex justify-between text-sm text-neutral-600"><span>Sub Total:</span><span className="font-bold text-neutral-900">{formatNPR(subtotal)}</span></div>
+                            <div className="flex justify-between text-sm text-neutral-600"><span>VAT {vatRate}%:</span><span className="font-bold text-emerald-400">{formatNPR(vatAmount)}</span></div>
+                            <div className="flex justify-between text-base font-extrabold border-t border-slate-800 pt-2 mt-2 text-neutral-900"><span>Net Total:</span><span className="text-amber-400">{formatNPR(netTotal)}</span></div>
                             <div className="text-[10px] text-slate-500 pt-1 italic">{numberToWords(netTotal)}</div>
                         </div>
                     </div>
 
                     <div className="flex justify-end gap-3 border-t border-slate-800 pt-4">
-                        <button onClick={onClose} className="px-6 py-2.5 rounded-xl border border-slate-700 text-slate-400 hover:text-white hover:bg-slate-800 text-sm font-medium transition-colors">
+                        <button onClick={onClose} className="px-6 py-2.5 rounded-xl border border-slate-700 text-neutral-600 hover:text-neutral-900 hover:bg-slate-800 text-sm font-medium transition-colors">
                             Cancel
                         </button>
                         <button onClick={handleSave} disabled={saving}
-                            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold transition-colors disabled:opacity-50">
+                            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-neutral-900 text-sm font-bold transition-colors disabled:opacity-50">
                             <Save className="h-4 w-4" />
                             {saving ? 'Saving…' : 'Save Invoice'}
                         </button>
@@ -815,15 +815,15 @@ export const Sales: React.FC = () => {
 
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-3xl font-extrabold tracking-tight text-white font-outfit">Sales Invoices</h1>
-                    <p className="text-sm text-slate-400">Stock OUT — tax invoices to customers. Inventory updated automatically.</p>
+                    <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 font-outfit">Sales Invoices</h1>
+                    <p className="text-sm text-neutral-600">Stock OUT — tax invoices to customers. Inventory updated automatically.</p>
                 </div>
                 <div className="flex items-center gap-2">
-                    <button onClick={fetchAll} title="Refresh" className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-colors">
+                    <button onClick={fetchAll} title="Refresh" className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 hover:bg-slate-800 text-neutral-600 hover:text-neutral-900 transition-colors">
                         <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
                     </button>
                     <button onClick={() => setShowForm(true)}
-                        className="flex items-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 px-4 py-2.5 text-sm font-bold text-white transition-colors">
+                        className="flex items-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 px-4 py-2.5 text-sm font-bold text-neutral-900 transition-colors">
                         <Plus className="h-4 w-4" /> New Sales Invoice
                     </button>
                 </div>
@@ -838,7 +838,7 @@ export const Sales: React.FC = () => {
             <div className="relative">
                 <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                 <input
-                    className="block w-full rounded-xl border border-slate-800 bg-slate-950/80 py-3 pl-10 pr-4 text-white placeholder-slate-500 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
+                    className="block w-full rounded-xl border border-slate-800 bg-slate-950/80 py-3 pl-10 pr-4 text-neutral-900 placeholder-slate-500 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
                     placeholder="Search by invoice number or party..."
                     value={search} onChange={e => setSearch(e.target.value)}
                 />
@@ -847,7 +847,7 @@ export const Sales: React.FC = () => {
             {/* Filters Row */}
             <div className="grid gap-3 grid-cols-1 sm:grid-cols-3 bg-slate-950/40 p-4 rounded-xl border border-slate-800/80">
                 <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Party Filter</label>
+                    <label className="text-[10px] font-bold text-neutral-600 uppercase tracking-wider">Party Filter</label>
                     <select
                         value={selectedPartyId}
                         onChange={e => setSelectedPartyId(e.target.value === 'ALL' ? 'ALL' : Number(e.target.value))}
@@ -860,7 +860,7 @@ export const Sales: React.FC = () => {
                     </select>
                 </div>
                 <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Date Filter</label>
+                    <label className="text-[10px] font-bold text-neutral-600 uppercase tracking-wider">Date Filter</label>
                     <select
                         value={dateFilter}
                         onChange={e => setDateFilter(e.target.value as any)}
@@ -873,7 +873,7 @@ export const Sales: React.FC = () => {
                     </select>
                 </div>
                 <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Invoice Type</label>
+                    <label className="text-[10px] font-bold text-neutral-600 uppercase tracking-wider">Invoice Type</label>
                     <select
                         value={typeFilter}
                         onChange={e => setTypeFilter(e.target.value as any)}
@@ -891,7 +891,7 @@ export const Sales: React.FC = () => {
             ) : filtered.length === 0 ? (
                 <div className="flex flex-col items-center justify-center p-16 text-center rounded-2xl border border-slate-800 bg-slate-900/20">
                     <Receipt className="h-12 w-12 text-slate-600 mb-3" />
-                    <h3 className="text-lg font-bold text-slate-400">No sales invoices yet</h3>
+                    <h3 className="text-lg font-bold text-neutral-600">No sales invoices yet</h3>
                     <p className="text-xs text-slate-500 mt-1">Click "New Sales Invoice" to issue your first tax invoice.</p>
                 </div>
             ) : (
@@ -900,14 +900,14 @@ export const Sales: React.FC = () => {
                         <thead>
                             <tr className="border-b border-slate-800 bg-slate-950/60">
                                 {['Invoice No.', 'Date', 'Customer', 'Items', 'Subtotal', 'VAT', 'Net Total', 'Status', 'Actions'].map(h => (
-                                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">{h}</th>
+                                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-neutral-600">{h}</th>
                                 ))}
                             </tr>
                         </thead>
                         <tbody>
                             {filtered.map(inv => (
                                 <tr key={inv.id} className="border-b border-slate-800/40 hover:bg-slate-800/20 transition-colors">
-                                    <td className="px-4 py-3 font-mono text-slate-100 font-bold whitespace-nowrap">
+                                    <td className="px-4 py-3 font-mono text-neutral-900 font-bold whitespace-nowrap">
                                         <span className="text-amber-400">{inv.invoice_number}</span>
                                         {inv.ref_number && (
                                             <span className="ml-2 inline-flex items-center rounded bg-blue-500/10 px-1.5 py-0.5 text-[9px] font-semibold text-blue-400 border border-blue-500/20">
@@ -920,12 +920,12 @@ export const Sales: React.FC = () => {
                                             </span>
                                         )}
                                     </td>
-                                    <td className="px-4 py-3 text-slate-300">{formatDate(inv.invoice_date)}</td>
-                                    <td className="px-4 py-3 text-slate-100 max-w-[180px] truncate">{inv.parties?.Parties_name || '—'}</td>
-                                    <td className="px-4 py-3 text-center text-slate-400">{inv.sales_invoice_items?.length ?? 0}</td>
-                                    <td className="px-4 py-3 text-right text-slate-300">{formatNPR(inv.subtotal)}</td>
+                                    <td className="px-4 py-3 text-neutral-700">{formatDate(inv.invoice_date)}</td>
+                                    <td className="px-4 py-3 text-neutral-900 max-w-[180px] truncate">{inv.parties?.Parties_name || '—'}</td>
+                                    <td className="px-4 py-3 text-center text-neutral-600">{inv.sales_invoice_items?.length ?? 0}</td>
+                                    <td className="px-4 py-3 text-right text-neutral-700">{formatNPR(inv.subtotal)}</td>
                                     <td className="px-4 py-3 text-right text-emerald-400">{formatNPR(inv.vat_amount)}</td>
-                                    <td className="px-4 py-3 text-right font-bold text-white">{formatNPR(inv.net_total)}</td>
+                                    <td className="px-4 py-3 text-right font-bold text-neutral-900">{formatNPR(inv.net_total)}</td>
                                     <td className="px-4 py-3">
                                         <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase ${inv.status === 'ACTIVE' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}`}>
                                             {inv.status}
@@ -933,7 +933,7 @@ export const Sales: React.FC = () => {
                                     </td>
                                     <td className="px-4 py-3">
                                         <button onClick={() => handlePrint(inv)}
-                                            className="flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-700 transition-colors">
+                                            className="flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-medium text-neutral-700 hover:text-neutral-900 hover:bg-slate-700 transition-colors">
                                             <Printer className="h-3 w-3" /> Print
                                         </button>
                                     </td>

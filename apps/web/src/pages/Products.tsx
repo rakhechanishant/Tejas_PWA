@@ -105,13 +105,13 @@ export const Products: React.FC = () => {
             {/* Top Title Bar */}
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-3xl font-extrabold tracking-tight text-white font-outfit">Products Catalog</h1>
-                    <p className="text-sm text-slate-400">Manage store inventory, check stock alerts, and inspect specification sheets.</p>
+                    <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 font-outfit">Products Catalog</h1>
+                    <p className="text-sm text-neutral-600">Manage store inventory, check stock alerts, and inspect specification sheets.</p>
                 </div>
                 <button
                     onClick={() => fetchProducts(true)}
                     title="Reload Catalog"
-                    className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 transition-colors text-slate-400 hover:text-white self-start sm:self-center"
+                    className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 transition-colors text-neutral-600 hover:text-neutral-900 self-start sm:self-center"
                 >
                     <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
                 </button>
@@ -129,12 +129,12 @@ export const Products: React.FC = () => {
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Search by name, ref code, specs, category... (debounce 300ms)"
-                        className="block w-full rounded-xl border border-slate-800 bg-slate-950/80 py-3 pr-4 pl-10 text-white placeholder-slate-500 transition-colors focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+                        className="block w-full rounded-xl border border-slate-800 bg-slate-950/80 py-3 pr-4 pl-10 text-neutral-900 placeholder-slate-500 transition-colors focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
                     />
                     {searchQuery && (
                         <button
                             onClick={() => setSearchQuery('')}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 hover:text-slate-200"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 hover:text-neutral-800"
                         >
                             Clear
                         </button>
@@ -145,7 +145,7 @@ export const Products: React.FC = () => {
                 <div className="grid gap-3 grid-cols-1 md:grid-cols-2">
                     {/* Company */}
                     <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Brand / Company</label>
+                        <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-600">Brand / Company</label>
                         <select
                             multiple
                             value={selectedCompanies}
@@ -157,7 +157,7 @@ export const Products: React.FC = () => {
                                     setSelectedCompanies(opts.length ? opts : ['ALL']);
                                 }
                             }}
-                            className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:border-amber-500 focus:outline-none overflow-hidden h-[44px]"
+                            className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-neutral-900 focus:border-amber-500 focus:outline-none overflow-hidden h-[44px]"
                         >
                             <option value="ALL">All Brands</option>
                             {companies.map((c) => c !== 'ALL' && (
@@ -168,7 +168,7 @@ export const Products: React.FC = () => {
 
                     {/* Category */}
                     <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Category</label>
+                        <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-600">Category</label>
                         <select
                             multiple
                             value={selectedCategories}
@@ -180,7 +180,7 @@ export const Products: React.FC = () => {
                                     setSelectedCategories(opts.length ? opts : ['ALL']);
                                 }
                             }}
-                            className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-white focus:border-amber-500 focus:outline-none overflow-hidden h-[44px]"
+                            className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-neutral-900 focus:border-amber-500 focus:outline-none overflow-hidden h-[44px]"
                         >
                             <option value="ALL">All Categories</option>
                             {categories.map((c) => c !== 'ALL' && (
@@ -219,7 +219,7 @@ export const Products: React.FC = () => {
                     {filteredProducts.length === 0 ? (
                         <div className="flex flex-col items-center justify-center p-12 text-center rounded-2xl border border-slate-805 bg-slate-900/10">
                             <Layers className="h-12 w-12 text-slate-600 mb-3" />
-                            <h3 className="text-lg font-bold text-slate-350">No products found</h3>
+                            <h3 className="text-lg font-bold text-neutral-700">No products found</h3>
                             <p className="text-xs text-slate-500 max-w-sm mt-1">Try tweaking your search term or filter parameters above to view other records.</p>
                         </div>
                     ) : (
@@ -255,7 +255,7 @@ export const Products: React.FC = () => {
 
                                             {/* Company & Code row */}
                                             <div className="flex items-center justify-between gap-2">
-                                                <span className="text-[9px] font-bold uppercase tracking-wider py-0.5 px-2.5 rounded-full bg-slate-850 text-slate-400">
+                                                <span className="text-[9px] font-bold uppercase tracking-wider py-0.5 px-2.5 rounded-full bg-slate-850 text-neutral-600">
                                                     {p.company || 'Generic'}
                                                 </span>
                                                 {p.ref_code && (
@@ -266,7 +266,7 @@ export const Products: React.FC = () => {
                                             </div>
 
                                             {/* Product Name */}
-                                            <h3 className="mt-3 text-sm font-bold text-slate-100 group-hover:text-white transition-colors leading-snug">
+                                            <h3 className="mt-3 text-sm font-bold text-neutral-900 group-hover:text-neutral-900 transition-colors leading-snug">
                                                 {p.product_name}
                                             </h3>
 
@@ -283,7 +283,7 @@ export const Products: React.FC = () => {
 
                                             {/* Specification Sheet */}
                                             {p.specification && (
-                                                <p className="mt-2 text-xs text-slate-400 line-clamp-2 leading-relaxed italic">
+                                                <p className="mt-2 text-xs text-neutral-600 line-clamp-2 leading-relaxed italic">
                                                     "{p.specification}"
                                                 </p>
                                             )}
@@ -311,7 +311,7 @@ export const Products: React.FC = () => {
                             <button
                                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                 disabled={currentPage === 1}
-                                className="flex h-9 items-center justify-center rounded-xl bg-slate-900 border border-slate-800 px-4 text-xs font-medium text-slate-300 hover:bg-slate-850 hover:text-white disabled:opacity-50 disabled:hover:bg-slate-900 disabled:hover:text-slate-350 transition-colors"
+                                className="flex h-9 items-center justify-center rounded-xl bg-slate-900 border border-slate-800 px-4 text-xs font-medium text-neutral-700 hover:bg-slate-850 hover:text-neutral-900 disabled:opacity-50 disabled:hover:bg-slate-900 disabled:hover:text-neutral-700 transition-colors"
                             >
                                 Previous
                             </button>
@@ -322,8 +322,8 @@ export const Products: React.FC = () => {
                                         key={pageNum}
                                         onClick={() => setCurrentPage(pageNum)}
                                         className={`flex h-9 w-9 items-center justify-center rounded-xl text-xs font-bold transition-all ${currentPage === pageNum
-                                            ? 'bg-amber-500 text-white shadow-md shadow-amber-500/10'
-                                            : 'bg-slate-905 border border-slate-855 text-slate-400 hover:bg-slate-800 hover:text-white'
+                                            ? 'bg-amber-500 text-neutral-900 shadow-md shadow-amber-500/10'
+                                            : 'bg-slate-905 border border-slate-855 text-neutral-600 hover:bg-slate-800 hover:text-neutral-900'
                                             }`}
                                     >
                                         {pageNum}
@@ -333,7 +333,7 @@ export const Products: React.FC = () => {
                             <button
                                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                                 disabled={currentPage === totalPages}
-                                className="flex h-9 items-center justify-center rounded-xl bg-slate-900 border border-slate-800 px-4 text-xs font-medium text-slate-300 hover:bg-slate-850 hover:text-white disabled:opacity-50 disabled:hover:bg-slate-900 disabled:hover:text-slate-350 transition-colors"
+                                className="flex h-9 items-center justify-center rounded-xl bg-slate-900 border border-slate-800 px-4 text-xs font-medium text-neutral-700 hover:bg-slate-850 hover:text-neutral-900 disabled:opacity-50 disabled:hover:bg-slate-900 disabled:hover:text-neutral-700 transition-colors"
                             >
                                 Next
                             </button>
@@ -348,7 +348,7 @@ export const Products: React.FC = () => {
                     <div className="relative w-full max-w-2xl rounded-3xl border border-slate-800 bg-slate-905 bg-slate-900/90 p-6 shadow-2xl backdrop-blur-xl max-h-[90vh] overflow-y-auto">
                         <button
                             onClick={() => setSelectedProduct(null)}
-                            className="absolute right-4 top-4 rounded-xl bg-slate-950/80 p-2 text-slate-400 hover:text-white border border-slate-800 transition-colors"
+                            className="absolute right-4 top-4 rounded-xl bg-slate-950/80 p-2 text-neutral-600 hover:text-neutral-900 border border-slate-800 transition-colors"
                         >
                             <X className="h-5 w-5" />
                         </button>
@@ -388,8 +388,8 @@ export const Products: React.FC = () => {
                                         )}
                                     </div>
 
-                                    <h2 className="mt-3 text-xl font-extrabold text-slate-200 tracking-tight leading-snug">{selectedProduct.product_name}</h2>
-                                    <p className="text-xs text-slate-400 font-semibold mt-1">
+                                    <h2 className="mt-3 text-xl font-extrabold text-neutral-800 tracking-tight leading-snug">{selectedProduct.product_name}</h2>
+                                    <p className="text-xs text-neutral-600 font-semibold mt-1">
                                         Category: {selectedProduct.category} {selectedProduct.sub_category ? `• ${selectedProduct.sub_category}` : ''}
                                     </p>
                                 </div>
@@ -413,8 +413,8 @@ export const Products: React.FC = () => {
                         <div className="mt-6 space-y-4">
                             {selectedProduct.specification && (
                                 <div className="rounded-xl bg-slate-950/30 border border-slate-850 p-4">
-                                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Technical Description & Specs</h4>
-                                    <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-line bg-slate-950/45 p-3 rounded-lg border border-slate-850">
+                                    <h4 className="text-xs font-bold text-neutral-600 uppercase tracking-wider mb-2">Technical Description & Specs</h4>
+                                    <p className="text-sm text-neutral-700 leading-relaxed whitespace-pre-line bg-slate-950/45 p-3 rounded-lg border border-slate-850">
                                         {selectedProduct.specification}
                                     </p>
                                 </div>
@@ -422,23 +422,23 @@ export const Products: React.FC = () => {
 
                             {/* Standard Packaging Rules Grid */}
                             <div className="rounded-xl border border-slate-850 bg-slate-950/40 p-4">
-                                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Logistic Packaging Configurations</h4>
+                                <h4 className="text-xs font-bold text-neutral-600 uppercase tracking-wider mb-3">Logistic Packaging Configurations</h4>
                                 <div className="grid grid-cols-3 gap-4 text-center">
                                     <div className="border-r border-slate-850">
                                         <span className="text-[9px] font-bold text-slate-550 uppercase block">Pcs / Packet</span>
-                                        <span className="text-lg font-extrabold text-slate-200 mt-1 block">
+                                        <span className="text-lg font-extrabold text-neutral-800 mt-1 block">
                                             {selectedProduct.packing_pcs || '—'}
                                         </span>
                                     </div>
                                     <div className="border-r border-slate-850">
                                         <span className="text-[9px] font-bold text-slate-550 uppercase block">Pcs / Box</span>
-                                        <span className="text-lg font-extrabold text-slate-200 mt-1 block">
+                                        <span className="text-lg font-extrabold text-neutral-800 mt-1 block">
                                             {selectedProduct.packing_bx || '—'}
                                         </span>
                                     </div>
                                     <div>
                                         <span className="text-[9px] font-bold text-slate-550 uppercase block">Pcs / Carton</span>
-                                        <span className="text-lg font-extrabold text-slate-200 mt-1 block">
+                                        <span className="text-lg font-extrabold text-neutral-800 mt-1 block">
                                             {selectedProduct.packing_car || '—'}
                                         </span>
                                     </div>
@@ -448,17 +448,17 @@ export const Products: React.FC = () => {
                                 {(selectedProduct.mrp && (selectedProduct.packing_bx || selectedProduct.packing_car)) && (
                                     <div className="mt-4 pt-4 border-t border-slate-850/60 grid grid-cols-2 gap-4 text-xs">
                                         {selectedProduct.packing_bx && (
-                                            <div className="flex justify-between items-center text-slate-405">
+                                            <div className="flex justify-between items-center text-neutral-600">
                                                 <span>Est. Box Value:</span>
-                                                <span className="font-bold text-slate-200">
+                                                <span className="font-bold text-neutral-800">
                                                     रु {(selectedProduct.mrp * selectedProduct.packing_bx).toLocaleString('en-NP', { minimumFractionDigits: 2 })}
                                                 </span>
                                             </div>
                                         )}
                                         {selectedProduct.packing_car && (
-                                            <div className="flex justify-between items-center text-slate-405">
+                                            <div className="flex justify-between items-center text-neutral-600">
                                                 <span>Est. Carton Value:</span>
-                                                <span className="font-bold text-slate-205">
+                                                <span className="font-bold text-neutral-800">
                                                     रु {(selectedProduct.mrp * selectedProduct.packing_car).toLocaleString('en-NP', { minimumFractionDigits: 2 })}
                                                 </span>
                                             </div>
@@ -471,7 +471,7 @@ export const Products: React.FC = () => {
                             {selectedProduct.series && (
                                 <div className="flex justify-between items-center bg-slate-950/20 p-3 rounded-xl border border-slate-850 text-xs">
                                     <span className="font-bold text-slate-500 uppercase tracking-wider text-[9px]">Product Line / Series</span>
-                                    <span className="font-semibold text-slate-300">{selectedProduct.series}</span>
+                                    <span className="font-semibold text-neutral-700">{selectedProduct.series}</span>
                                 </div>
                             )}
                         </div>

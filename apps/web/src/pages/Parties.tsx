@@ -480,7 +480,7 @@ export const Parties: React.FC = () => {
             {/* Title Bar */}
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between font-outfit">
                 <div>
-                    <h1 className="text-3xl font-extrabold tracking-tight text-slate-200">Parties Registry</h1>
+                    <h1 className="text-3xl font-extrabold tracking-tight text-neutral-800">Parties Registry</h1>
                     <p className="text-sm text-slate-500">Track Nepal store accounts, outstanding dues, credit limits, and contact profiles.</p>
                 </div>
 
@@ -532,14 +532,14 @@ export const Parties: React.FC = () => {
             <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm">
                 <div className="relative">
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                        <Search className="h-5 w-5 text-slate-400" />
+                        <Search className="h-5 w-5 text-neutral-600" />
                     </div>
                     <input
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Search by store name, party code, phone, address..."
-                        className="block w-full rounded-xl border border-slate-200 bg-white py-3 pr-4 pl-10 text-slate-200 placeholder-slate-400 transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                        className="block w-full rounded-xl border border-slate-200 bg-white py-3 pr-4 pl-10 text-neutral-800 placeholder-slate-400 transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                     />
                 </div>
             </div>
@@ -563,7 +563,7 @@ export const Parties: React.FC = () => {
                 <>
                     {filteredParties.length === 0 ? (
                         <div className="flex flex-col items-center justify-center p-12 text-center rounded-2xl border border-slate-200 bg-slate-900/55 font-outfit">
-                            <BookOpen className="h-12 w-12 text-slate-400 mb-3" />
+                            <BookOpen className="h-12 w-12 text-neutral-600 mb-3" />
                             <h3 className="text-lg font-bold text-slate-700">No customer matches</h3>
                             <p className="text-xs text-slate-500 max-w-sm mt-1">Check that you typed the spelling correctly, or register a new store account.</p>
                         </div>
@@ -587,7 +587,7 @@ export const Parties: React.FC = () => {
 
                                             <div className="min-w-0 space-y-1 font-outfit">
                                                 <div className="flex items-center gap-2 flex-wrap">
-                                                    <h3 className="text-sm font-bold text-slate-200 group-hover:text-blue-600 transition-colors truncate">
+                                                    <h3 className="text-sm font-bold text-neutral-800 group-hover:text-blue-600 transition-colors truncate">
                                                         {p.name}
                                                     </h3>
                                                     <span className="text-[9px] font-bold py-0.5 px-2 rounded-md bg-slate-850 text-slate-600 border border-slate-200">
@@ -599,13 +599,13 @@ export const Parties: React.FC = () => {
                                                 <div className="flex items-center gap-3 text-xs text-slate-500 flex-wrap">
                                                     {p.phone && (
                                                         <span className="flex items-center gap-1.5 font-mono text-[11px] text-slate-600">
-                                                            <Phone className="h-3.5 w-3.5 text-slate-400" />
+                                                            <Phone className="h-3.5 w-3.5 text-neutral-600" />
                                                             {p.phone}
                                                         </span>
                                                     )}
                                                     {p.city && (
                                                         <span className="flex items-center gap-1 text-slate-500 truncate">
-                                                            <MapPin className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+                                                            <MapPin className="h-3.5 w-3.5 shrink-0 text-neutral-600" />
                                                             {p.city}
                                                         </span>
                                                     )}
@@ -616,7 +616,7 @@ export const Parties: React.FC = () => {
                                         {/* Dues / Credit Display */}
                                         <div className="flex items-center gap-4 shrink-0 font-outfit">
                                             <div className="text-right">
-                                                <span className="block text-[9px] font-semibold text-slate-400 uppercase tracking-wider">Due Amount</span>
+                                                <span className="block text-[9px] font-semibold text-neutral-600 uppercase tracking-wider">Due Amount</span>
                                                 <span className={`text-sm font-extrabold font-outfit ${outstanding > 0
                                                     ? isLimitExceeded ? 'text-rose-600 underline decoration-wavy' : 'text-amber-600 font-bold'
                                                     : 'text-slate-500'
@@ -634,7 +634,7 @@ export const Parties: React.FC = () => {
                                                 >
                                                     <Edit3 className="h-3.5 w-3.5" />
                                                 </button>
-                                                <ChevronRight className="h-5 w-5 text-slate-400 group-hover:text-blue-600 transition-colors hidden sm:block" />
+                                                <ChevronRight className="h-5 w-5 text-neutral-600 group-hover:text-blue-600 transition-colors hidden sm:block" />
                                             </div>
                                         </div>
                                     </div>
@@ -649,7 +649,7 @@ export const Parties: React.FC = () => {
                             <button
                                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                 disabled={currentPage === 1}
-                                className="flex h-9 items-center justify-center rounded-xl bg-white border border-slate-200 px-4 text-xs font-semibold text-slate-600 hover:bg-slate-900 disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-slate-400 transition-colors cursor-pointer"
+                                className="flex h-9 items-center justify-center rounded-xl bg-white border border-slate-200 px-4 text-xs font-semibold text-slate-600 hover:bg-slate-900 disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-neutral-600 transition-colors cursor-pointer"
                             >
                                 Previous
                             </button>
@@ -671,7 +671,7 @@ export const Parties: React.FC = () => {
                             <button
                                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                                 disabled={currentPage === totalPages}
-                                className="flex h-9 items-center justify-center rounded-xl bg-white border border-slate-200 px-4 text-xs font-semibold text-slate-600 hover:bg-slate-900 disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-slate-400 transition-colors cursor-pointer"
+                                className="flex h-9 items-center justify-center rounded-xl bg-white border border-slate-200 px-4 text-xs font-semibold text-slate-600 hover:bg-slate-900 disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-neutral-600 transition-colors cursor-pointer"
                             >
                                 Next
                             </button>
@@ -691,7 +691,7 @@ export const Parties: React.FC = () => {
                                     <span className="text-[10px] font-mono font-bold tracking-wider text-blue-600 uppercase">
                                         {activeProfile.party_code}
                                     </span>
-                                    <h2 className="text-xl font-extrabold text-slate-200 mt-1 font-outfit leading-tight truncate max-w-[320px]">
+                                    <h2 className="text-xl font-extrabold text-neutral-800 mt-1 font-outfit leading-tight truncate max-w-[320px]">
                                         {activeProfile.name}
                                     </h2>
                                 </div>
@@ -809,11 +809,11 @@ export const Parties: React.FC = () => {
                                             <div className="grid grid-cols-2 gap-2 text-slate-700">
                                                 <div>
                                                     <span className="block text-[10px] text-slate-500 font-medium">Full Name</span>
-                                                    <span className="font-semibold text-slate-200">{activeProfile.contact_person || 'N/A'}</span>
+                                                    <span className="font-semibold text-neutral-800">{activeProfile.contact_person || 'N/A'}</span>
                                                 </div>
                                                 <div>
                                                     <span className="block text-[10px] text-slate-500 font-medium">Designation</span>
-                                                    <span className="font-semibold text-slate-200">{activeProfile.designation || 'N/A'}</span>
+                                                    <span className="font-semibold text-neutral-800">{activeProfile.designation || 'N/A'}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -851,15 +851,15 @@ export const Parties: React.FC = () => {
                                                 <div className="grid grid-cols-3 gap-2">
                                                     <div>
                                                         <span className="block text-[10px] text-slate-500 font-medium">Province</span>
-                                                        <span className="font-medium text-slate-200">{activeProfile.province || 'N/A'}</span>
+                                                        <span className="font-medium text-neutral-800">{activeProfile.province || 'N/A'}</span>
                                                     </div>
                                                     <div>
                                                         <span className="block text-[10px] text-slate-500 font-medium">District</span>
-                                                        <span className="font-medium text-slate-200">{activeProfile.district || 'N/A'}</span>
+                                                        <span className="font-medium text-neutral-800">{activeProfile.district || 'N/A'}</span>
                                                     </div>
                                                     <div>
                                                         <span className="block text-[10px] text-slate-500 font-medium">City / Town</span>
-                                                        <span className="font-medium text-slate-200">{activeProfile.city || 'N/A'}</span>
+                                                        <span className="font-medium text-neutral-800">{activeProfile.city || 'N/A'}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -870,11 +870,11 @@ export const Parties: React.FC = () => {
                                             <div className="grid grid-cols-2 gap-2 text-slate-700">
                                                 <div>
                                                     <span className="block text-[10px] text-slate-500 font-medium">PAN Number</span>
-                                                    <span className="font-mono font-bold text-slate-200">{activeProfile.pan || 'N/A'}</span>
+                                                    <span className="font-mono font-bold text-neutral-800">{activeProfile.pan || 'N/A'}</span>
                                                 </div>
                                                 <div>
                                                     <span className="block text-[10px] text-slate-500 font-medium">Salesperson Assigned</span>
-                                                    <span className="font-medium text-slate-200">{activeProfile.sales_person || 'No representative assigned'}</span>
+                                                    <span className="font-medium text-neutral-800">{activeProfile.sales_person || 'No representative assigned'}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -901,7 +901,7 @@ export const Parties: React.FC = () => {
                                                 >
                                                     <div>
                                                         <div className="flex items-center gap-1.5">
-                                                            <span className="font-mono text-slate-200 font-bold block">{o.order_number}</span>
+                                                            <span className="font-mono text-neutral-800 font-bold block">{o.order_number}</span>
                                                             <span className="text-[8px] font-bold px-1.5 py-0.5 rounded bg-slate-850 border border-slate-200 text-slate-600 uppercase">
                                                                 {o.status}
                                                             </span>
@@ -909,7 +909,7 @@ export const Parties: React.FC = () => {
                                                         <span className="text-[10px] text-slate-500 block mt-0.5">{new Date(o.created_at).toLocaleDateString()}</span>
                                                     </div>
                                                     <div className="text-right">
-                                                        <span className="block font-black text-slate-200 font-mono">रु {Number(o.total_amount).toLocaleString()}</span>
+                                                        <span className="block font-black text-neutral-800 font-mono">रु {Number(o.total_amount).toLocaleString()}</span>
                                                         {Number(o.due_amount) > 0 && (
                                                             <span className="text-[10px] font-bold text-rose-600 block">Due: रु {Number(o.due_amount).toLocaleString()}</span>
                                                         )}
@@ -924,7 +924,7 @@ export const Parties: React.FC = () => {
                                     <div className="space-y-3 font-outfit">
                                         {loadingDrawerData ? (
                                             <div className="text-center py-8">
-                                                <RefreshCw className="h-6 w-6 animate-spin text-slate-400 mx-auto mb-2" />
+                                                <RefreshCw className="h-6 w-6 animate-spin text-neutral-600 mx-auto mb-2" />
                                                 <p className="text-slate-500 font-semibold">Syncing payment records...</p>
                                             </div>
                                         ) : filteredPartyPayments.length === 0 ? (
@@ -972,7 +972,7 @@ export const Parties: React.FC = () => {
                                                         onClick={() => setLedgerViewType('chronological')}
                                                         className={`px-2.5 py-1 text-[9px] font-black uppercase tracking-wider rounded-md transition-all cursor-pointer ${ledgerViewType === 'chronological'
                                                             ? 'bg-blue-600 text-white font-bold shadow-sm'
-                                                            : 'text-slate-500 hover:text-slate-200'
+                                                            : 'text-slate-500 hover:text-neutral-800'
                                                             }`}
                                                     >
                                                         Timeline
@@ -982,7 +982,7 @@ export const Parties: React.FC = () => {
                                                         onClick={() => setLedgerViewType('billwise')}
                                                         className={`px-2.5 py-1 text-[9px] font-black uppercase tracking-wider rounded-md transition-all cursor-pointer ${ledgerViewType === 'billwise'
                                                             ? 'bg-blue-600 text-white font-bold shadow-sm'
-                                                            : 'text-slate-500 hover:text-slate-200'
+                                                            : 'text-slate-500 hover:text-neutral-800'
                                                             }`}
                                                     >
                                                         Bill-Wise
@@ -1035,7 +1035,7 @@ export const Parties: React.FC = () => {
                                                             >
                                                                 <div className="flex items-start gap-2.5 font-outfit">
                                                                     <div className={`mt-0.5 p-1.5 rounded-lg ${item.isCancelled
-                                                                        ? 'bg-slate-850 text-slate-400'
+                                                                        ? 'bg-slate-850 text-neutral-600'
                                                                         : isDebit
                                                                             ? 'bg-emerald-50 text-emerald-600 border border-emerald-100/30'
                                                                             : 'bg-blue-50 text-blue-600 border border-blue-100/30'
@@ -1059,10 +1059,10 @@ export const Parties: React.FC = () => {
                                                                 </div>
                                                                 <div className="text-right pl-2 font-outfit">
                                                                     <span className={`block font-extrabold text-xs font-mono ${item.isCancelled
-                                                                        ? 'text-slate-405 line-through'
+                                                                        ? 'text-neutral-600 line-through'
                                                                         : isDebit
                                                                             ? 'text-emerald-600'
-                                                                            : 'text-slate-200'
+                                                                            : 'text-neutral-800'
                                                                         }`}>
                                                                         {isDebit ? '-' : '+'} रु {item.amount.toLocaleString()}
                                                                     </span>
@@ -1115,7 +1115,7 @@ export const Parties: React.FC = () => {
                                                                         </div>
                                                                         <div>
                                                                             <div className="flex items-center gap-1.5">
-                                                                                <span className="font-bold text-slate-200 font-mono text-xs">{order.order_number}</span>
+                                                                                <span className="font-bold text-neutral-800 font-mono text-xs">{order.order_number}</span>
                                                                                 <span className={`text-[7px] font-black tracking-wider uppercase px-1.5 py-0.5 rounded-md border ${statusCol}`}>
                                                                                     {paymentStatusText}
                                                                                 </span>
@@ -1128,7 +1128,7 @@ export const Parties: React.FC = () => {
                                                                     </div>
                                                                     <div className="flex items-center gap-2 pl-2">
                                                                         <div className="text-right">
-                                                                            <span className="block font-bold text-xs text-slate-200 font-mono">रु {Number(order.total_amount).toLocaleString()}</span>
+                                                                            <span className="block font-bold text-xs text-neutral-800 font-mono">रु {Number(order.total_amount).toLocaleString()}</span>
                                                                             {Number(order.due_amount) > 0 ? (
                                                                                 <span className="text-[9px] font-bold text-rose-600 font-mono block mt-0.5">Due: {Number(order.due_amount).toLocaleString()}</span>
                                                                             ) : (
@@ -1203,7 +1203,7 @@ export const Parties: React.FC = () => {
                                     setSelectedPartyForEdit(currentParty)
                                     setShowFormModal(true)
                                 }}
-                                className="flex-1 inline-flex justify-center items-center gap-2 py-3 rounded-xl border border-slate-200 hover:bg-slate-900 hover:text-slate-200 active:scale-95 text-xs font-semibold text-slate-700 transition-all shadow-sm cursor-pointer"
+                                className="flex-1 inline-flex justify-center items-center gap-2 py-3 rounded-xl border border-slate-200 hover:bg-slate-900 hover:text-neutral-800 active:scale-95 text-xs font-semibold text-slate-700 transition-all shadow-sm cursor-pointer"
                             >
                                 <Edit3 className="h-4 w-4" />
                                 Edit Profile
@@ -1224,7 +1224,7 @@ export const Parties: React.FC = () => {
                             <button
                                 type="button"
                                 onClick={() => setActiveProfile(null)}
-                                className="px-5 py-3 rounded-xl bg-slate-850 hover:bg-slate-200 hover:text-slate-200 text-xs font-bold text-slate-700 active:scale-95 transition-all cursor-pointer"
+                                className="px-5 py-3 rounded-xl bg-slate-850 hover:bg-slate-200 hover:text-neutral-800 text-xs font-bold text-slate-700 active:scale-95 transition-all cursor-pointer"
                             >
                                 Close
                             </button>
@@ -1249,7 +1249,7 @@ export const Parties: React.FC = () => {
                                     )}
                                 </div>
                                 <div>
-                                    <h3 className="text-base font-extrabold text-slate-200 font-outfit">
+                                    <h3 className="text-base font-extrabold text-neutral-800 font-outfit">
                                         {selectedInspectTx.type === 'payment' ? 'Payment Record Inspect' : 'Invoice Details Inspect'}
                                     </h3>
                                     <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider">
@@ -1260,7 +1260,7 @@ export const Parties: React.FC = () => {
                             <button
                                 type="button"
                                 onClick={() => setSelectedInspectTx(null)}
-                                className="text-slate-400 hover:text-slate-200 rounded-lg p-1.5 hover:bg-slate-850 transition-colors cursor-pointer"
+                                className="text-neutral-600 hover:text-neutral-800 rounded-lg p-1.5 hover:bg-slate-850 transition-colors cursor-pointer"
                             >
                                 <X className="h-5 w-5" />
                             </button>
@@ -1288,11 +1288,11 @@ export const Parties: React.FC = () => {
                                     <div className="grid grid-cols-2 gap-3.5">
                                         <div className="bg-slate-900 border border-slate-200 p-3 rounded-xl space-y-1">
                                             <span className="block text-[8px] font-bold text-slate-500 uppercase tracking-widest">Payment Channel</span>
-                                            <span className="font-bold text-xs text-slate-200">{selectedInspectTx.data.method}</span>
+                                            <span className="font-bold text-xs text-neutral-800">{selectedInspectTx.data.method}</span>
                                         </div>
                                         <div className="bg-slate-900 border border-slate-200 p-3 rounded-xl space-y-1">
                                             <span className="block text-[8px] font-bold text-slate-500 uppercase tracking-widest">Transaction Date</span>
-                                            <span className="font-semibold text-xs text-slate-200">{new Date(selectedInspectTx.data.payment_date || selectedInspectTx.data.created_at).toLocaleDateString()}</span>
+                                            <span className="font-semibold text-xs text-neutral-800">{new Date(selectedInspectTx.data.payment_date || selectedInspectTx.data.created_at).toLocaleDateString()}</span>
                                         </div>
                                         <div className="bg-slate-900 border border-slate-200 p-3 rounded-xl space-y-1 col-span-2">
                                             <span className="block text-[8px] font-bold text-slate-500 uppercase tracking-widest">Recorded By Staff</span>
@@ -1303,7 +1303,7 @@ export const Parties: React.FC = () => {
                                     {selectedInspectTx.data.reference && (
                                         <div className="bg-slate-900 p-3 rounded-xl border border-slate-200 space-y-1">
                                             <span className="block text-[8px] font-bold text-slate-500 uppercase tracking-widest">Reference / Check Code</span>
-                                            <span className="font-mono font-bold text-xs text-slate-200 block">{selectedInspectTx.data.reference}</span>
+                                            <span className="font-mono font-bold text-xs text-neutral-800 block">{selectedInspectTx.data.reference}</span>
                                         </div>
                                     )}
 
@@ -1321,7 +1321,7 @@ export const Parties: React.FC = () => {
                                         <div className="flex items-center justify-between">
                                             <div>
                                                 <span className="block text-[8px] font-bold text-slate-500 uppercase tracking-widest">Reference Order</span>
-                                                <span className="font-mono text-base font-black text-slate-200">{selectedInspectTx.data.order_number}</span>
+                                                <span className="font-mono text-base font-black text-neutral-800">{selectedInspectTx.data.order_number}</span>
                                             </div>
                                             <span className="text-[9px] font-bold tracking-wider uppercase bg-slate-850 border border-slate-200 text-slate-700 px-2 py-1 rounded-lg">
                                                 {selectedInspectTx.data.status}
@@ -1330,7 +1330,7 @@ export const Parties: React.FC = () => {
                                         <div className="grid grid-cols-3 gap-2 pt-1 border-t border-slate-200">
                                             <div>
                                                 <span className="block text-[8px] font-bold text-slate-500 uppercase tracking-widest">Total Invoice</span>
-                                                <span className="font-extrabold text-slate-200 font-mono">रु {Number(selectedInspectTx.data.total_amount).toLocaleString()}</span>
+                                                <span className="font-extrabold text-neutral-800 font-mono">रु {Number(selectedInspectTx.data.total_amount).toLocaleString()}</span>
                                             </div>
                                             <div>
                                                 <span className="block text-[8px] font-bold text-slate-500 uppercase tracking-widest">Amount Paid</span>
@@ -1409,7 +1409,7 @@ export const Parties: React.FC = () => {
                                         </h4>
                                         {loadingInspectItems ? (
                                             <div className="py-6 text-center">
-                                                <RefreshCw className="h-5 w-5 animate-spin mx-auto text-slate-400 mb-1.5" />
+                                                <RefreshCw className="h-5 w-5 animate-spin mx-auto text-neutral-600 mb-1.5" />
                                                 <span className="text-[10px] text-slate-500 block">Retrieving products metadata...</span>
                                             </div>
                                         ) : inspectOrderItems.length === 0 ? (
@@ -1419,7 +1419,7 @@ export const Parties: React.FC = () => {
                                                 {inspectOrderItems.map((item: any) => (
                                                     <div key={item.id} className="bg-white p-2 rounded-lg border border-slate-200 flex justify-between items-center text-[10px]">
                                                         <div>
-                                                            <span className="font-bold text-slate-200 block">{item.products?.product_name || 'Unknown hardware item'}</span>
+                                                            <span className="font-bold text-neutral-800 block">{item.products?.product_name || 'Unknown hardware item'}</span>
                                                             <span className="text-[8px] font-bold text-slate-500 uppercase font-mono block mt-0.5">Code: {item.products?.ref_code || 'N/A'}</span>
                                                         </div>
                                                         <div className="text-right">

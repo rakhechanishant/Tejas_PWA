@@ -242,7 +242,7 @@ const CreditForm: React.FC<FormProps> = ({ parties, invoices, onClose, onSaved, 
                             <p className="text-xs text-slate-500">Sales Return — stock will be increased</p>
                         </div>
                     </div>
-                    <button onClick={onClose} className="rounded-xl p-2 text-slate-400 hover:text-white hover:bg-slate-800"><X className="h-5 w-5" /></button>
+                    <button onClick={onClose} className="rounded-xl p-2 text-neutral-600 hover:text-neutral-900 hover:bg-slate-800"><X className="h-5 w-5" /></button>
                 </div>
                 <div className="p-6 space-y-5">
                     {error && <div className="flex items-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-sm text-rose-400"><AlertCircle className="h-4 w-4" />{error}</div>}
@@ -281,7 +281,7 @@ const CreditForm: React.FC<FormProps> = ({ parties, invoices, onClose, onSaved, 
 
                     <div>
                         <div className="flex items-center justify-between mb-3">
-                            <h3 className="text-sm font-bold text-slate-300">Returned Items</h3>
+                            <h3 className="text-sm font-bold text-neutral-700">Returned Items</h3>
                             <button onClick={() => setItems(p => [...p, newRow()])} className="flex items-center gap-1.5 text-xs font-medium text-amber-400 hover:text-amber-300"><Plus className="h-3.5 w-3.5" /> Add Row</button>
                         </div>
                         <div className="overflow-x-auto rounded-xl border border-slate-800">
@@ -289,7 +289,7 @@ const CreditForm: React.FC<FormProps> = ({ parties, invoices, onClose, onSaved, 
                                 <thead>
                                     <tr className="border-b border-slate-800 bg-slate-950/60">
                                         {['#', 'Particulars', 'Ref Code', 'Qty', 'Unit', 'Rate', 'Amount', ''].map(h => (
-                                            <th key={h} className="px-3 py-2.5 text-left font-semibold text-slate-400 uppercase">{h}</th>
+                                            <th key={h} className="px-3 py-2.5 text-left font-semibold text-neutral-600 uppercase">{h}</th>
                                         ))}
                                     </tr>
                                 </thead>
@@ -319,14 +319,14 @@ const CreditForm: React.FC<FormProps> = ({ parties, invoices, onClose, onSaved, 
 
                     <div className="flex justify-end gap-4">
                         <div className="min-w-[240px] space-y-1.5 rounded-xl border border-slate-800 bg-slate-950/40 p-4">
-                            <div className="flex justify-between text-sm text-slate-400"><span>Taxable:</span><span className="font-bold text-slate-100">{formatNPR(subtotal)}</span></div>
-                            <div className="flex justify-between text-sm text-slate-400"><span>VAT {vatRate}%:</span><span className="font-bold text-purple-400">{formatNPR(vatAmount)}</span></div>
+                            <div className="flex justify-between text-sm text-neutral-600"><span>Taxable:</span><span className="font-bold text-neutral-900">{formatNPR(subtotal)}</span></div>
+                            <div className="flex justify-between text-sm text-neutral-600"><span>VAT {vatRate}%:</span><span className="font-bold text-purple-400">{formatNPR(vatAmount)}</span></div>
                             <div className="flex justify-between text-base font-extrabold border-t border-slate-800 pt-2 mt-2 text-white"><span>Net Total:</span><span className="text-amber-400">{formatNPR(netTotal)}</span></div>
                         </div>
                     </div>
 
                     <div className="flex justify-end gap-3 border-t border-slate-800 pt-4">
-                        <button onClick={onClose} className="px-6 py-2.5 rounded-xl border border-slate-700 text-slate-400 hover:text-white hover:bg-slate-800 text-sm font-medium">Cancel</button>
+                        <button onClick={onClose} className="px-6 py-2.5 rounded-xl border border-slate-700 text-neutral-600 hover:text-neutral-900 hover:bg-slate-800 text-sm font-medium">Cancel</button>
                         <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold disabled:opacity-50">
                             <Save className="h-4 w-4" />{saving ? 'Saving…' : 'Save Credit Note'}
                         </button>
@@ -387,10 +387,10 @@ export const CreditNotes: React.FC = () => {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 className="text-3xl font-extrabold tracking-tight text-white font-outfit">Credit Notes</h1>
-                    <p className="text-sm text-slate-400">Sales Returns — issued when customers return goods.</p>
+                    <p className="text-sm text-neutral-600">Sales Returns — issued when customers return goods.</p>
                 </div>
                 <div className="flex items-center gap-2">
-                    <button onClick={fetchAll} className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-colors">
+                    <button onClick={fetchAll} className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 hover:bg-slate-800 text-neutral-600 hover:text-neutral-900 transition-colors">
                         <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
                     </button>
                     <button onClick={() => setShowForm(true)} className="flex items-center gap-2 rounded-xl bg-purple-600 hover:bg-purple-500 px-4 py-2.5 text-sm font-bold text-white transition-colors">
@@ -408,7 +408,7 @@ export const CreditNotes: React.FC = () => {
             ) : filtered.length === 0 ? (
                 <div className="flex flex-col items-center justify-center p-16 text-center rounded-2xl border border-slate-800 bg-slate-900/20">
                     <Undo2 className="h-12 w-12 text-slate-600 mb-3" />
-                    <h3 className="text-lg font-bold text-slate-400">No credit notes yet</h3>
+                    <h3 className="text-lg font-bold text-neutral-600">No credit notes yet</h3>
                     <p className="text-xs text-slate-500 mt-1">Click "New Credit Note" to record a sales return.</p>
                 </div>
             ) : (
@@ -417,7 +417,7 @@ export const CreditNotes: React.FC = () => {
                         <thead>
                             <tr className="border-b border-slate-800 bg-slate-950/60">
                                 {['Note No.', 'Date', 'Party', 'Orig. Invoice', 'Net Total', 'Status', 'Actions'].map(h => (
-                                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-400">{h}</th>
+                                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-neutral-600">{h}</th>
                                 ))}
                             </tr>
                         </thead>
@@ -425,15 +425,15 @@ export const CreditNotes: React.FC = () => {
                             {filtered.map(n => (
                                 <tr key={n.id} className="border-b border-slate-800/40 hover:bg-slate-800/20">
                                     <td className="px-4 py-3 font-mono text-purple-400 font-bold">{n.note_number}</td>
-                                    <td className="px-4 py-3 text-slate-300">{formatDate(n.note_date)}</td>
-                                    <td className="px-4 py-3 text-slate-100 max-w-[180px] truncate">{n.parties?.Parties_name || '—'}</td>
-                                    <td className="px-4 py-3 text-slate-400 font-mono text-xs">{n.original_invoice_no || '—'}</td>
+                                    <td className="px-4 py-3 text-neutral-700">{formatDate(n.note_date)}</td>
+                                    <td className="px-4 py-3 text-neutral-900 max-w-[180px] truncate">{n.parties?.Parties_name || '—'}</td>
+                                    <td className="px-4 py-3 text-neutral-600 font-mono text-xs">{n.original_invoice_no || '—'}</td>
                                     <td className="px-4 py-3 text-right font-bold text-white">{formatNPR(n.net_total)}</td>
                                     <td className="px-4 py-3">
                                         <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase ${n.status === 'ACTIVE' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}`}>{n.status}</span>
                                     </td>
                                     <td className="px-4 py-3">
-                                        <button onClick={() => handlePrint(n)} className="flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-700">
+                                        <button onClick={() => handlePrint(n)} className="flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-medium text-neutral-700 hover:text-neutral-900 hover:bg-slate-700">
                                             <Printer className="h-3 w-3" /> Print
                                         </button>
                                     </td>
