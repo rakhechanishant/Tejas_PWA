@@ -74,6 +74,7 @@ export const Orders: React.FC = () => {
     // Phase 4 additions: State control hooks
     const [activeTab, setActiveTab] = useState<'all' | 'pending' | 'pending_fulfillment' | 'completed'>('all')
     const [selectedDetailedOrder, setSelectedDetailedOrder] = useState<any | null>(null)
+    const [selectedProductInfo, setSelectedProductInfo] = useState<any | null>(null)
     const [profiles, setProfiles] = useState<any[]>([])
     const [acting, setActing] = useState(false)
     const [billNumber, setBillNumber] = useState<string>('')
@@ -265,7 +266,14 @@ export const Orders: React.FC = () => {
                             product_name,
                             ref_code,
                             unit,
-                            mrp
+                            mrp,
+                            image_url,
+                            specification,
+                            category,
+                            sub_category,
+                            company,
+                            packing_bx,
+                            packing_car
                         )
                     ),
                     returns (
@@ -883,7 +891,22 @@ export const Orders: React.FC = () => {
                                                     return (
                                                         <tr key={idx} className="hover:bg-slate-900 transition-colors">
                                                             <td className="py-3 px-4 font-semibold text-neutral-800">
-                                                                <div>{item.products?.product_name || 'Legacy Product'}</div>
+                                                                <div className="flex items-center gap-2">
+                                                                    <span>{item.products?.product_name || 'Legacy Product'}</span>
+                                                                    {item.products && (
+                                                                        <button
+                                                                            title="View Product Info"
+                                                                            onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                // @ts-ignore - this relies on a new state we will add
+                                                                                setSelectedProductInfo(item.products);
+                                                                            }}
+                                                                            className="text-slate-450 hover:text-blue-500 bg-slate-100 hover:bg-blue-50 rounded-full p-1 transition-colors"
+                                                                        >
+                                                                            <Info className="h-3.5 w-3.5" />
+                                                                        </button>
+                                                                    )}
+                                                                </div>
                                                                 <div className="text-[10px] text-slate-450 font-mono mt-0.5">{item.products?.ref_code || `Code #${item.product_id}`}</div>
                                                             </td>
                                                             <td className="py-3 px-4 text-right font-extrabold font-mono text-slate-700">
@@ -1355,16 +1378,16 @@ export const Orders: React.FC = () => {
                                                     <button
                                                         onClick={async () => {
                                                             if (!profile?.id) return
-                                                            if (!billNumber.trim() || !invoiceNumber.trim()) {
-                                                                alert('Safety Validation: Bill Number and Invoice Number are mandatory before submitting.')
+                                                            if (!billNumber.trim() && !invoiceNumber.trim()) {
+                                                                alert('Safety Validation: Either Bill Number or Invoice Number is required before submitting.')
                                                                 return
                                                             }
                                                             setActing(true)
                                                             try {
                                                                 const { error } = await supabase.rpc('record_billing_info', {
                                                                     p_order_id: selectedDetailedOrder.id,
-                                                                    p_bill_number: billNumber.trim(),
-                                                                    p_invoice_number: invoiceNumber.trim(),
+                                                                    p_bill_number: billNumber.trim() || null,
+                                                                    p_invoice_number: invoiceNumber.trim() || null,
                                                                     p_billing_remarks: billingRemarks.trim() || null,
                                                                     p_billed_by: profile.id
                                                                 })
@@ -1648,6 +1671,108 @@ export const Orders: React.FC = () => {
                     </div>
                 )
             }
+
+            {/* Product Detail Modal/Drawer Overlay (Amazon Style) */}
+            {selectedProductInfo && (
+                <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-md">
+                    <div className="relative w-full max-w-2xl rounded-3xl border border-slate-800 bg-slate-905 bg-slate-900/90 p-6 shadow-2xl backdrop-blur-xl max-h-[90vh] overflow-y-auto">
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedProductInfo(null);
+                            }}
+                            className="absolute right-4 top-4 rounded-xl bg-slate-950/80 p-2 text-neutral-600 hover:text-neutral-900 border border-slate-800 transition-colors"
+                        >
+                            <X className="h-5 w-5" />
+                        </button>
+
+                        <div className="grid gap-6 md:grid-cols-2 mt-4">
+                            {/* Visual Asset Container */}
+                            <div className="relative aspect-square w-full rounded-2xl bg-slate-950/80 border border-slate-850 flex items-center justify-center p-6">
+                                {selectedProductInfo.image_url ? (
+                                    <img
+                                        src={selectedProductInfo.image_url}
+                                        alt={selectedProductInfo.product_name}
+                                        className="max-h-full max-w-full object-contain"
+                                        onError={(e) => {
+                                            e.currentTarget.style.display = 'none'
+                                            const fallback = e.currentTarget.parentElement?.querySelector('.modal-fallback')
+                                            if (fallback) fallback.classList.remove('hidden')
+                                        }}
+                                    />
+                                ) : null}
+                                <div className={`modal-fallback flex flex-col items-center justify-center text-slate-600 ${selectedProductInfo.image_url ? 'hidden' : ''}`}>
+                                    <Layers className="h-16 w-16 text-slate-705 mb-2" />
+                                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500">No Image Available</span>
+                                </div>
+                            </div>
+
+                            {/* Detail Specs Frame */}
+                            <div className="flex flex-col justify-between space-y-4">
+                                <div>
+                                    <div className="flex flex-wrap items-center gap-2">
+                                        <span className="text-[9px] font-bold uppercase tracking-wider py-0.5 px-2.5 rounded-full bg-slate-800 text-amber-500 border border-slate-750">
+                                            {selectedProductInfo.company || 'Generic'}
+                                        </span>
+                                        {selectedProductInfo.ref_code && (
+                                            <span className="text-xs font-mono font-extrabold py-1 px-3 rounded-xl bg-amber-505/10 text-amber-400 border border-amber-550/20">
+                                                Ref No: {selectedProductInfo.ref_code}
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    <h2 className="mt-3 text-xl font-extrabold text-neutral-800 tracking-tight leading-snug">{selectedProductInfo.product_name}</h2>
+                                    <p className="text-xs text-neutral-600 font-semibold mt-1">
+                                        Category: {selectedProductInfo.category} {selectedProductInfo.sub_category ? `• ${selectedProductInfo.sub_category}` : ''}
+                                    </p>
+                                </div>
+
+                                {/* MRP card */}
+                                <div className="rounded-xl border border-slate-850 bg-slate-950/60 p-4">
+                                    <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Maximum Retail Price</span>
+                                    <div className="flex items-baseline gap-1 mt-1">
+                                        <span className="text-2xl font-black text-amber-505">
+                                            {selectedProductInfo.mrp ? `रु ${selectedProductInfo.mrp.toLocaleString('en-NP', { minimumFractionDigits: 2 })}` : 'N/A'}
+                                        </span>
+                                        <span className="text-xs text-slate-500 font-semibold">/ {selectedProductInfo.unit || 'pcs'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Packaging rules & series tables */}
+                        <div className="mt-6 space-y-4">
+                            {selectedProductInfo.specification && (
+                                <div className="rounded-xl bg-slate-950/30 border border-slate-850 p-4">
+                                    <h4 className="text-xs font-bold text-neutral-600 uppercase tracking-wider mb-2">Technical Description & Specs</h4>
+                                    <p className="text-sm text-neutral-700 leading-relaxed whitespace-pre-line bg-slate-950/45 p-3 rounded-lg border border-slate-850">
+                                        {selectedProductInfo.specification}
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* Standard Packaging Rules Grid */}
+                            <div className="rounded-xl border border-slate-850 bg-slate-950/40 p-4">
+                                <h4 className="text-xs font-bold text-neutral-600 uppercase tracking-wider mb-3">Logistic Packaging Configurations</h4>
+                                <div className="grid grid-cols-2 gap-4 text-center">
+                                    <div className="border-r border-slate-850">
+                                        <span className="text-[9px] font-bold text-slate-550 uppercase block">Pcs / Box</span>
+                                        <span className="text-lg font-extrabold text-neutral-800 mt-1 block">
+                                            {selectedProductInfo.packing_bx || '—'}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span className="text-[9px] font-bold text-slate-550 uppercase block">Pcs / Carton</span>
+                                        <span className="text-lg font-extrabold text-neutral-800 mt-1 block">
+                                            {selectedProductInfo.packing_car || '—'}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div >
     )
 }
