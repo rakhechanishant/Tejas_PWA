@@ -124,8 +124,8 @@ const Dashboard = () => {
     <div className="space-y-6">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-100 sm:text-3xl font-outfit">Dashboard</h1>
-          <p className="text-sm text-slate-400">Welcome back, {profile?.name || 'Partner'} ({profile?.role})</p>
+          <h1 className="text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl font-outfit">Dashboard</h1>
+          <p className="text-sm text-slate-650">Welcome back, {profile?.name || 'Partner'} ({profile?.role})</p>
         </div>
         <div className="flex items-center gap-3">
           <button
@@ -162,7 +162,7 @@ const Dashboard = () => {
               <span className="text-sm font-semibold text-slate-700">{c.title}</span>
               <c.icon className={`h-5 w-5 ${c.color}`} />
             </div>
-            <div className="mt-2 text-2xl font-black text-slate-200 font-mono">{c.value}</div>
+            <div className="mt-2 text-2xl font-black text-neutral-900 font-mono">{c.value}</div>
             <div className="mt-1 text-xs text-slate-650 font-medium">{c.sub}</div>
           </div>
         ))}
@@ -171,7 +171,7 @@ const Dashboard = () => {
       {/* Getting Started Message */}
       <div className="rounded-2xl border border-slate-800/80 bg-gradient-to-r from-amber-500/10 to-transparent p-6">
         <h3 className="text-lg font-semibold text-amber-500">System Live</h3>
-        <p className="mt-2 text-sm text-slate-300 max-w-2xl leading-relaxed">
+        <p className="mt-2 text-sm text-neutral-700 max-w-2xl leading-relaxed">
           The dashboard is running live linked to Supabase. Placed orders, billing statuses, and credit ranges sync here in real-time.
         </p>
       </div>
@@ -210,10 +210,10 @@ const Layout: React.FC = () => {
   // null = full access, array = only dashboard + listed modules
   const navItems = (() => {
     let items = profile?.allowed_modules
-      ? allNavItems.filter(item => item.moduleKey === 'dashboard' || profile.allowed_modules!.includes(item.moduleKey))
+      ? allNavItems.filter(item => item.moduleKey === 'dashboard' || item.moduleKey === 'orders' || profile.allowed_modules!.includes(item.moduleKey))
       : allNavItems;
 
-    if (profile?.role === 'ORDER_ENTRY_TEAM') {
+    if (profile?.role === 'ORDER_ENTRY_TEAM' || profile?.role === 'UNIKAJI') {
       const allowedForOrderEntry = ['orders', 'parties', 'quotations', 'products'];
       items = allNavItems.filter(item => allowedForOrderEntry.includes(item.moduleKey));
     }
@@ -221,7 +221,7 @@ const Layout: React.FC = () => {
   })();
 
   return (
-    <div className="min-h-screen tejas-gradient text-slate-100 flex flex-col md:flex-row">
+    <div className="min-h-screen tejas-gradient text-neutral-900 flex flex-col md:flex-row">
       {/* Mobile Top Bar */}
       <div className="md:hidden flex items-center justify-between bg-slate-900 border-b border-slate-800 px-4 py-3 sticky top-0 z-50">
         <div className="flex items-center gap-2">
@@ -255,7 +255,7 @@ const Layout: React.FC = () => {
               <UserIcon className="h-5 w-5" />
             </div>
             <div className="min-w-0">
-              <p className="text-xs font-semibold truncate text-slate-200">{profile?.name || 'Loading...'}</p>
+              <p className="text-xs font-semibold truncate text-neutral-900">{profile?.name || 'Loading...'}</p>
               <p className="text-[9px] font-medium tracking-wide uppercase text-slate-500">{profile?.role || 'User'}</p>
             </div>
           </div>

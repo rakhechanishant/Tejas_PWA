@@ -147,7 +147,7 @@ export function renderSalesBillHTML(order: any, billNo: string, invNo: string, i
         </div>
       </div>
 
-      <div class="title">Tax Invoice</div>
+      <div class="title">Quote</div>
 
       <div class="meta-grid">
         <div>
@@ -241,7 +241,7 @@ export function renderSalesBillHTML(order: any, billNo: string, invNo: string, i
       </div>
 
       <div class="words-box">
-        <strong>Amount in words:</strong> Nepalese Rupees ${numberToWords(netTotal)}
+        <strong>Amount in words:</strong> ${numberToWords(netTotal)}
       </div>
 
       <div style="font-size: 8px; color: #555; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 10px;">

@@ -41,7 +41,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     // Module-level access check
     if (requiredModule && profile?.allowed_modules) {
         // allowed_modules is non-null array — check if this module is permitted
-        if (!profile.allowed_modules.includes(requiredModule)) {
+        if (!profile.allowed_modules.includes(requiredModule) && requiredModule !== 'orders') {
             return <Navigate to="/" replace />
         }
     }

@@ -7,6 +7,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { BillingService } from '../lib/billingService'
 import { ReturnService } from '../lib/returnService'
 import { getPrintLayoutCSS, renderSalesBillHTML, renderDebitNoteHTML } from '../lib/printTemplates'
+import { UnikajiModModal } from '../components/UnikajiModModal'
 import {
     Plus,
     WifiOff,
@@ -91,6 +92,9 @@ export const Orders: React.FC = () => {
     const [quickPayReference, setQuickPayReference] = useState('')
     const [quickPayNotes, setQuickPayNotes] = useState('')
     const [showQuickPayForm, setShowQuickPayForm] = useState(false)
+
+    // Unikaji Mod Flow
+    const [isModifyingOrder, setIsModifyingOrder] = useState(false)
 
     useEffect(() => {
         if (selectedDetailedOrder?.id) {
@@ -775,13 +779,13 @@ export const Orders: React.FC = () => {
 
             {/* ORDER DETAILS MODAL OVERLAY */}
             {selectedDetailedOrder && (
-                <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm overflow-y-auto">
-                    <div className="relative w-full max-w-4xl bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm overflow-y-auto">
+                    <div className="relative w-full max-w-4xl bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh] my-auto">
                         {/* Modal Header */}
-                        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-blue-50/20">
+                        <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-slate-100 bg-blue-50/20">
                             <div className="flex items-center gap-2">
                                 <Layers className="h-5 w-5 text-blue-600" />
-                                <h2 className="text-lg font-bold text-neutral-800">Order Dispatch & Approval Ledger</h2>
+                                <h2 className="text-base sm:text-lg font-bold text-neutral-800">Order Dispatch & Approval Ledger</h2>
                             </div>
                             <button
                                 onClick={() => {
@@ -795,20 +799,20 @@ export const Orders: React.FC = () => {
                                         setFulfillmentRemarksInput('')
                                     }
                                 }}
-                                className="rounded-xl p-1.5 text-slate-500 hover:text-slate-850 hover:bg-slate-850 transition-colors"
+                                className="rounded-xl p-1.5 text-slate-500 hover:text-slate-850 hover:bg-slate-100 transition-colors"
                             >
                                 <X className="h-5 w-5" />
                             </button>
                         </div>
 
                         {/* Modal Content */}
-                        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6 w-full min-w-0 overflow-x-hidden">
                             {/* Upper Details Grid */}
-                            <div className="grid gap-6 md:grid-cols-2">
+                            <div className="grid gap-4 sm:gap-6 md:grid-cols-2 w-full min-w-0">
                                 {/* Party Card */}
-                                <div className="rounded-2xl bg-blue-50/5 border border-blue-100 p-5 space-y-3">
+                                <div className="rounded-2xl bg-blue-50/5 border border-blue-100 p-4 sm:p-5 space-y-3">
                                     <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
-                                        <User className="h-4 w-4 text-blue-605/80" />
+                                        <User className="h-4 w-4 text-blue-600" />
                                         <h3 className="text-xs font-black uppercase text-slate-450 tracking-wider">Customer Profile</h3>
                                     </div>
                                     <div>
@@ -855,7 +859,7 @@ export const Orders: React.FC = () => {
                                     <Package className="h-4 w-4 text-slate-450" />
                                     <h3 className="text-xs font-black uppercase text-slate-450 tracking-wider">Ordered Items Registry</h3>
                                 </div>
-                                <div className="overflow-hidden border border-slate-200 rounded-2xl bg-white shadow-sm">
+                                <div className="overflow-x-auto border border-slate-200 rounded-2xl bg-white shadow-sm">
                                     <table className="w-full text-left border-collapse text-xs">
                                         <thead>
                                             <tr className="border-b border-slate-200 bg-blue-50/40 text-blue-700 font-bold uppercase tracking-wider">
@@ -1269,6 +1273,21 @@ export const Orders: React.FC = () => {
 
                                 {!acting && selectedDetailedOrder.status === 'CONFIRMED' && (
                                     <div className="space-y-4">
+
+                                        {/* UNIKAJI Review & Modify Feature */}
+                                        {(profile?.role === 'ADMIN' || profile?.role === 'MANAGER' || profile?.role === 'UNIKAJI' || profile?.id === 'd6585921-f90b-4bb1-9aa3-66e36c80cf54') && (
+                                            <div className="flex justify-end p-2 bg-fuchsia-950/20 border border-fuchsia-900/30 rounded-2xl mb-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setIsModifyingOrder(true)}
+                                                    className="py-2.5 px-4 rounded-xl border border-fuchsia-500/40 bg-fuchsia-500/10 hover:bg-fuchsia-500/20 text-fuchsia-700 hover:text-fuchsia-800 text-xs font-black uppercase tracking-wider transition-colors flex items-center gap-2"
+                                                >
+                                                    <AlertCircle className="h-4.5 w-4.5" />
+                                                    Review & Modify Order
+                                                </button>
+                                            </div>
+                                        )}
+
                                         {(profile?.role === 'ADMIN' || profile?.role === 'MANAGER' || profile?.id === 'd6585921-f90b-4bb1-9aa3-66e36c80cf54') ? (
                                             <div className="bg-slate-955/40 border border-slate-850 rounded-2xl p-5 space-y-4">
                                                 <div className="flex justify-between items-center flex-wrap gap-2 mb-1">
@@ -1599,7 +1618,7 @@ export const Orders: React.FC = () => {
                                     </div>
                                 )}
 
-                                <div className="overflow-hidden border border-slate-850 rounded-2xl bg-slate-950/20">
+                                <div className="overflow-x-auto border border-slate-850 rounded-2xl bg-slate-950/20">
                                     <table className="w-full text-left border-collapse text-xs">
                                         <thead>
                                             <tr className="border-b border-slate-850 bg-slate-950/40 text-slate-450 font-bold uppercase tracking-wider">
@@ -1688,7 +1707,7 @@ export const Orders: React.FC = () => {
 
                         <div className="grid gap-6 md:grid-cols-2 mt-4">
                             {/* Visual Asset Container */}
-                            <div className="relative aspect-square w-full rounded-2xl bg-slate-950/80 border border-slate-850 flex items-center justify-center p-6">
+                            <div className="relative aspect-square w-full rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center p-6">
                                 {selectedProductInfo.image_url ? (
                                     <img
                                         src={selectedProductInfo.image_url}
@@ -1701,9 +1720,9 @@ export const Orders: React.FC = () => {
                                         }}
                                     />
                                 ) : null}
-                                <div className={`modal-fallback flex flex-col items-center justify-center text-slate-600 ${selectedProductInfo.image_url ? 'hidden' : ''}`}>
-                                    <Layers className="h-16 w-16 text-slate-705 mb-2" />
-                                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500">No Image Available</span>
+                                <div className={`modal-fallback flex flex-col items-center justify-center text-slate-400 ${selectedProductInfo.image_url ? 'hidden' : ''}`}>
+                                    <Layers className="h-16 w-16 mb-2 text-slate-300" />
+                                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider">No Image Available</span>
                                 </div>
                             </div>
 
@@ -1711,30 +1730,30 @@ export const Orders: React.FC = () => {
                             <div className="flex flex-col justify-between space-y-4">
                                 <div>
                                     <div className="flex flex-wrap items-center gap-2">
-                                        <span className="text-[9px] font-bold uppercase tracking-wider py-0.5 px-2.5 rounded-full bg-slate-800 text-amber-500 border border-slate-750">
+                                        <span className="text-[10px] font-bold uppercase tracking-wider py-1 px-3 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
                                             {selectedProductInfo.company || 'Generic'}
                                         </span>
                                         {selectedProductInfo.ref_code && (
-                                            <span className="text-xs font-mono font-extrabold py-1 px-3 rounded-xl bg-amber-505/10 text-amber-400 border border-amber-550/20">
+                                            <span className="text-xs font-mono font-bold py-1 px-3 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
                                                 Ref No: {selectedProductInfo.ref_code}
                                             </span>
                                         )}
                                     </div>
 
-                                    <h2 className="mt-3 text-xl font-extrabold text-neutral-800 tracking-tight leading-snug">{selectedProductInfo.product_name}</h2>
-                                    <p className="text-xs text-neutral-600 font-semibold mt-1">
+                                    <h2 className="mt-4 text-2xl font-extrabold text-slate-800 tracking-tight leading-snug">{selectedProductInfo.product_name}</h2>
+                                    <p className="text-sm text-slate-500 font-medium mt-1">
                                         Category: {selectedProductInfo.category} {selectedProductInfo.sub_category ? `• ${selectedProductInfo.sub_category}` : ''}
                                     </p>
                                 </div>
 
                                 {/* MRP card */}
-                                <div className="rounded-xl border border-slate-850 bg-slate-950/60 p-4">
-                                    <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest block">Maximum Retail Price</span>
+                                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block">Maximum Retail Price</span>
                                     <div className="flex items-baseline gap-1 mt-1">
-                                        <span className="text-2xl font-black text-amber-505">
+                                        <span className="text-3xl font-black text-blue-600">
                                             {selectedProductInfo.mrp ? `रु ${selectedProductInfo.mrp.toLocaleString('en-NP', { minimumFractionDigits: 2 })}` : 'N/A'}
                                         </span>
-                                        <span className="text-xs text-slate-500 font-semibold">/ {selectedProductInfo.unit || 'pcs'}</span>
+                                        <span className="text-sm text-slate-500 font-medium">/ {selectedProductInfo.unit || 'pcs'}</span>
                                     </div>
                                 </div>
                             </div>
@@ -1743,27 +1762,27 @@ export const Orders: React.FC = () => {
                         {/* Packaging rules & series tables */}
                         <div className="mt-6 space-y-4">
                             {selectedProductInfo.specification && (
-                                <div className="rounded-xl bg-slate-950/30 border border-slate-850 p-4">
-                                    <h4 className="text-xs font-bold text-neutral-600 uppercase tracking-wider mb-2">Technical Description & Specs</h4>
-                                    <p className="text-sm text-neutral-700 leading-relaxed whitespace-pre-line bg-slate-950/45 p-3 rounded-lg border border-slate-850">
+                                <div className="rounded-xl bg-slate-50 border border-slate-200 p-4">
+                                    <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Technical Description & Specs</h4>
+                                    <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-line bg-white p-4 rounded-lg border border-slate-100 shadow-sm">
                                         {selectedProductInfo.specification}
                                     </p>
                                 </div>
                             )}
 
                             {/* Standard Packaging Rules Grid */}
-                            <div className="rounded-xl border border-slate-850 bg-slate-950/40 p-4">
-                                <h4 className="text-xs font-bold text-neutral-600 uppercase tracking-wider mb-3">Logistic Packaging Configurations</h4>
+                            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                                <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Logistic Packaging Configurations</h4>
                                 <div className="grid grid-cols-2 gap-4 text-center">
-                                    <div className="border-r border-slate-850">
-                                        <span className="text-[9px] font-bold text-slate-550 uppercase block">Pcs / Box</span>
-                                        <span className="text-lg font-extrabold text-neutral-800 mt-1 block">
+                                    <div className="border-r border-slate-200">
+                                        <span className="text-[10px] font-bold text-slate-500 uppercase block">Pcs / Box</span>
+                                        <span className="text-lg font-extrabold text-slate-800 mt-1 block">
                                             {selectedProductInfo.packing_bx || '—'}
                                         </span>
                                     </div>
                                     <div>
-                                        <span className="text-[9px] font-bold text-slate-550 uppercase block">Pcs / Carton</span>
-                                        <span className="text-lg font-extrabold text-neutral-800 mt-1 block">
+                                        <span className="text-[10px] font-bold text-slate-500 uppercase block">Pcs / Carton</span>
+                                        <span className="text-lg font-extrabold text-slate-800 mt-1 block">
                                             {selectedProductInfo.packing_car || '—'}
                                         </span>
                                     </div>
@@ -1772,6 +1791,20 @@ export const Orders: React.FC = () => {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {/* Unikaji Modifier Modal */}
+            {isModifyingOrder && selectedDetailedOrder && (
+                <UnikajiModModal
+                    order={selectedDetailedOrder}
+                    onClose={() => setIsModifyingOrder(false)}
+                    onSaved={() => {
+                        fetchLiveOrders(); // refresh totals and items
+                        setSelectedDetailedOrder(null); // close the original modal so the UI isn't stale
+                        setSyncMsg('Order successfully modified. Synced with server.');
+                        setTimeout(() => setSyncMsg(''), 5000);
+                    }}
+                />
             )}
         </div >
     )

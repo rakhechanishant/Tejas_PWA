@@ -67,6 +67,7 @@ export const Payments: React.FC = () => {
     // Search and filters
     const [searchQuery, setSearchQuery] = useState('')
     const [selectedMethodFilter, setSelectedMethodFilter] = useState('')
+    const [partyStatusFilter, setPartyStatusFilter] = useState<'all' | 'outstanding' | 'completed'>('outstanding')
 
     // Modal state for recording payment
     const [showModal, setShowModal] = useState(false)
@@ -381,15 +382,23 @@ export const Payments: React.FC = () => {
     // Filtered lists
     const filteredParties = useMemo(() => {
         const query = searchQuery.trim().toLowerCase()
-        if (!query) return parties
+        let result = parties
 
-        return parties.filter(p => {
+        if (partyStatusFilter === 'outstanding') {
+            result = result.filter(p => p.total_due > 0)
+        } else if (partyStatusFilter === 'completed') {
+            result = result.filter(p => p.total_due <= 0)
+        }
+
+        if (!query) return result
+
+        return result.filter(p => {
             const matchesName = p.name?.toLowerCase().includes(query)
             const matchesCode = p.party_code?.toLowerCase().includes(query)
             const matchesCity = p.city?.toLowerCase().includes(query)
             return matchesName || matchesCode || matchesCity
         })
-    }, [parties, searchQuery])
+    }, [parties, searchQuery, partyStatusFilter])
 
     const filteredPayments = useMemo(() => {
         const query = searchQuery.trim().toLowerCase()
@@ -526,7 +535,7 @@ export const Payments: React.FC = () => {
                     />
                 </div>
 
-                {activeViewTab === 'history' && (
+                {activeViewTab === 'history' ? (
                     <div className="flex items-center gap-2">
                         <Filter className="h-4.5 w-4.5 text-slate-500" />
                         <select
@@ -541,6 +550,19 @@ export const Payments: React.FC = () => {
                             <option value="ESEWA">ESEWA</option>
                             <option value="KHALTI">KHALTI</option>
                             <option value="UPI">UPI</option>
+                        </select>
+                    </div>
+                ) : (
+                    <div className="flex items-center gap-2">
+                        <Filter className="h-4.5 w-4.5 text-slate-500" />
+                        <select
+                            value={partyStatusFilter}
+                            onChange={(e) => setPartyStatusFilter(e.target.value as any)}
+                            className="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-neutral-700 text-xs font-semibold focus:outline-none focus:border-amber-500 w-full md:w-auto"
+                        >
+                            <option value="outstanding">Outstanding Accounts</option>
+                            <option value="completed">Completed / Settled</option>
+                            <option value="all">All Customer Accounts</option>
                         </select>
                     </div>
                 )}
