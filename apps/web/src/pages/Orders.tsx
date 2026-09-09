@@ -74,6 +74,8 @@ export const Orders: React.FC = () => {
 
     // Phase 4 additions: State control hooks
     const [activeTab, setActiveTab] = useState<'all' | 'pending' | 'pending_fulfillment' | 'completed'>('all')
+    const [dateFilter, setDateFilter] = useState<'all' | 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly'>('all')
+    const [searchQuery, setSearchQuery] = useState('')
     const [selectedDetailedOrder, setSelectedDetailedOrder] = useState<any | null>(null)
     const [selectedProductInfo, setSelectedProductInfo] = useState<any | null>(null)
     const [profiles, setProfiles] = useState<any[]>([])
@@ -407,7 +409,38 @@ export const Orders: React.FC = () => {
     }
 
     const showPendingTab = true
-    const filteredLiveOrders = liveOrders.filter((ord) => {
+
+    // Filter by Party & Date first, so tab counts are accurate
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay());
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const startOfQuarter = new Date(today.getFullYear(), Math.floor(today.getMonth() / 3) * 3, 1);
+    const startOfYear = new Date(today.getFullYear(), 0, 1);
+
+    const baseFilteredOrders = liveOrders.filter(ord => {
+        if (searchQuery.trim() !== '') {
+            const query = searchQuery.toLowerCase();
+            const partyName = (ord.parties?.Parties_name || '').toLowerCase();
+            const orderNum = (ord.order_number || '').toLowerCase();
+            if (!partyName.includes(query) && !orderNum.includes(query)) return false;
+        }
+
+        if (dateFilter === 'all') return true;
+
+        const orderDate = new Date(ord.created_at);
+        switch (dateFilter) {
+            case 'daily': return orderDate >= today;
+            case 'weekly': return orderDate >= startOfWeek;
+            case 'monthly': return orderDate >= startOfMonth;
+            case 'quarterly': return orderDate >= startOfQuarter;
+            case 'yearly': return orderDate >= startOfYear;
+            default: return true;
+        }
+    });
+
+    const filteredLiveOrders = baseFilteredOrders.filter((ord) => {
         if (activeTab === 'pending') {
             return ord.status === 'CONFIRMED'
         }
@@ -667,13 +700,36 @@ export const Orders: React.FC = () => {
                         <Layers className="h-4 w-4" /> Live Order Registry feeds
                     </h2>
 
+                    <div className="flex gap-2 sm:gap-3 flex-wrap items-center mt-3 sm:mt-0">
+                        <select
+                            value={dateFilter}
+                            onChange={(e) => setDateFilter(e.target.value as any)}
+                            className="bg-white border border-slate-200 text-slate-700 text-xs font-bold rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow cursor-pointer"
+                        >
+                            <option value="all">All Dates</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                            <option value="yearly">Yearly</option>
+                        </select>
+
+                        <input
+                            type="text"
+                            placeholder="Search orders or parties..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="bg-white border border-slate-200 text-slate-700 text-xs font-bold rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow w-full sm:w-auto min-w-[200px]"
+                        />
+                    </div>
+
                     {/* Tabs Filter */}
                     <div className="flex gap-4 flex-wrap border-b border-slate-200 pb-2">
                         <button
                             onClick={() => setActiveTab('all')}
                             className={`text-xs font-bold transition-all relative pb-2 ${activeTab === 'all' ? 'text-blue-600 font-extrabold' : 'text-slate-500 hover:text-slate-850'}`}
                         >
-                            All Transactions ({liveOrders.length})
+                            All Transactions ({baseFilteredOrders.length})
                             {activeTab === 'all' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full" />}
                         </button>
                         {showPendingTab && (
@@ -681,7 +737,7 @@ export const Orders: React.FC = () => {
                                 onClick={() => setActiveTab('pending')}
                                 className={`text-xs font-bold transition-all relative pb-2 ${activeTab === 'pending' ? 'text-blue-600 font-extrabold' : 'text-slate-500 hover:text-slate-850'}`}
                             >
-                                Awaiting Billing ({liveOrders.filter(o => o.status === 'CONFIRMED').length})
+                                Awaiting Billing ({baseFilteredOrders.filter(o => o.status === 'CONFIRMED').length})
                                 {activeTab === 'pending' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full" />}
                             </button>
                         )}
@@ -689,14 +745,14 @@ export const Orders: React.FC = () => {
                             onClick={() => setActiveTab('pending_fulfillment')}
                             className={`text-xs font-bold transition-all relative pb-2 ${activeTab === 'pending_fulfillment' ? 'text-blue-600 font-extrabold' : 'text-slate-500 hover:text-slate-850'}`}
                         >
-                            Pending Pack ({liveOrders.filter(o => o.status === 'PENDING_FULFILLMENT').length})
+                            Pending Pack ({baseFilteredOrders.filter(o => o.status === 'PENDING_FULFILLMENT').length})
                             {activeTab === 'pending_fulfillment' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full" />}
                         </button>
                         <button
                             onClick={() => setActiveTab('completed')}
                             className={`text-xs font-bold transition-all relative pb-2 ${activeTab === 'completed' ? 'text-blue-600 font-extrabold' : 'text-slate-500 hover:text-slate-850'}`}
                         >
-                            Completed ({liveOrders.filter(o => o.status === 'PACKED').length})
+                            Completed ({baseFilteredOrders.filter(o => o.status === 'PACKED').length})
                             {activeTab === 'completed' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full" />}
                         </button>
                     </div>
