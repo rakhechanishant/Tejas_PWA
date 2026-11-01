@@ -604,7 +604,7 @@ export const Payments: React.FC = () => {
                                             {p.party_code.replace("TEJAS-", "")}
                                         </div>
                                         <div className="min-w-0">
-                                            <h3 className="text-sm font-bold text-neutral-900 group-hover:text-neutral-900 truncate">{p.name}</h3>
+                                            <h3 className="text-sm font-bold text-neutral-900 group-hover:text-neutral-900 break-words">{p.name}</h3>
                                             <div className="flex gap-2.5 items-center mt-1 text-slate-450 text-xs">
                                                 <span>City: {p.city || 'N/A'}</span>
                                                 <span className="h-1 w-1 bg-slate-800 rounded-full"></span>
@@ -724,8 +724,8 @@ export const Payments: React.FC = () => {
 
             {/* CUSTOMER LEDGER DETAIL MODAL */}
             {showLedgerModal && selectedLedgerParty && (
-                <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm overflow-y-auto">
-                    <div className="relative w-full max-w-4xl bg-slate-905 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+                <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 overflow-y-auto p-3 sm:p-6 flex items-start sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm">
+                    <div className="relative w-full max-w-4xl bg-slate-905 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col my-auto sm:my-8 max-h-[92vh]">
                         {/* Header */}
                         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-850 bg-slate-900/30">
                             <div className="flex items-center gap-2">
@@ -946,8 +946,8 @@ export const Payments: React.FC = () => {
 
             {/* RECORD PAYMENT DRAWER MODAL */}
             {showModal && (
-                <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm overflow-y-auto">
-                    <div className="relative w-full max-w-xl bg-slate-905 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+                <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 overflow-y-auto p-3 sm:p-6 flex items-start sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm">
+                    <div className="relative w-full max-w-xl bg-slate-905 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col my-auto sm:my-8 max-h-[92vh]">
                         {/* Header */}
                         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-850 bg-slate-900/30">
                             <div className="flex items-center gap-2">
@@ -1052,7 +1052,7 @@ export const Payments: React.FC = () => {
                             {/* Double grid inputs */}
                             {selectedOrder && (
                                 <>
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div>
                                             <label className="block text-[10px] font-black uppercase text-slate-500 tracking-wider mb-1.5">
                                                 Unpaid Balance (Order)
@@ -1079,7 +1079,7 @@ export const Payments: React.FC = () => {
                                         </div>
                                     </div>
 
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div>
                                             <label className="block text-[10px] font-black uppercase text-slate-500 tracking-wider mb-1.5">
                                                 Clearance Channel *
@@ -1177,8 +1177,8 @@ export const Payments: React.FC = () => {
 
             {/* PAYMENT DETAILS POPUP MODAL */}
             {selectedPaymentDetail && (
-                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-sm overflow-y-auto">
-                    <div className="relative w-full max-w-lg bg-slate-905 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col">
+                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[60] overflow-y-auto p-3 sm:p-6 flex items-start sm:items-center justify-center bg-slate-950/85 backdrop-blur-sm">
+                    <div className="relative w-full max-w-lg bg-slate-905 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col my-auto sm:my-8 max-h-[92vh]">
                         {/* Header */}
                         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-850 bg-slate-900/30">
                             <div className="flex items-center gap-2">
@@ -1205,7 +1205,7 @@ export const Payments: React.FC = () => {
                             </div>
 
                             {/* Details Grid */}
-                            <div className="grid grid-cols-2 gap-4 text-xs font-semibold">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-semibold">
                                 <div className="bg-slate-900/20 p-4 rounded-xl border border-slate-850">
                                     <span className="block text-[9px] uppercase tracking-wider text-slate-500 mb-1 font-bold">Party / Customer</span>
                                     <span className="text-neutral-800 block">{selectedPaymentDetail.party_name}</span>

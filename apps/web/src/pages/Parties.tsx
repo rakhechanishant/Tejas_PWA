@@ -577,20 +577,20 @@ export const Parties: React.FC = () => {
                                     <div
                                         key={p.id}
                                         onClick={() => setActiveProfile(p)}
-                                        className="group rounded-2xl border border-slate-200 bg-white hover:border-slate-300 p-4 transition-all hover:bg-slate-900/60 shadow-sm flex items-center justify-between cursor-pointer"
+                                        className="group rounded-2xl border border-slate-200 bg-white hover:border-slate-300 p-4 transition-all hover:bg-slate-900/60 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 cursor-pointer"
                                     >
-                                        <div className="flex items-center gap-4 min-w-0">
+                                        <div className="flex items-start sm:items-center gap-3 sm:gap-4 min-w-0">
                                             {/* Code avatar label */}
-                                            <div className="hidden sm:flex h-12 w-12 rounded-xl bg-slate-900 group-hover:bg-blue-50 border border-slate-200 items-center justify-center text-slate-500 group-hover:text-blue-600 transition-colors uppercase font-bold text-[10px] text-center font-mono">
+                                            <div className="h-10 w-10 sm:h-12 sm:w-12 shrink-0 rounded-xl bg-slate-900 group-hover:bg-blue-50 border border-slate-200 flex items-center justify-center text-slate-500 group-hover:text-blue-600 transition-colors uppercase font-bold text-[10px] text-center font-mono">
                                                 {p.party_code.replace("TEJAS-", "")}
                                             </div>
 
-                                            <div className="min-w-0 space-y-1 font-outfit">
+                                            <div className="min-w-0 space-y-1 font-outfit flex-1">
                                                 <div className="flex items-center gap-2 flex-wrap">
-                                                    <h3 className="text-sm font-bold text-neutral-800 group-hover:text-blue-600 transition-colors truncate">
+                                                    <h3 className="text-sm font-bold text-neutral-800 group-hover:text-blue-600 transition-colors break-words">
                                                         {p.name}
                                                     </h3>
-                                                    <span className="text-[9px] font-bold py-0.5 px-2 rounded-md bg-slate-850 text-slate-600 border border-slate-200">
+                                                    <span className="text-[9px] font-bold py-0.5 px-2 rounded-md bg-slate-850 text-slate-600 border border-slate-200 shrink-0">
                                                         {p.party_type || 'Retailer'}
                                                     </span>
                                                 </div>
@@ -599,23 +599,23 @@ export const Parties: React.FC = () => {
                                                 <div className="flex items-center gap-3 text-xs text-slate-500 flex-wrap">
                                                     {p.phone && (
                                                         <span className="flex items-center gap-1.5 font-mono text-[11px] text-slate-600">
-                                                            <Phone className="h-3.5 w-3.5 text-neutral-600" />
+                                                            <Phone className="h-3.5 w-3.5 text-neutral-600 shrink-0" />
                                                             {p.phone}
                                                         </span>
                                                     )}
                                                     {p.city && (
-                                                        <span className="flex items-center gap-1 text-slate-500 truncate">
+                                                        <span className="flex items-center gap-1 text-slate-500">
                                                             <MapPin className="h-3.5 w-3.5 shrink-0 text-neutral-600" />
-                                                            {p.city}
+                                                            <span>{p.city}</span>
                                                         </span>
                                                     )}
                                                 </div>
                                             </div>
                                         </div>
 
-                                        {/* Dues / Credit Display */}
-                                        <div className="flex items-center gap-4 shrink-0 font-outfit">
-                                            <div className="text-right">
+                                        {/* Dues / Credit Display & Actions */}
+                                        <div className="flex items-center justify-between sm:justify-end gap-4 shrink-0 font-outfit pt-2 sm:pt-0 border-t sm:border-0 border-slate-100">
+                                            <div className="text-left sm:text-right">
                                                 <span className="block text-[9px] font-semibold text-neutral-600 uppercase tracking-wider">Due Amount</span>
                                                 <span className={`text-sm font-extrabold font-outfit ${outstanding > 0
                                                     ? isLimitExceeded ? 'text-rose-600 underline decoration-wavy' : 'text-amber-600 font-bold'
@@ -625,16 +625,19 @@ export const Parties: React.FC = () => {
                                                 </span>
                                             </div>
 
-                                            <div className="flex items-center gap-1.5">
+                                            <div className="flex items-center gap-2">
                                                 <button
                                                     type="button"
                                                     onClick={(e) => handleEditClick(e, p)}
                                                     title="Edit Customer"
-                                                    className="p-2 rounded-lg bg-slate-900 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 text-slate-600 hover:text-blue-600 transition-colors cursor-pointer"
+                                                    aria-label={`Edit ${p.name}`}
+                                                    className="p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-900 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 text-slate-600 hover:text-blue-600 transition-colors cursor-pointer"
                                                 >
-                                                    <Edit3 className="h-3.5 w-3.5" />
+                                                    <Edit3 className="h-4 w-4" />
                                                 </button>
-                                                <ChevronRight className="h-5 w-5 text-neutral-600 group-hover:text-blue-600 transition-colors hidden sm:block" />
+                                                <div className="hidden sm:flex items-center justify-center text-neutral-400 group-hover:text-blue-600 transition-colors">
+                                                    <ChevronRight className="h-5 w-5" />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -682,23 +685,24 @@ export const Parties: React.FC = () => {
 
             {/* DRAWER / DETAILS MODAL */}
             {activeProfile && (
-                <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-end bg-slate-900/40 backdrop-blur-sm p-4">
-                    <div className="w-full max-w-lg h-full bg-white border-l border-slate-200 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-2xl animate-in slide-in-from-right duration-300">
+                <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-stretch justify-end bg-slate-900/50 backdrop-blur-sm sm:p-4">
+                    <div className="w-full sm:max-w-lg h-full bg-white border-l border-slate-200 rounded-none sm:rounded-3xl p-4 sm:p-6 md:p-8 flex flex-col justify-between shadow-2xl animate-in slide-in-from-right duration-300 overflow-hidden">
                         {/* Header info */}
                         <div className="flex flex-col h-full overflow-hidden font-outfit">
                             <div className="flex items-center justify-between pb-4 border-b border-slate-205 shrink-0">
-                                <div>
+                                <div className="min-w-0 pr-2">
                                     <span className="text-[10px] font-mono font-bold tracking-wider text-blue-600 uppercase">
                                         {activeProfile.party_code}
                                     </span>
-                                    <h2 className="text-xl font-extrabold text-neutral-800 mt-1 font-outfit leading-tight truncate max-w-[320px]">
+                                    <h2 className="text-lg sm:text-xl font-extrabold text-neutral-800 mt-0.5 font-outfit leading-tight break-words">
                                         {activeProfile.name}
                                     </h2>
                                 </div>
                                 <button
                                     type="button"
                                     onClick={() => setActiveProfile(null)}
-                                    className="text-slate-500 hover:text-slate-700 rounded-lg p-1.5 hover:bg-slate-850 transition-colors cursor-pointer"
+                                    aria-label="Close details"
+                                    className="text-slate-500 hover:text-slate-700 rounded-xl p-2 hover:bg-slate-100 transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center shrink-0"
                                 >
                                     <X className="h-5 w-5" />
                                 </button>

@@ -215,12 +215,12 @@ export const PartyForm: React.FC<PartyFormProps> = ({
     }
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm overflow-y-auto">
-            <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl my-8">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-sm p-3 sm:p-6 flex justify-center items-start sm:items-center">
+            <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl my-auto sm:my-8">
                 {/* Header */}
                 <div className="flex items-center justify-between pb-4 border-b border-slate-800">
                     <div>
-                        <h2 className="text-xl font-bold font-outfit text-neutral-900">
+                        <h2 className="text-lg sm:text-xl font-bold font-outfit text-neutral-900">
                             {isEditMode ? `Edit Party: ${party?.party_code}` : 'Register New Party'}
                         </h2>
                         <p className="text-xs text-neutral-600 mt-0.5">
@@ -230,7 +230,8 @@ export const PartyForm: React.FC<PartyFormProps> = ({
                     <button
                         type="button"
                         onClick={onClose}
-                        className="text-neutral-600 hover:text-neutral-900 rounded-lg p-1.5 hover:bg-slate-800 transition-colors"
+                        aria-label="Close modal"
+                        className="text-neutral-600 hover:text-neutral-900 rounded-xl p-2 hover:bg-slate-800 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
                     >
                         <X className="h-5 w-5" />
                     </button>
@@ -243,11 +244,11 @@ export const PartyForm: React.FC<PartyFormProps> = ({
                 )}
 
                 {/* Form body */}
-                <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+                <form onSubmit={handleSubmit} className="mt-5 sm:mt-6 space-y-4 sm:space-y-5">
                     {/* Main Info Row */}
-                    <div className="grid gap-4 md:grid-cols-2">
+                    <div className="grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2">
                         <div className="space-y-1">
-                            <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-600">Party / Store Name *</label>
+                            <label className="text-[11px] font-bold uppercase tracking-wider text-slate-700">Party / Store Name *</label>
                             <div className="relative">
                                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                     <UserCheck className="h-4 w-4 text-slate-500" />
@@ -258,13 +259,13 @@ export const PartyForm: React.FC<PartyFormProps> = ({
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     placeholder="e.g. Bajrang Hardware Store"
-                                    className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 pr-3 pl-9 text-xs text-neutral-900 focus:border-amber-500 focus:outline-none"
+                                    className="block w-full min-h-[44px] rounded-xl border border-slate-800 bg-slate-950 py-2.5 pr-3 pl-9 text-sm text-neutral-900 focus:border-amber-500 focus:outline-none"
                                 />
                             </div>
                         </div>
 
                         <div className="space-y-1">
-                            <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-600">Contact Number</label>
+                            <label className="text-[11px] font-bold uppercase tracking-wider text-slate-700">Contact Number</label>
                             <div className="relative">
                                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                     <Phone className="h-4 w-4 text-slate-500" />
@@ -274,15 +275,15 @@ export const PartyForm: React.FC<PartyFormProps> = ({
                                     value={phone}
                                     onChange={(e) => setPhone(e.target.value)}
                                     placeholder="e.g. 9841XXXXXX or 014XXXX"
-                                    className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 pr-3 pl-9 text-xs text-neutral-900 focus:border-amber-500 focus:outline-none"
+                                    className="block w-full min-h-[44px] rounded-xl border border-slate-800 bg-slate-950 py-2.5 pr-3 pl-9 text-sm text-neutral-900 focus:border-amber-500 focus:outline-none font-mono"
                                 />
                             </div>
                         </div>
                     </div>
 
-                    <div className="grid gap-4 md:grid-cols-3">
+                    <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-3">
                         <div className="space-y-1">
-                            <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-600">PAN Number (9 Digits)</label>
+                            <label className="text-[11px] font-bold uppercase tracking-wider text-slate-700">PAN Number (9 Digits)</label>
                             <div className="relative">
                                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                     <Hash className="h-4 w-4 text-slate-500" />
@@ -292,17 +293,17 @@ export const PartyForm: React.FC<PartyFormProps> = ({
                                     value={pan}
                                     onChange={(e) => setPan(e.target.value)}
                                     placeholder="e.g. 609876543"
-                                    className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 pr-3 pl-9 text-xs text-neutral-900 focus:border-amber-500 focus:outline-none"
+                                    className="block w-full min-h-[44px] rounded-xl border border-slate-800 bg-slate-950 py-2.5 pr-3 pl-9 text-sm text-neutral-900 focus:border-amber-500 focus:outline-none font-mono"
                                 />
                             </div>
                         </div>
 
                         <div className="space-y-1">
-                            <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-600">Party Type</label>
+                            <label className="text-[11px] font-bold uppercase tracking-wider text-slate-700">Party Type</label>
                             <select
                                 value={partyType}
                                 onChange={(e) => setPartyType(e.target.value)}
-                                className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-neutral-900 focus:border-amber-500 focus:outline-none"
+                                className="block w-full min-h-[44px] rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-sm text-neutral-900 focus:border-amber-500 focus:outline-none"
                             >
                                 <option value="Hardware">Hardware Store</option>
                                 <option value="Wholesaler">Wholesaler</option>
@@ -313,45 +314,45 @@ export const PartyForm: React.FC<PartyFormProps> = ({
                         </div>
 
                         <div className="space-y-1">
-                            <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-600">Credit Limit (रु)</label>
+                            <label className="text-[11px] font-bold uppercase tracking-wider text-slate-700">Credit Limit (रु)</label>
                             <input
                                 type="number"
                                 min="0"
                                 value={creditLimit}
                                 onChange={(e) => setCreditLimit(Number(e.target.value))}
                                 placeholder="200000"
-                                className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-neutral-900 focus:border-amber-500 focus:outline-none"
+                                className="block w-full min-h-[44px] rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-sm text-neutral-900 focus:border-amber-500 focus:outline-none font-mono"
                             />
                         </div>
                     </div>
 
                     {/* Contact Person Details */}
-                    <div className="grid gap-4 md:grid-cols-2">
+                    <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2">
                         <div className="space-y-1">
-                            <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-600">Contact Person Name</label>
+                            <label className="text-[11px] font-bold uppercase tracking-wider text-slate-700">Contact Person Name</label>
                             <input
                                 type="text"
                                 value={contactPerson}
                                 onChange={(e) => setContactPerson(e.target.value)}
                                 placeholder="e.g. Mr. Ram Gurung"
-                                className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-neutral-900 focus:border-amber-500 focus:outline-none"
+                                className="block w-full min-h-[44px] rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-sm text-neutral-900 focus:border-amber-500 focus:outline-none"
                             />
                         </div>
 
                         <div className="space-y-1">
-                            <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-600">Designation</label>
+                            <label className="text-[11px] font-bold uppercase tracking-wider text-slate-700">Designation</label>
                             <input
                                 type="text"
                                 value={designation}
                                 onChange={(e) => setDesignation(e.target.value)}
                                 placeholder="e.g. Proprietor / Manager"
-                                className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-neutral-900 focus:border-amber-500 focus:outline-none"
+                                className="block w-full min-h-[44px] rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-sm text-neutral-900 focus:border-amber-500 focus:outline-none"
                             />
                         </div>
                     </div>
 
                     <div className="space-y-1">
-                        <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-600">Consolidated Address</label>
+                        <label className="text-[11px] font-bold uppercase tracking-wider text-slate-700">Consolidated Address</label>
                         <div className="relative">
                             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                 <Home className="h-4 w-4 text-slate-500" />
@@ -361,72 +362,72 @@ export const PartyForm: React.FC<PartyFormProps> = ({
                                 value={address}
                                 onChange={(e) => setAddress(e.target.value)}
                                 placeholder="e.g. Ward 4, New Road, Pokhara"
-                                className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 pr-3 pl-9 text-xs text-neutral-900 focus:border-amber-500 focus:outline-none"
+                                className="block w-full min-h-[44px] rounded-xl border border-slate-800 bg-slate-950 py-2.5 pr-3 pl-9 text-sm text-neutral-900 focus:border-amber-500 focus:outline-none"
                             />
                         </div>
                     </div>
 
                     {/* Regional details */}
-                    <div className="grid gap-4 md:grid-cols-4">
+                    <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
                         <div className="space-y-1">
-                            <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-600">Province</label>
+                            <label className="text-[11px] font-bold uppercase tracking-wider text-slate-700">Province</label>
                             <input
                                 type="text"
                                 value={province}
                                 onChange={(e) => setProvince(e.target.value)}
                                 placeholder="e.g. Gandaki"
-                                className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-neutral-900 focus:border-amber-500 focus:outline-none"
+                                className="block w-full min-h-[44px] rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-sm text-neutral-900 focus:border-amber-500 focus:outline-none"
                             />
                         </div>
 
                         <div className="space-y-1">
-                            <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-600">District</label>
+                            <label className="text-[11px] font-bold uppercase tracking-wider text-slate-700">District</label>
                             <input
                                 type="text"
                                 value={district}
                                 onChange={(e) => setDistrict(e.target.value)}
                                 placeholder="e.g. Kaski"
-                                className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-neutral-900 focus:border-amber-500 focus:outline-none"
+                                className="block w-full min-h-[44px] rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-sm text-neutral-900 focus:border-amber-500 focus:outline-none"
                             />
                         </div>
 
                         <div className="space-y-1">
-                            <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-600">City</label>
+                            <label className="text-[11px] font-bold uppercase tracking-wider text-slate-700">City</label>
                             <input
                                 type="text"
                                 value={city}
                                 onChange={(e) => setCity(e.target.value)}
                                 placeholder="e.g. Pokhara"
-                                className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-neutral-900 focus:border-amber-500 focus:outline-none"
+                                className="block w-full min-h-[44px] rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-sm text-neutral-900 focus:border-amber-500 focus:outline-none"
                             />
                         </div>
 
                         <div className="space-y-1">
-                            <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-600">Sales Representative</label>
+                            <label className="text-[11px] font-bold uppercase tracking-wider text-slate-700">Sales Representative</label>
                             <input
                                 type="text"
                                 value={salesPerson}
                                 onChange={(e) => setSalesPerson(e.target.value)}
                                 placeholder="e.g. Tejas Staff"
-                                className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-neutral-900 focus:border-amber-500 focus:outline-none"
+                                className="block w-full min-h-[44px] rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-sm text-neutral-900 focus:border-amber-500 focus:outline-none"
                             />
                         </div>
                     </div>
 
                     {/* Footer Submit Buttons */}
-                    <div className="pt-6 border-t border-slate-800 flex justify-end gap-3">
+                    <div className="pt-5 sm:pt-6 border-t border-slate-800 flex items-center justify-end gap-3">
                         <button
                             type="button"
                             disabled={loading}
                             onClick={onClose}
-                            className="px-5 py-2.5 rounded-xl border border-slate-850 hover:bg-slate-800 hover:text-neutral-900 transition-all text-xs font-semibold text-neutral-600 disabled:opacity-50"
+                            className="min-h-[44px] px-5 py-2.5 rounded-xl border border-slate-850 hover:bg-slate-800 hover:text-neutral-900 transition-all text-xs font-semibold text-neutral-600 disabled:opacity-50 cursor-pointer"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-neutral-900 hover:bg-amber-400 font-bold transition-all text-xs disabled:opacity-50"
+                            className="min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 text-white hover:bg-amber-600 font-bold transition-all text-xs disabled:opacity-50 cursor-pointer shadow-md shadow-amber-500/20 active:scale-95"
                         >
                             {loading ? (
                                 <Loader2 className="h-4 w-4 animate-spin" />

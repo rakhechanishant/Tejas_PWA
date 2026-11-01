@@ -942,8 +942,8 @@ export const NewOrder: React.FC = () => {
 
             {/* Product Detail Modal/Drawer Overlay (Amazon Style) */}
             {selectedDetailProduct && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-955/40 p-4 backdrop-blur-sm">
-                    <div className="relative w-full max-w-2xl rounded-3xl border border-slate-205 bg-white p-6 shadow-2xl max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-200 font-outfit">
+                <div className="fixed inset-0 z-50 overflow-y-auto p-3 sm:p-6 flex items-start sm:items-center justify-center bg-slate-955/40 backdrop-blur-sm">
+                    <div className="relative w-full max-w-2xl rounded-3xl border border-slate-205 bg-white p-6 shadow-2xl my-auto sm:my-8 max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-200 font-outfit">
                         <button
                             onClick={() => setSelectedDetailProduct(null)}
                             className="absolute right-4 top-4 rounded-xl bg-slate-850 hover:bg-slate-200 p-2 text-slate-500 hover:text-neutral-800 border border-slate-200 transition-colors cursor-pointer"

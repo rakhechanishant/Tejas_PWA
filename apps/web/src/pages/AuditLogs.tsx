@@ -215,8 +215,42 @@ export const AuditLogs: React.FC = () => {
                     <p className="mt-1 text-sm text-slate-550">No events found matching your query criteria.</p>
                 </div>
             ) : (
-                <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/10">
-                    <table className="w-full border-collapse text-left text-sm">
+                <>
+                    {/* Mobile Cards for Audit Logs */}
+                    <div className="space-y-3 sm:hidden">
+                        {filteredLogs.map((log) => (
+                            <div key={log.id} className="p-4 rounded-2xl border border-slate-800 bg-slate-900/40 space-y-3">
+                                <div className="flex items-center justify-between">
+                                    <span className="font-mono text-xs font-bold text-neutral-800">
+                                        {log.table_name} #{log.record_id}
+                                    </span>
+                                    <span className={`px-2 py-0.5 rounded text-[10px] font-extrabold tracking-wider ${getActionBadgeClass(log.action)}`}>
+                                        {log.action}
+                                    </span>
+                                </div>
+                                <div className="flex items-center justify-between text-xs">
+                                    <div className="flex items-center gap-1 text-neutral-600">
+                                        <Calendar className="h-3.5 w-3.5 text-slate-550" />
+                                        <span>{new Date(log.changed_at).toLocaleString('en-IN')}</span>
+                                    </div>
+                                    <div className="text-right">
+                                        <span className="text-neutral-800 font-medium">{log.profiles?.name || 'Automated'}</span>
+                                        <span className="text-[10px] text-slate-500 block uppercase">{log.profiles?.role || 'SYSTEM'}</span>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => setSelectedLog(log)}
+                                    className="w-full min-h-[44px] py-2 px-4 bg-slate-900 border border-slate-800 hover:border-slate-700 text-neutral-700 hover:text-neutral-900 rounded-xl text-xs font-semibold flex items-center justify-center gap-2"
+                                >
+                                    Inspect Diff Payload
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Desktop Table */}
+                    <div className="hidden sm:block overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/10">
+                        <table className="w-full border-collapse text-left text-sm">
                         <thead className="bg-slate-900/60 text-neutral-600 uppercase text-[9px] font-bold tracking-wider">
                             <tr>
                                 <th className="px-5 py-3">Timestamp</th>
@@ -264,12 +298,13 @@ export const AuditLogs: React.FC = () => {
                         </tbody>
                     </table>
                 </div>
+                </>
             )}
 
             {/* Modal for Details / Diff */}
             {selectedLog && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-                    <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh]">
+                <div className="fixed inset-0 z-50 overflow-y-auto p-3 sm:p-6 flex items-start sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm">
+                    <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col my-auto sm:my-8 max-h-[92vh]">
                         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/20">
                             <div>
                                 <h3 className="text-base font-bold text-neutral-900">Audit Payload Inspector</h3>

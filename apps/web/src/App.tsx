@@ -223,24 +223,39 @@ const Layout: React.FC = () => {
   return (
     <div className="min-h-screen tejas-gradient text-neutral-900 flex flex-col md:flex-row">
       {/* Mobile Top Bar */}
-      <div className="md:hidden flex items-center justify-between bg-slate-900 border-b border-slate-800 px-4 py-3 sticky top-0 z-50">
-        <div className="flex items-center gap-2">
-          <a href="https://www.tejasimpex.com.np/" target="_blank" rel="noopener noreferrer" className="font-extrabold text-amber-500 tracking-wider hover:text-amber-400 transition-colors uppercase text-sm">
+      <header className="md:hidden flex items-center justify-between bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-4 py-2.5 sticky top-0 z-30 min-h-[52px]">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <a href="https://www.tejasimpex.com.np/" target="_blank" rel="noopener noreferrer" className="font-extrabold text-amber-500 tracking-wider hover:text-amber-400 transition-colors uppercase text-sm font-outfit truncate">
             Tejas Impex
           </a>
+          {profile?.role && (
+            <span className="text-[9px] font-bold font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 uppercase shrink-0">
+              {profile.role.replace('_', ' ')}
+            </span>
+          )}
         </div>
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="text-slate-400 hover:text-white focus:outline-none"
+          aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+          className="min-h-[44px] min-w-[44px] -mr-2 flex items-center justify-center text-slate-400 hover:text-white rounded-lg focus:outline-none cursor-pointer"
         >
           {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
-      </div>
+      </header>
+
+      {/* Mobile Drawer Backdrop Overlay */}
+      {mobileMenuOpen && (
+        <div
+          onClick={() => setMobileMenuOpen(false)}
+          className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-40 md:hidden animate-in fade-in duration-200"
+          aria-hidden="true"
+        />
+      )}
 
       {/* Sidebar Navigation */}
       <aside className={`
-        fixed inset-y-0 left-0 z-40 w-64 bg-slate-900 border-r border-slate-850 p-5 transform transition-transform duration-300 md:translate-x-0 md:static md:flex md:flex-col justify-between
-        ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
+        fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] bg-slate-900 border-r border-slate-850 p-5 transform transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:w-64 md:flex md:flex-col justify-between overflow-y-auto
+        ${mobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'}
       `}>
         <div className="space-y-6">
           <div className="hidden md:block py-2">
@@ -316,7 +331,7 @@ const Layout: React.FC = () => {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 bg-slate-950/50 p-4 md:p-8 overflow-y-auto">
+      <main className="flex-1 bg-slate-950/50 p-3 sm:p-5 md:p-8 overflow-y-auto min-w-0 w-full pb-16 md:pb-8">
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/products" element={<ProtectedRoute requiredModule="products"><Products /></ProtectedRoute>} />

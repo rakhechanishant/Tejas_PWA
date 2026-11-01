@@ -147,17 +147,9 @@ export const Products: React.FC = () => {
                     <div className="space-y-1.5">
                         <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-600">Brand / Company</label>
                         <select
-                            multiple
-                            value={selectedCompanies}
-                            onChange={(e) => {
-                                const opts = Array.from(e.target.selectedOptions, option => option.value);
-                                if (opts.includes('ALL')) {
-                                    setSelectedCompanies(['ALL']);
-                                } else {
-                                    setSelectedCompanies(opts.length ? opts : ['ALL']);
-                                }
-                            }}
-                            className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-neutral-900 focus:border-amber-500 focus:outline-none overflow-hidden h-[44px]"
+                            value={selectedCompanies[0] || 'ALL'}
+                            onChange={(e) => setSelectedCompanies([e.target.value])}
+                            className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-neutral-900 focus:border-amber-500 focus:outline-none min-h-[44px]"
                         >
                             <option value="ALL">All Brands</option>
                             {companies.map((c) => c !== 'ALL' && (
@@ -170,17 +162,9 @@ export const Products: React.FC = () => {
                     <div className="space-y-1.5">
                         <label className="text-[10px] font-bold uppercase tracking-wider text-neutral-600">Category</label>
                         <select
-                            multiple
-                            value={selectedCategories}
-                            onChange={(e) => {
-                                const opts = Array.from(e.target.selectedOptions, option => option.value);
-                                if (opts.includes('ALL')) {
-                                    setSelectedCategories(['ALL']);
-                                } else {
-                                    setSelectedCategories(opts.length ? opts : ['ALL']);
-                                }
-                            }}
-                            className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-neutral-900 focus:border-amber-500 focus:outline-none overflow-hidden h-[44px]"
+                            value={selectedCategories[0] || 'ALL'}
+                            onChange={(e) => setSelectedCategories([e.target.value])}
+                            className="block w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 px-3 text-xs text-neutral-900 focus:border-amber-500 focus:outline-none min-h-[44px]"
                         >
                             <option value="ALL">All Categories</option>
                             {categories.map((c) => c !== 'ALL' && (
@@ -344,8 +328,8 @@ export const Products: React.FC = () => {
 
             {/* Product Detail Modal/Drawer Overlay (Amazon Style) */}
             {selectedProduct && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-md">
-                    <div className="relative w-full max-w-2xl rounded-3xl border border-slate-800 bg-slate-905 bg-slate-900/90 p-6 shadow-2xl backdrop-blur-xl max-h-[90vh] overflow-y-auto">
+                <div className="fixed inset-0 z-50 overflow-y-auto p-3 sm:p-6 flex items-start sm:items-center justify-center bg-slate-950/70 backdrop-blur-md">
+                    <div className="relative w-full max-w-2xl rounded-3xl border border-slate-800 bg-slate-905 bg-slate-900/90 p-6 shadow-2xl backdrop-blur-xl my-auto sm:my-8 max-h-[92vh] overflow-y-auto">
                         <button
                             onClick={() => setSelectedProduct(null)}
                             className="absolute right-4 top-4 rounded-xl bg-slate-950/80 p-2 text-neutral-600 hover:text-neutral-900 border border-slate-800 transition-colors"

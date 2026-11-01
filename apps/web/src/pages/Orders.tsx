@@ -791,7 +791,7 @@ export const Orders: React.FC = () => {
                                     <div>
                                         <div className="flex justify-between items-start gap-2">
                                             <div className="min-w-0">
-                                                <h3 className="text-sm font-bold text-neutral-800 truncate">{ord.parties?.Parties_name || 'Unknown Party'}</h3>
+                                                <h3 className="text-sm font-bold text-neutral-800 break-words">{ord.parties?.Parties_name || 'Unknown Party'}</h3>
                                                 <div className="flex items-center gap-1.5 mt-1 text-[10px] text-slate-500 font-semibold font-mono">
                                                     <Calendar className="h-3 w-3 text-neutral-600" />
                                                     <span>{new Date(ord.created_at).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}</span>
@@ -835,7 +835,7 @@ export const Orders: React.FC = () => {
 
             {/* ORDER DETAILS MODAL OVERLAY */}
             {selectedDetailedOrder && (
-                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm overflow-y-auto">
+                <div role="dialog" aria-modal="true" className="fixed inset-0 z-[60] overflow-y-auto p-3 sm:p-6 flex items-start sm:items-center justify-center bg-slate-900/40 backdrop-blur-sm">
                     <div className="relative w-full max-w-4xl bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh] my-auto">
                         {/* Modal Header */}
                         <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-slate-100 bg-blue-50/20">
@@ -1648,7 +1648,7 @@ export const Orders: React.FC = () => {
             {/* PROCESS SALES RETURN MODAL */}
             {
                 showReturnModal && selectedDetailedOrder && (
-                    <div role="dialog" aria-modal="true" className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md overflow-y-auto">
+                    <div role="dialog" aria-modal="true" className="fixed inset-0 z-[60] overflow-y-auto p-3 sm:p-6 flex items-start sm:items-center justify-center bg-slate-950/90 backdrop-blur-md">
                         <div className="relative w-full max-w-2xl bg-slate-905 border border-rose-900/50 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh]">
 
                             <div className="flex items-center justify-between px-6 py-4 border-b border-rose-900/40 bg-rose-950/20">
@@ -1749,7 +1749,7 @@ export const Orders: React.FC = () => {
 
             {/* Product Detail Modal/Drawer Overlay (Amazon Style) */}
             {selectedProductInfo && (
-                <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-md">
+                <div className="fixed inset-0 z-[70] overflow-y-auto p-3 sm:p-6 flex items-start sm:items-center justify-center bg-slate-950/70 backdrop-blur-md">
                     <div className="relative w-full max-w-2xl rounded-3xl border border-slate-800 bg-slate-905 bg-slate-900/90 p-6 shadow-2xl backdrop-blur-xl max-h-[90vh] overflow-y-auto">
                         <button
                             onClick={(e) => {

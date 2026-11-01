@@ -20,7 +20,10 @@ import {
     Info,
     Calendar,
     ArrowLeft,
-    Eye
+    Eye,
+    ShoppingCart,
+    ArrowRight,
+    Check
 } from 'lucide-react'
 import { type Product } from '../store/useCartStore'
 import { jsPDF } from 'jspdf'
@@ -71,6 +74,10 @@ export const Quotations: React.FC = () => {
     const [partyQuery, setPartyQuery] = useState('')
     const [isPartyDropdownOpen, setIsPartyDropdownOpen] = useState(false)
     const partyDropdownRef = useRef<HTMLDivElement>(null)
+
+    // Mobile guided 2-step workflow state
+    const [mobileStep, setMobileStep] = useState<1 | 2>(1)
+    const [isMobileCartOpen, setIsMobileCartOpen] = useState(false)
 
     // Product selection & filtering states
     const [productQuery, setProductQuery] = useState('')
@@ -195,6 +202,7 @@ export const Quotations: React.FC = () => {
             setCurrentQuotationId(q.id)
             setCurrentQuotationStatus(q.status)
             setCurrentQuotationNumber(q.quotation_number)
+            setMobileStep(2)
             setViewMode('create')
         } catch (err: any) {
             console.error('Error loading quotation:', err)
@@ -307,6 +315,8 @@ export const Quotations: React.FC = () => {
         setCurrentQuotationId(null)
         setCurrentQuotationStatus(null)
         setCurrentQuotationNumber(null)
+        setMobileStep(1)
+        setIsMobileCartOpen(false)
     }
 
     const handleConvertQuotation = async () => {
@@ -917,8 +927,54 @@ export const Quotations: React.FC = () => {
                             <p className="text-xs text-slate-500 mt-1">Start by clicking "New Quotation" to draft a price estimate.</p>
                         </div>
                     ) : (
-                        <div className="overflow-x-auto rounded-2xl border border-slate-805 bg-slate-900/10">
-                            <table className="w-full border-collapse text-left text-sm">
+                        <>
+                            {/* Mobile Quotations Register Cards */}
+                            <div className="space-y-3 sm:hidden">
+                                {quotationsList.map((q) => (
+                                    <div key={q.id} className="p-4 rounded-2xl border border-slate-800 bg-slate-900/40 space-y-3">
+                                        <div className="flex items-center justify-between">
+                                            <span className="font-mono text-xs font-bold text-neutral-800 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+                                                {q.quotation_number}
+                                            </span>
+                                            <span className={`px-2 py-0.5 rounded text-[10px] font-extrabold tracking-widest ${
+                                                q.status === 'DRAFT' ? 'bg-slate-850 text-neutral-600 border border-slate-800' :
+                                                q.status === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-450 border border-emerald-500/20' :
+                                                q.status === 'CONVERTED' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' :
+                                                'bg-rose-500/10 text-rose-455 border border-rose-500/20'
+                                            }`}>
+                                                {q.status}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <div className="font-semibold text-neutral-800 text-sm break-words">{q.parties?.Parties_name || 'Guest / Retail Customer'}</div>
+                                            <div className="text-xs text-slate-500 font-mono mt-0.5">{q.parties?.party_code || 'GUEST'}</div>
+                                        </div>
+                                        <div className="flex items-center justify-between pt-2 border-t border-slate-800/60 text-xs">
+                                            <div className="flex items-center gap-1.5 text-neutral-600">
+                                                <Calendar className="h-3.5 w-3.5 text-slate-500" />
+                                                <span>{new Date(q.created_at).toLocaleDateString('en-IN')}</span>
+                                            </div>
+                                            <div className="font-mono font-bold text-amber-500 text-sm">
+                                                रु {Number(q.total_amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => {
+                                                loadQuotationIntoEstimator(q)
+                                                setMobileStep(2)
+                                            }}
+                                            className="w-full min-h-[44px] py-2 px-4 bg-slate-900 border border-slate-850 hover:border-slate-700 text-neutral-700 hover:text-neutral-900 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-colors"
+                                        >
+                                            <Eye className="h-4 w-4 text-amber-500" />
+                                            <span>Inspect Quotation</span>
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Desktop Table View */}
+                            <div className="hidden sm:block overflow-x-auto rounded-2xl border border-slate-805 bg-slate-900/10">
+                                <table className="w-full border-collapse text-left text-sm">
                                 <thead className="bg-slate-950/45 text-neutral-600 uppercase text-xs font-bold tracking-wider">
                                     <tr>
                                         <th className="px-5 py-3.5">Date</th>
@@ -968,6 +1024,7 @@ export const Quotations: React.FC = () => {
                                 </tbody>
                             </table>
                         </div>
+                        </>
                     )}
                 </div>
             ) : (
@@ -1103,7 +1160,630 @@ export const Quotations: React.FC = () => {
                         </div>
                     )}
 
-                    {/* Top row: Setup & Catalog side-by-side */}
+                    {/* Mobile Guided 2-Step Workflow */}
+                    <div className="md:hidden space-y-4 no-print pb-24">
+                        {/* Step Progress Tracker */}
+                        <div className="flex items-center justify-between bg-slate-900/60 p-3 rounded-2xl border border-slate-800">
+                            <div className="flex items-center gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setMobileStep(1)}
+                                    className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-all ${
+                                        mobileStep === 1
+                                            ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                                            : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                                    }`}
+                                >
+                                    {mobileStep === 2 ? <Check className="h-3.5 w-3.5" /> : '1'}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setMobileStep(1)}
+                                    className={`text-xs font-bold ${mobileStep === 1 ? 'text-amber-500' : 'text-neutral-700'}`}
+                                >
+                                    Party
+                                </button>
+
+                                <span className="text-slate-600">→</span>
+
+                                <span
+                                    className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${
+                                        mobileStep === 2
+                                            ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                                            : 'bg-slate-800 text-slate-500'
+                                    }`}
+                                >
+                                    2
+                                </span>
+                                <span className={`text-xs font-bold ${mobileStep === 2 ? 'text-amber-500' : 'text-slate-500'}`}>
+                                    Products
+                                </span>
+                            </div>
+                            <span className="text-[10px] font-mono font-bold text-slate-500 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+                                Step {mobileStep} of 2
+                            </span>
+                        </div>
+
+                        {/* STEP 1: SELECT PARTY / CUSTOMER */}
+                        {mobileStep === 1 && (
+                            <div className="space-y-4 animate-in fade-in duration-200">
+                                <div className="rounded-2xl border border-slate-800/80 bg-slate-900/40 p-4 space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="text-sm font-extrabold uppercase tracking-wider text-neutral-800 flex items-center gap-2">
+                                            <User className="h-5 w-5 text-amber-500" />
+                                            <span>Select Customer / Party</span>
+                                        </h3>
+                                    </div>
+
+                                    {/* Mode Selector */}
+                                    <div className="grid grid-cols-2 gap-1 bg-slate-950 p-1 rounded-xl border border-slate-850">
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setIsGuest(false)
+                                                setCustomPartyName('')
+                                            }}
+                                            className={`py-2 text-xs font-bold rounded-lg transition-all ${
+                                                !isGuest
+                                                    ? 'bg-amber-500/10 border border-amber-500/20 text-amber-500'
+                                                    : 'text-neutral-600 hover:text-neutral-800'
+                                            }`}
+                                        >
+                                            Registered Party
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setIsGuest(true)
+                                                setSelectedParty(null)
+                                            }}
+                                            className={`py-2 text-xs font-bold rounded-lg transition-all ${
+                                                isGuest
+                                                    ? 'bg-amber-500/10 border border-amber-500/20 text-amber-500'
+                                                    : 'text-neutral-600 hover:text-neutral-800'
+                                            }`}
+                                        >
+                                            Guest / Retail Mode
+                                        </button>
+                                    </div>
+
+                                    {/* Registered Party Selection */}
+                                    {!isGuest ? (
+                                        <div className="space-y-3">
+                                            <div className="relative">
+                                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                                                <input
+                                                    type="text"
+                                                    placeholder="Search customer by name, code, phone..."
+                                                    value={partyQuery}
+                                                    onChange={(e) => setPartyQuery(e.target.value)}
+                                                    className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-9 py-2.5 text-xs text-neutral-800 placeholder:text-slate-500 focus:outline-none focus:border-amber-500"
+                                                />
+                                                {partyQuery && (
+                                                    <button
+                                                        onClick={() => setPartyQuery('')}
+                                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-neutral-700 p-1"
+                                                    >
+                                                        <X className="h-3.5 w-3.5" />
+                                                    </button>
+                                                )}
+                                            </div>
+
+                                            {/* List of matching parties as selectable cards */}
+                                            <div className="space-y-2 max-h-[360px] overflow-y-auto pr-1">
+                                                {loadingParties ? (
+                                                    <div className="p-6 text-center text-xs text-slate-500 animate-pulse">
+                                                        Loading customer registry...
+                                                    </div>
+                                                ) : filteredParties.length === 0 ? (
+                                                    <div className="p-6 text-center text-xs text-slate-500 rounded-xl border border-dashed border-slate-800">
+                                                        No matching parties found.
+                                                    </div>
+                                                ) : (
+                                                    filteredParties.map((p) => {
+                                                        const isSelected = selectedParty?.id === p.id
+                                                        return (
+                                                            <div
+                                                                key={p.id}
+                                                                onClick={() => setSelectedParty(p)}
+                                                                className={`p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                                                                    isSelected
+                                                                        ? 'border-amber-500 bg-amber-500/10 ring-1 ring-amber-500'
+                                                                        : 'border-slate-800 bg-slate-950/60 hover:border-slate-700'
+                                                                }`}
+                                                            >
+                                                                <div className="min-w-0 flex-1 space-y-1">
+                                                                    <div className="flex items-center gap-2">
+                                                                        <span className="font-bold text-sm text-neutral-800 break-words">
+                                                                            {p.name}
+                                                                        </span>
+                                                                        {isSelected && (
+                                                                            <span className="h-5 w-5 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center shrink-0">
+                                                                                <Check className="h-3 w-3 stroke-[3]" />
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
+                                                                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-slate-500">
+                                                                        <span className="font-mono text-[10px] bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800 text-slate-400">
+                                                                            {p.party_code}
+                                                                        </span>
+                                                                        <span>{p.city || 'No Location'}</span>
+                                                                        {p.contact_number && (
+                                                                            <>
+                                                                                <span>•</span>
+                                                                                <span className="font-mono">{p.contact_number}</span>
+                                                                            </>
+                                                                        )}
+                                                                    </div>
+                                                                    <div className="text-xs">
+                                                                        <span className="text-slate-500 font-medium">Due: </span>
+                                                                        <span className="font-mono font-bold text-amber-500">
+                                                                            रु {p.total_due.toLocaleString()}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        )
+                                                    })
+                                                )}
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                                                Guest / Store Name *
+                                            </label>
+                                            <input
+                                                type="text"
+                                                placeholder="e.g. Shyam Hardware Center"
+                                                value={customPartyName}
+                                                onChange={(e) => setCustomPartyName(e.target.value)}
+                                                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-neutral-800 placeholder:text-slate-500 focus:outline-none focus:border-amber-500"
+                                            />
+                                            <p className="text-[11px] text-slate-500">
+                                                Provide customer / shop name for this retail quotation.
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    {/* Continue button */}
+                                    <button
+                                        type="button"
+                                        disabled={(!isGuest && !selectedParty) || (isGuest && !customPartyName.trim())}
+                                        onClick={() => setMobileStep(2)}
+                                        className="w-full min-h-[48px] py-3 px-4 bg-amber-500 hover:bg-amber-400 disabled:opacity-50 disabled:hover:bg-amber-500 text-neutral-900 font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-500/10 cursor-pointer"
+                                    >
+                                        <span>Continue to Products</span>
+                                        <ArrowRight className="h-4 w-4" />
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* STEP 2: SELECT PRODUCTS */}
+                        {mobileStep === 2 && (
+                            <div className="space-y-4 animate-in fade-in duration-200">
+                                {/* Selected Party Summary Bar */}
+                                <div className="p-3.5 rounded-2xl border border-slate-800 bg-slate-900/50 flex items-center justify-between gap-3">
+                                    <div className="min-w-0">
+                                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">Selected Party</span>
+                                        <h4 className="text-sm font-bold text-neutral-800 break-words">{getPartyName()}</h4>
+                                        {!isGuest && selectedParty?.city && (
+                                            <p className="text-xs text-slate-500">{selectedParty.city} {selectedParty.contact_number ? `• ${selectedParty.contact_number}` : ''}</p>
+                                        )}
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => setMobileStep(1)}
+                                        className="py-1.5 px-3 rounded-lg border border-slate-700 bg-slate-850 hover:bg-slate-800 text-xs font-semibold text-neutral-700 transition-colors shrink-0"
+                                    >
+                                        Change Party
+                                    </button>
+                                </div>
+
+                                {/* Product Filters */}
+                                <div className="space-y-2">
+                                    <div className="relative">
+                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                                        <input
+                                            type="text"
+                                            placeholder="Search product by name, code..."
+                                            value={productQuery}
+                                            onChange={(e) => setProductQuery(e.target.value)}
+                                            className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-9 py-2.5 text-xs text-neutral-800 placeholder:text-slate-500 focus:outline-none focus:border-amber-500"
+                                        />
+                                        {productQuery && (
+                                            <button
+                                                onClick={() => setProductQuery('')}
+                                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-neutral-700 p-1"
+                                            >
+                                                <X className="h-3.5 w-3.5" />
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <select
+                                            value={selectedBrand}
+                                            onChange={(e) => setSelectedBrand(e.target.value)}
+                                            className="bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-2 text-xs text-neutral-700 focus:outline-none min-h-[44px]"
+                                        >
+                                            <option value="ALL">All Brands</option>
+                                            {brands.map(b => b !== 'ALL' && <option key={b} value={b}>{b}</option>)}
+                                        </select>
+
+                                        <select
+                                            value={selectedCategory}
+                                            onChange={(e) => setSelectedCategory(e.target.value)}
+                                            className="bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-2 text-xs text-neutral-700 focus:outline-none min-h-[44px]"
+                                        >
+                                            <option value="ALL">All Categories</option>
+                                            {categories.map(c => c !== 'ALL' && <option key={c} value={c}>{c}</option>)}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {/* Product List Cards */}
+                                <div className="space-y-3 max-h-[550px] overflow-y-auto pr-1">
+                                    {loadingProducts ? (
+                                        <div className="p-8 text-center text-xs text-slate-500 animate-pulse">Syncing catalog products...</div>
+                                    ) : filteredProducts.length === 0 ? (
+                                        <div className="p-8 text-center text-xs text-slate-500 rounded-xl border border-dashed border-slate-800">
+                                            No products match your filter criteria.
+                                        </div>
+                                    ) : (
+                                        filteredProducts.map((p) => {
+                                            const itemInQuote = items.find(it => it.product.id === p.id)
+                                            const quantityInQuote = itemInQuote?.quantity || 0
+                                            return (
+                                                <div
+                                                    key={p.id}
+                                                    className="p-3.5 rounded-2xl border border-slate-800/80 bg-slate-900/30 space-y-2.5"
+                                                >
+                                                    <div className="flex items-start justify-between gap-3">
+                                                        <div className="min-w-0 flex-1">
+                                                            <div className="flex items-center gap-1.5 flex-wrap">
+                                                                <span className="text-[9px] font-bold font-mono px-1.5 py-0.5 rounded bg-slate-850 text-slate-400 border border-slate-800 uppercase">
+                                                                    {p.company || 'Generic'}
+                                                                </span>
+                                                                {p.ref_code && (
+                                                                    <span className="text-[10px] font-mono font-bold text-amber-500 bg-slate-950 px-1.5 py-0.5 rounded border border-slate-800">
+                                                                        {p.ref_code}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                            <div
+                                                                onClick={() => setSelectedDetailProduct(p)}
+                                                                className="font-bold text-sm text-neutral-800 mt-1 cursor-pointer flex items-center gap-1.5 break-words"
+                                                            >
+                                                                <span>{p.product_name}</span>
+                                                                <Info className="h-3.5 w-3.5 text-slate-500 shrink-0" />
+                                                            </div>
+                                                            <div className="text-xs text-slate-500 mt-0.5">
+                                                                {p.category} {p.sub_category ? `• ${p.sub_category}` : ''}
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-right shrink-0">
+                                                            <span className="text-[10px] text-slate-500 uppercase font-medium block">Price</span>
+                                                            <span className="text-sm font-extrabold text-amber-500 font-mono">
+                                                                रु {p.mrp?.toLocaleString()}
+                                                            </span>
+                                                            <span className="text-[10px] text-slate-500 block">/ {p.unit || 'pcs'}</span>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Controls: Quantity and Add */}
+                                                    <div className="flex items-center justify-between pt-2 border-t border-slate-800/60">
+                                                        {quantityInQuote > 0 ? (
+                                                            <div className="flex items-center gap-2 bg-slate-950 border border-slate-800 rounded-xl p-1">
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => updateItemQty(p.id, quantityInQuote - 1)}
+                                                                    className="h-8 w-8 bg-blue-50 border border-blue-105 rounded-lg flex items-center justify-center text-xs text-blue-600 active:scale-95"
+                                                                >
+                                                                    <Minus className="h-3 w-3" />
+                                                                </button>
+                                                                <span className="w-8 text-center font-mono font-bold text-xs text-neutral-900">
+                                                                    {quantityInQuote}
+                                                                </span>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => updateItemQty(p.id, quantityInQuote + 1)}
+                                                                    className="h-8 w-8 bg-blue-50 border border-blue-105 rounded-lg flex items-center justify-center text-xs text-blue-600 active:scale-95"
+                                                                >
+                                                                    <Plus className="h-3 w-3" />
+                                                                </button>
+                                                            </div>
+                                                        ) : (
+                                                            <span className="text-xs text-slate-500">Not in quote</span>
+                                                        )}
+
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => addProductToQuote(p)}
+                                                            className={`min-h-[40px] px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                                                                quantityInQuote > 0
+                                                                    ? 'bg-blue-50 border border-blue-200 text-blue-600'
+                                                                    : 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm'
+                                                            }`}
+                                                        >
+                                                            <Plus className="h-3.5 w-3.5" />
+                                                            <span>{quantityInQuote > 0 ? 'Add Another' : 'Add to Quote'}</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            )
+                                        })
+                                    )}
+                                </div>
+
+                                {/* Sticky Bottom Summary Bar */}
+                                <div className="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 border-t border-slate-800 px-4 py-3 flex items-center justify-between backdrop-blur-md">
+                                    <div>
+                                        <div className="text-[11px] text-slate-400 font-medium">
+                                            {items.length} items ({totals.totalItems} qty)
+                                        </div>
+                                        <div className="text-base font-extrabold font-mono text-amber-500">
+                                            रु {totals.netPayable.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                        </div>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsMobileCartOpen(true)}
+                                        className="min-h-[44px] px-4 py-2 bg-amber-500 hover:bg-amber-400 text-neutral-900 font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center gap-2 shadow-lg shadow-amber-500/20"
+                                    >
+                                        <ShoppingCart className="h-4 w-4" />
+                                        <span>View Estimate</span>
+                                        {items.length > 0 && (
+                                            <span className="h-5 w-5 rounded-full bg-slate-950 text-amber-400 text-[10px] font-black flex items-center justify-center">
+                                                {items.length}
+                                            </span>
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Mobile Cart / Quotation Estimate Drawer Modal */}
+                        {isMobileCartOpen && (
+                            <div className="fixed inset-0 z-50 overflow-y-auto p-3 sm:p-6 flex items-start sm:items-center justify-center bg-slate-950/85 backdrop-blur-sm">
+                                <div className="relative w-full max-w-xl bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col my-auto sm:my-8 max-h-[92vh]">
+                                    {/* Header */}
+                                    <div className="flex items-center justify-between px-5 py-4 border-b border-slate-800 bg-slate-950/40">
+                                        <div>
+                                            <h3 className="text-base font-bold text-neutral-800">Quotation Cart & Estimate</h3>
+                                            <p className="text-xs text-slate-500">For {getPartyName()}</p>
+                                        </div>
+                                        <button
+                                            onClick={() => setIsMobileCartOpen(false)}
+                                            className="rounded-xl p-1.5 text-slate-400 hover:text-neutral-900 hover:bg-slate-800 transition-colors"
+                                        >
+                                            <X className="h-5 w-5" />
+                                        </button>
+                                    </div>
+
+                                    {/* Items List */}
+                                    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                                        {items.length === 0 ? (
+                                            <div className="py-12 text-center text-xs text-slate-500">
+                                                No products added yet. Go back to add products.
+                                            </div>
+                                        ) : (
+                                            <div className="space-y-3">
+                                                {items.map((it, idx) => {
+                                                    const itemSub = it.quantity * it.unitPrice
+                                                    const itemDiscount = itemSub * (it.discountPct / 100)
+                                                    const lineTotal = itemSub - itemDiscount
+                                                    return (
+                                                        <div key={it.product.id} className="p-3.5 rounded-xl border border-slate-800 bg-slate-950/50 space-y-2">
+                                                            <div className="flex items-start justify-between gap-2">
+                                                                <div className="min-w-0 flex-1">
+                                                                    <div className="text-[10px] font-mono text-slate-500 uppercase">
+                                                                        #{idx + 1} {it.product.ref_code ? `• ${it.product.ref_code}` : ''}
+                                                                    </div>
+                                                                    <h4 className="font-bold text-xs text-neutral-800 break-words mt-0.5">
+                                                                        {it.product.product_name}
+                                                                    </h4>
+                                                                    <div className="text-[11px] text-slate-500">
+                                                                        Rate: रु {it.unitPrice.toLocaleString()} / {it.product.unit || 'pcs'}
+                                                                    </div>
+                                                                </div>
+                                                                <button
+                                                                    onClick={() => removeItemFromQuote(it.product.id)}
+                                                                    className="text-slate-500 hover:text-rose-500 p-1.5 rounded-lg border border-slate-800 hover:bg-rose-500/10 transition-colors shrink-0"
+                                                                >
+                                                                    <Trash2 className="h-4 w-4" />
+                                                                </button>
+                                                            </div>
+
+                                                            <div className="flex items-center justify-between pt-2 border-t border-slate-850">
+                                                                <div className="flex items-center gap-1 bg-slate-900 border border-slate-800 rounded-lg p-1">
+                                                                    <button
+                                                                        onClick={() => updateItemQty(it.product.id, it.quantity - 1)}
+                                                                        className="h-6 w-6 rounded bg-slate-800 text-neutral-700 flex items-center justify-center text-xs"
+                                                                    >
+                                                                        <Minus className="h-2.5 w-2.5" />
+                                                                    </button>
+                                                                    <span className="w-8 text-center text-xs font-mono font-bold text-neutral-800">
+                                                                        {it.quantity}
+                                                                    </span>
+                                                                    <button
+                                                                        onClick={() => updateItemQty(it.product.id, it.quantity + 1)}
+                                                                        className="h-6 w-6 rounded bg-slate-800 text-neutral-700 flex items-center justify-center text-xs"
+                                                                    >
+                                                                        <Plus className="h-2.5 w-2.5" />
+                                                                    </button>
+                                                                </div>
+
+                                                                <div className="flex items-center gap-1 text-xs">
+                                                                    <span className="text-slate-500 text-[10px]">Disc:</span>
+                                                                    <input
+                                                                        type="number"
+                                                                        min="0"
+                                                                        max="100"
+                                                                        value={it.discountPct}
+                                                                        onChange={(e) => updateItemDiscount(it.product.id, Number(e.target.value))}
+                                                                        className="w-10 bg-slate-900 border border-slate-800 rounded py-0.5 text-center text-xs font-bold text-neutral-800 focus:outline-none"
+                                                                    />
+                                                                    <span className="text-slate-500 text-[10px]">%</span>
+                                                                </div>
+
+                                                                <div className="text-right font-mono font-bold text-xs text-amber-500">
+                                                                    रु {lineTotal.toLocaleString()}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                })}
+                                            </div>
+                                        )}
+
+                                        {/* Overall Discount */}
+                                        {items.length > 0 && (
+                                            <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-850 space-y-2.5">
+                                                <label className="text-[10px] font-extrabold uppercase tracking-wider text-neutral-600 block">
+                                                    Overall Discount
+                                                </label>
+                                                <div className="grid grid-cols-3 gap-1">
+                                                    {(['NONE', 'PERCENT', 'FLAT'] as const).map((mode) => (
+                                                        <button
+                                                            key={mode}
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setOverallDiscountType(mode)
+                                                                setOverallDiscountValue(0)
+                                                            }}
+                                                            className={`py-1.5 text-xs font-bold rounded-lg border transition-all ${
+                                                                overallDiscountType === mode
+                                                                    ? 'bg-amber-500/10 border-amber-500/30 text-amber-500'
+                                                                    : 'bg-slate-900 border-slate-800 text-neutral-600'
+                                                            }`}
+                                                        >
+                                                            {mode === 'NONE' ? 'None' : mode === 'PERCENT' ? 'Percent %' : 'Flat (रु)'}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                                {overallDiscountType !== 'NONE' && (
+                                                    <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-850">
+                                                        <span className="text-xs text-neutral-600">
+                                                            {overallDiscountType === 'PERCENT' ? 'Discount %' : 'Discount Amount (रु)'}
+                                                        </span>
+                                                        <input
+                                                            type="number"
+                                                            min="0"
+                                                            value={overallDiscountValue}
+                                                            onChange={(e) => setOverallDiscountValue(Number(e.target.value))}
+                                                            className="w-20 bg-slate-900 border border-slate-800 rounded-lg py-1 px-2 text-right text-xs font-bold text-neutral-800 focus:outline-none"
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        {/* Totals Summary */}
+                                        {items.length > 0 && (
+                                            <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-850 text-xs space-y-2">
+                                                <div className="flex justify-between items-center text-neutral-600">
+                                                    <span>Subtotal:</span>
+                                                    <span className="font-semibold text-neutral-800 font-mono">रु {totals.subtotal.toLocaleString()}</span>
+                                                </div>
+                                                {totals.discount > 0 && (
+                                                    <div className="flex justify-between items-center text-rose-400">
+                                                        <span>Total Discount:</span>
+                                                        <span className="font-mono font-medium">- रु {totals.discount.toLocaleString()}</span>
+                                                    </div>
+                                                )}
+                                                <div className="flex justify-between items-center pt-2 border-t border-slate-800 text-sm font-extrabold text-amber-500">
+                                                    <span>Grand Total:</span>
+                                                    <span className="font-mono">रु {totals.netPayable.toLocaleString()}</span>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Action Buttons inside Drawer */}
+                                        {items.length > 0 && (
+                                            <div className="space-y-2 pt-2">
+                                                {!currentQuotationId && (
+                                                    <div className="grid grid-cols-2 gap-2">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleSaveQuotation('DRAFT')}
+                                                            disabled={actionLoading}
+                                                            className="py-3 px-4 bg-slate-800 hover:bg-slate-700 text-neutral-700 font-bold rounded-xl text-xs border border-slate-700 transition-colors"
+                                                        >
+                                                            Save Draft
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleSaveQuotation('APPROVED')}
+                                                            disabled={actionLoading}
+                                                            className="py-3 px-4 bg-amber-500 hover:bg-amber-400 text-neutral-900 font-extrabold rounded-xl text-xs transition-colors"
+                                                        >
+                                                            Save & Approve
+                                                        </button>
+                                                    </div>
+                                                )}
+
+                                                <button
+                                                    type="button"
+                                                    onClick={handleSharePDF}
+                                                    disabled={sharingLoading}
+                                                    className="w-full py-3 px-4 btn-primary-blue text-white font-extrabold text-xs uppercase rounded-xl flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
+                                                >
+                                                    <Send className="h-4 w-4" />
+                                                    <span>{sharingLoading ? 'Generating PDF...' : 'Share PDF to WhatsApp'}</span>
+                                                </button>
+
+                                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                                                    <button
+                                                        onClick={handleSendWhatsApp}
+                                                        className="py-2.5 px-3 bg-slate-950 border border-blue-500/20 text-blue-400 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5"
+                                                    >
+                                                        <Send className="h-3.5 w-3.5" /> WhatsApp
+                                                    </button>
+                                                    <button
+                                                        onClick={handleCopyClipboard}
+                                                        className="py-2.5 px-3 bg-slate-950 border border-blue-500/20 text-blue-400 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5"
+                                                    >
+                                                        <Copy className="h-3.5 w-3.5" /> Copy
+                                                    </button>
+                                                    <button
+                                                        onClick={handlePrint}
+                                                        className="py-2.5 px-3 bg-slate-950 border border-blue-500/20 text-blue-400 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5"
+                                                    >
+                                                        <Printer className="h-3.5 w-3.5" /> Print
+                                                    </button>
+                                                    <button
+                                                        onClick={handleDownloadCSV}
+                                                        className="py-2.5 px-3 bg-slate-950 border border-blue-500/20 text-blue-400 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5"
+                                                    >
+                                                        <Download className="h-3.5 w-3.5" /> Excel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Footer */}
+                                    <div className="px-5 py-3 border-t border-slate-800 bg-slate-950/40 flex justify-between items-center">
+                                        <button
+                                            onClick={() => setIsMobileCartOpen(false)}
+                                            className="py-2 px-4 rounded-xl border border-slate-800 text-xs font-bold text-neutral-600 hover:text-neutral-900"
+                                        >
+                                            ← Back to Products
+                                        </button>
+                                        <span className="font-mono font-bold text-amber-500 text-sm">
+                                            रु {totals.netPayable.toLocaleString()}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                                        {/* Desktop Side-by-Side Editor */}
+                    <div className="hidden md:block space-y-6">
+{/* Top row: Setup & Catalog side-by-side */}
                     <div className="grid gap-6 md:grid-cols-2 no-print">
 
                         {/* Section 1: Customer Selection */}
@@ -1587,6 +2267,8 @@ export const Quotations: React.FC = () => {
                         </div>
                     </div>
 
+                    </div>
+
                     {/* ─── INVOICE PREVIEW SHEET (FOR NATIVE PRINTING OR VISUAL SCREENSHOTS) ─── */}
                     <div
                         id="print-invoice-sheet"
@@ -1739,8 +2421,8 @@ export const Quotations: React.FC = () => {
 
             {/* Product Detail Modal/Drawer Overlay (Amazon Style) */}
             {selectedDetailProduct && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-md">
-                    <div className="relative w-full max-w-2xl rounded-3xl border border-slate-800 bg-slate-900/90 p-6 shadow-2xl backdrop-blur-xl max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-200">
+                <div className="fixed inset-0 z-50 overflow-y-auto p-3 sm:p-6 flex items-start sm:items-center justify-center bg-slate-950/70 backdrop-blur-md">
+                    <div className="relative w-full max-w-2xl rounded-3xl border border-slate-800 bg-slate-900/90 p-6 shadow-2xl backdrop-blur-xl my-auto sm:my-8 max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-200">
                         <button
                             onClick={() => setSelectedDetailProduct(null)}
                             className="absolute right-4 top-4 rounded-xl bg-slate-955/80 p-2 text-neutral-600 hover:text-neutral-900 border border-slate-800 transition-colors"

@@ -336,7 +336,7 @@ export const Cheques: React.FC = () => {
                 </div>
             </div>
 
-            {/* List Table */}
+            {/* List Table / Responsive Cards */}
             {loading ? (
                 <div className="flex flex-col items-center justify-center py-20 text-slate-500 gap-3">
                     <div className="h-8 w-8 animate-spin rounded-full border-4 border-amber-500 border-t-transparent" />
@@ -349,94 +349,148 @@ export const Cheques: React.FC = () => {
                     <p className="mt-1 text-sm text-slate-550">Matches will display here. Click "Register New Cheque" to make an entry.</p>
                 </div>
             ) : (
-                <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/10">
-                    <table className="w-full border-collapse text-left text-sm">
-                        <thead className="bg-slate-900/60 text-neutral-600 uppercase text-[10px] font-bold tracking-wider">
-                            <tr>
-                                <th className="px-6 py-4">Cheque Details</th>
-                                <th className="px-6 py-4">Customer Name</th>
-                                <th className="px-6 py-4">Due Date</th>
-                                <th className="px-6 py-4 text-right">Amount</th>
-                                <th className="px-6 py-4 text-center">Status</th>
-                                <th className="px-6 py-4 text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-800/80">
-                            {filteredCheques.map((ch) => {
-                                let statusClasses = 'bg-slate-950/40 text-neutral-600 border border-slate-800'
-                                if (ch.status === 'CLEARED') statusClasses = 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                                if (ch.status === 'BOUNCED') statusClasses = 'bg-rose-500/10 text-rose-450 border border-rose-505/20'
+                <>
+                    {/* Mobile Card Layout */}
+                    <div className="grid gap-3 sm:hidden">
+                        {filteredCheques.map((ch) => {
+                            let statusClasses = 'bg-slate-950/40 text-neutral-600 border border-slate-800'
+                            if (ch.status === 'CLEARED') statusClasses = 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20'
+                            if (ch.status === 'BOUNCED') statusClasses = 'bg-rose-500/10 text-rose-600 border border-rose-505/20'
 
-                                return (
-                                    <tr key={ch.id} className="hover:bg-slate-900/40 transition-colors">
-                                        <td className="px-6 py-4">
-                                            <div className="font-semibold text-neutral-800">{ch.bank_name}</div>
-                                            <div className="text-[11px] text-slate-500 mt-0.5">No: {ch.cheque_number}</div>
-                                        </td>
-                                        <td className="px-6 py-4 text-neutral-700">
-                                            <div className="font-medium text-neutral-800">{ch.parties?.Parties_name || 'N/A'}</div>
-                                            {ch.parties?.contact_number && <div className="text-[10px] text-slate-550">{ch.parties.contact_number}</div>}
-                                        </td>
-                                        <td className="px-6 py-4 text-neutral-700">
-                                            <div className="flex items-center gap-1.5 text-xs">
-                                                <Calendar className="h-4 w-4 text-slate-500" />
-                                                <span>{new Date(ch.due_date).toLocaleDateString('en-IN')}</span>
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 text-right font-bold text-neutral-900">
+                            return (
+                                <div key={ch.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-3 font-outfit">
+                                    <div className="flex items-start justify-between gap-2">
+                                        <div className="min-w-0 flex-1">
+                                            <h3 className="text-sm font-bold text-neutral-800 break-words">{ch.parties?.Parties_name || 'N/A'}</h3>
+                                            <p className="text-xs text-slate-500 mt-0.5">{ch.bank_name} • <span className="font-mono font-medium">#{ch.cheque_number}</span></p>
+                                        </div>
+                                        <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider shrink-0 border ${statusClasses}`}>
+                                            {ch.status}
+                                        </span>
+                                    </div>
+
+                                    <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-100">
+                                        <div className="flex items-center gap-1.5 text-slate-500">
+                                            <Calendar className="h-3.5 w-3.5 text-slate-400" />
+                                            <span>Due: {new Date(ch.due_date).toLocaleDateString('en-IN')}</span>
+                                        </div>
+                                        <div className="text-right font-extrabold text-sm text-neutral-900 font-mono">
                                             रु {ch.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                                        </td>
-                                        <td className="px-6 py-4 text-center">
-                                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${statusClasses}`}>
-                                                {ch.status}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            {ch.status === 'PENDING' ? (
-                                                <div className="flex items-center justify-center gap-2">
-                                                    <button
-                                                        onClick={() => handleUpdateStatus(ch.id, 'CLEARED')}
-                                                        className="px-2.5 py-1 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-xs font-bold transition-all shadow-sm"
-                                                    >
-                                                        Clear
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleUpdateStatus(ch.id, 'BOUNCED')}
-                                                        className="px-2.5 py-1 bg-rose-500 hover:bg-rose-600 text-white rounded-lg text-xs font-bold transition-all shadow-sm"
-                                                    >
-                                                        Bounce
-                                                    </button>
+                                        </div>
+                                    </div>
+
+                                    {ch.status === 'PENDING' && (
+                                        <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
+                                            <button
+                                                onClick={() => handleUpdateStatus(ch.id, 'CLEARED')}
+                                                className="min-h-[40px] px-3 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold transition-all shadow-sm active:scale-95 flex items-center justify-center cursor-pointer"
+                                            >
+                                                Clear Cheque
+                                            </button>
+                                            <button
+                                                onClick={() => handleUpdateStatus(ch.id, 'BOUNCED')}
+                                                className="min-h-[40px] px-3 py-2 bg-rose-500 hover:bg-rose-600 text-white rounded-xl text-xs font-bold transition-all shadow-sm active:scale-95 flex items-center justify-center cursor-pointer"
+                                            >
+                                                Mark Bounced
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            )
+                        })}
+                    </div>
+
+                    {/* Desktop Table View */}
+                    <div className="hidden sm:block overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/10">
+                        <table className="w-full border-collapse text-left text-sm">
+                            <thead className="bg-slate-900/60 text-neutral-600 uppercase text-[10px] font-bold tracking-wider">
+                                <tr>
+                                    <th className="px-6 py-4">Cheque Details</th>
+                                    <th className="px-6 py-4">Customer Name</th>
+                                    <th className="px-6 py-4">Due Date</th>
+                                    <th className="px-6 py-4 text-right">Amount</th>
+                                    <th className="px-6 py-4 text-center">Status</th>
+                                    <th className="px-6 py-4 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-800/80">
+                                {filteredCheques.map((ch) => {
+                                    let statusClasses = 'bg-slate-950/40 text-neutral-600 border border-slate-800'
+                                    if (ch.status === 'CLEARED') statusClasses = 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                                    if (ch.status === 'BOUNCED') statusClasses = 'bg-rose-500/10 text-rose-450 border border-rose-505/20'
+
+                                    return (
+                                        <tr key={ch.id} className="hover:bg-slate-900/40 transition-colors">
+                                            <td className="px-6 py-4">
+                                                <div className="font-semibold text-neutral-800">{ch.bank_name}</div>
+                                                <div className="text-[11px] text-slate-500 mt-0.5">No: {ch.cheque_number}</div>
+                                            </td>
+                                            <td className="px-6 py-4 text-neutral-700">
+                                                <div className="font-medium text-neutral-800">{ch.parties?.Parties_name || 'N/A'}</div>
+                                                {ch.parties?.contact_number && <div className="text-[10px] text-slate-550">{ch.parties.contact_number}</div>}
+                                            </td>
+                                            <td className="px-6 py-4 text-neutral-700">
+                                                <div className="flex items-center gap-1.5 text-xs">
+                                                    <Calendar className="h-4 w-4 text-slate-500" />
+                                                    <span>{new Date(ch.due_date).toLocaleDateString('en-IN')}</span>
                                                 </div>
-                                            ) : (
-                                                <p className="text-slate-550 text-xs text-center">Settled</p>
-                                            )}
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </table>
-                </div>
+                                            </td>
+                                            <td className="px-6 py-4 text-right font-bold text-neutral-900">
+                                                रु {ch.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                            </td>
+                                            <td className="px-6 py-4 text-center">
+                                                <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${statusClasses}`}>
+                                                    {ch.status}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                {ch.status === 'PENDING' ? (
+                                                    <div className="flex items-center justify-center gap-2">
+                                                        <button
+                                                            onClick={() => handleUpdateStatus(ch.id, 'CLEARED')}
+                                                            className="px-2.5 py-1 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-xs font-bold transition-all shadow-sm cursor-pointer"
+                                                        >
+                                                            Clear
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleUpdateStatus(ch.id, 'BOUNCED')}
+                                                            className="px-2.5 py-1 bg-rose-500 hover:bg-rose-600 text-white rounded-lg text-xs font-bold transition-all shadow-sm cursor-pointer"
+                                                        >
+                                                            Bounce
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <p className="text-slate-550 text-xs text-center">Settled</p>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                </>
             )}
 
             {/* modal form register cheque */}
             {showAddModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-                    <div className="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col">
-                        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/20">
+                <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-sm p-3 sm:p-6 flex justify-center items-start sm:items-center">
+                    <div className="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl flex flex-col my-auto sm:my-8">
+                        <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-slate-800 bg-slate-950/20">
                             <div>
-                                <h3 className="text-base font-bold text-neutral-900">Register Customer Cheque</h3>
+                                <h3 className="text-base font-bold text-neutral-900 font-outfit">Register Customer Cheque</h3>
                                 <p className="text-xs text-slate-500">Record a post-dated check linked to account dues</p>
                             </div>
                             <button
                                 onClick={() => setShowAddModal(false)}
-                                className="text-slate-450 hover:text-neutral-900 transition-colors"
+                                aria-label="Close modal"
+                                className="text-slate-450 hover:text-neutral-900 transition-colors p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl cursor-pointer"
                             >
-                                <X className="h-6 w-6" />
+                                <X className="h-5 w-5" />
                             </button>
                         </div>
 
-                        <form onSubmit={handleCreateCheque} className="p-6 space-y-4">
+                        <form onSubmit={handleCreateCheque} className="p-4 sm:p-6 space-y-4">
                             {/* Party Auto Select */}
                             <div className="relative" ref={partyDropdownRef}>
                                 <label className="block text-xs font-semibold text-neutral-600 uppercase tracking-widest mb-1.5">Select Customer *</label>
@@ -453,7 +507,7 @@ export const Cheques: React.FC = () => {
                                             setIsPartyDropdownOpen(true)
                                         }}
                                         onFocus={() => setIsPartyDropdownOpen(true)}
-                                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-955 border border-slate-800 text-neutral-800 placeholder-slate-550 focus:border-amber-500 outline-none text-sm transition-all"
+                                        className="w-full pl-10 pr-4 py-2.5 min-h-[44px] rounded-xl bg-slate-955 border border-slate-800 text-neutral-800 placeholder-slate-550 focus:border-amber-500 outline-none text-sm transition-all"
                                     />
                                     {selectedParty && (
                                         <button
@@ -462,7 +516,8 @@ export const Cheques: React.FC = () => {
                                                 setSelectedParty(null)
                                                 setPartyQuery('')
                                             }}
-                                            className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-500 hover:text-neutral-900"
+                                            aria-label="Clear customer selection"
+                                            className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-500 hover:text-neutral-900 cursor-pointer"
                                         >
                                             <X className="h-4 w-4" />
                                         </button>
@@ -480,9 +535,9 @@ export const Cheques: React.FC = () => {
                                                     setIsPartyDropdownOpen(false)
                                                     setPartyQuery('')
                                                 }}
-                                                className="w-full text-left px-4 py-2 text-neutral-800 hover:bg-slate-800 hover:text-neutral-900 flex items-center justify-between"
+                                                className="w-full text-left px-4 py-2.5 text-neutral-800 hover:bg-slate-800 hover:text-neutral-900 flex items-center justify-between cursor-pointer"
                                             >
-                                                <span>{p.name}</span>
+                                                <span className="font-semibold">{p.name}</span>
                                                 <span className="text-[10px] text-slate-500 font-mono">{p.party_code}</span>
                                             </button>
                                         ))}
@@ -491,7 +546,7 @@ export const Cheques: React.FC = () => {
                             </div>
 
                             {/* Row: Bank Name & Cheque Number */}
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                 <div>
                                     <label className="block text-xs font-semibold text-neutral-600 uppercase tracking-widest mb-1.5">Bank Name *</label>
                                     <input
@@ -500,7 +555,7 @@ export const Cheques: React.FC = () => {
                                         required
                                         value={bankName}
                                         onChange={(e) => setBankName(e.target.value)}
-                                        className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-neutral-800 placeholder-slate-600 focus:border-amber-500 focus:ring-0 outline-none text-sm"
+                                        className="w-full px-3 py-2.5 min-h-[44px] rounded-xl bg-slate-950 border border-slate-800 text-neutral-800 placeholder-slate-600 focus:border-amber-500 focus:ring-0 outline-none text-sm"
                                     />
                                 </div>
                                 <div>
@@ -511,13 +566,13 @@ export const Cheques: React.FC = () => {
                                         required
                                         value={chequeNumber}
                                         onChange={(e) => setChequeNumber(e.target.value)}
-                                        className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-neutral-800 placeholder-slate-600 focus:border-amber-500 focus:ring-0 outline-none text-sm"
+                                        className="w-full px-3 py-2.5 min-h-[44px] rounded-xl bg-slate-950 border border-slate-800 text-neutral-800 placeholder-slate-600 focus:border-amber-500 focus:ring-0 outline-none text-sm font-mono"
                                     />
                                 </div>
                             </div>
 
                             {/* Row: Amount & Due Date */}
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                 <div>
                                     <label className="block text-xs font-semibold text-neutral-600 uppercase tracking-widest mb-1.5">Due/Clearance Date *</label>
                                     <input
@@ -525,7 +580,7 @@ export const Cheques: React.FC = () => {
                                         required
                                         value={dueDate}
                                         onChange={(e) => setDueDate(e.target.value)}
-                                        className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-neutral-800 focus:border-amber-500 focus:ring-0 outline-none text-sm"
+                                        className="w-full px-3 py-2.5 min-h-[44px] rounded-xl bg-slate-950 border border-slate-800 text-neutral-800 focus:border-amber-500 focus:ring-0 outline-none text-sm font-mono"
                                     />
                                 </div>
                                 <div>
@@ -539,7 +594,7 @@ export const Cheques: React.FC = () => {
                                             required
                                             value={amount}
                                             onChange={(e) => setAmount(e.target.value)}
-                                            className="w-full pl-8 pr-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-neutral-800 placeholder-slate-600 focus:border-amber-500 focus:ring-0 outline-none text-sm"
+                                            className="w-full pl-8 pr-3 py-2.5 min-h-[44px] rounded-xl bg-slate-950 border border-slate-800 text-neutral-800 placeholder-slate-600 focus:border-amber-500 focus:ring-0 outline-none text-sm font-mono"
                                         />
                                     </div>
                                 </div>
@@ -558,20 +613,20 @@ export const Cheques: React.FC = () => {
                             </div>
 
                             {/* Actions submit */}
-                            <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">
+                            <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
                                 <button
                                     type="button"
                                     onClick={() => setShowAddModal(false)}
-                                    className="px-4 py-2.5 border border-slate-805 hover:bg-slate-800 rounded-xl text-neutral-600 hover:text-neutral-900 transition-all text-sm font-semibold"
+                                    className="px-4 py-2.5 min-h-[44px] border border-slate-805 hover:bg-slate-800 rounded-xl text-neutral-600 hover:text-neutral-900 transition-all text-xs font-semibold cursor-pointer"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={actionLoading}
-                                    className="px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl transition-all text-sm shadow-md"
+                                    className="px-6 py-2.5 min-h-[44px] bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white font-bold rounded-xl transition-all text-xs flex items-center justify-center gap-2 shadow-md shadow-amber-500/20 cursor-pointer active:scale-95"
                                 >
-                                    {actionLoading ? 'Saving...' : 'Register Cheque'}
+                                    {actionLoading ? 'Registering...' : 'Save Cheque'}
                                 </button>
                             </div>
                         </form>

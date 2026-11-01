@@ -299,7 +299,48 @@ export const Returns: React.FC = () => {
                     <p className="mt-1 text-sm text-slate-550">Matches will show up here after sales returns are processed in Orders.</p>
                 </div>
             ) : (
-                <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/10">
+                <>
+                    {/* Mobile Cards View */}
+                <div className="space-y-3 sm:hidden">
+                    {filteredReturns.map((ret) => (
+                        <div key={ret.id} className="p-4 rounded-xl border border-slate-800 bg-slate-900/40 space-y-3">
+                            <div className="flex items-center justify-between">
+                                <span className="font-mono text-xs font-bold text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                                    RET-{String(ret.id).padStart(4, '0')}
+                                </span>
+                                <div className="flex items-center gap-1.5 text-xs text-neutral-600">
+                                    <Calendar className="h-3.5 w-3.5 text-slate-500" />
+                                    <span>{new Date(ret.created_at).toLocaleDateString('en-IN')}</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div className="font-semibold text-neutral-800 text-sm break-words">{ret.parties?.Parties_name}</div>
+                                <div className="text-xs text-slate-500">{ret.parties?.city || 'Nepal'}</div>
+                            </div>
+                            <div className="flex items-center justify-between pt-2 border-t border-slate-800/60 text-xs">
+                                <div>
+                                    <span className="text-slate-500">Order: </span>
+                                    <span className="text-neutral-700 font-medium">{ret.orders?.order_number || 'N/A'}</span>
+                                </div>
+                                <div className="text-right">
+                                    <span className="text-slate-500">Refund: </span>
+                                    <span className="text-emerald-400 font-bold">
+                                        रु {Number(ret.total_refund).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                    </span>
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => fetchReturnItems(ret)}
+                                className="w-full min-h-[44px] py-2.5 px-4 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-neutral-700 hover:text-neutral-900 transition-colors text-xs font-semibold flex items-center justify-center gap-2"
+                            >
+                                View Details
+                            </button>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Desktop Table View */}
+                <div className="hidden sm:block overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/10">
                     <table className="w-full border-collapse text-left text-sm">
                         <thead className="bg-slate-900/60 text-neutral-600 uppercase text-[10px] font-bold tracking-wider">
                             <tr>
@@ -346,12 +387,13 @@ export const Returns: React.FC = () => {
                         </tbody>
                     </table>
                 </div>
+                </>
             )}
 
             {/* Modal for Details */}
             {selectedReturn && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-                    <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh]">
+                <div className="fixed inset-0 z-50 overflow-y-auto p-4 sm:p-6 flex items-start sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm">
+                    <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col my-auto sm:my-8 max-h-[90vh]">
                         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/20">
                             <div>
                                 <h3 className="text-base font-bold text-neutral-900">Sales Return Detailed View</h3>
